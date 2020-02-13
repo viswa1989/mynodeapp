@@ -30,7 +30,7 @@
     "fs-extra": "^7.0.1",
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.4.1",
+    "mongoose": "^5.7.5",
     "mongoose-float": "^1.0.3",
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
