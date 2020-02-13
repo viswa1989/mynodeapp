@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Generator: Adobe Fireworks 10, Export SVG Extension by Aaron Beall (http://fireworks.abeall.com) . Version: 0.6.1  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="Untitled-Page%201" viewBox="0 0 17 17" style="background-color:#ffffff00" version="1.1"
+	xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+	x="0px" y="0px" width="17px" height="17px"
+>
+	<defs>
+		<!-- Library -->
+		<symbol id="onlinesym" overflow="visible">
+			<g id="Layer%2012">
+				<path id="Ellipse" d="M -8 0 C -8 -4.1422 -4.6422 -7.5 -0.5 -7.5 C 3.6422 -7.5 7 -4.1422 7 0 C 7 4.1422 3.6422 7.5 -0.5 7.5 C -4.6422 7.5 -8 4.1422 -8 0 Z" stroke="#ffffff" stroke-width="1" fill="url(#gradient1)"/>
+			</g>
+
+		</symbol>
+		<!-- End Library -->
+		<linearGradient id="gradient1" x1="50%" y1="10%" x2="150%" y2="10%">
+			<stop stop-color="#20b200" stop-opacity="1" offset="0%"/>
+			<stop stop-color="#40ff00" stop-opacity="1" offset="100%"/>
+		</linearGradient>
+	</defs>
+	<g id="Layer%201">
+		<use id="online-sym" xlink:href="#onlinesym" transform="matrix(1, 0, 0, 1, 9, 8)"/>
+	</g>
+</svg>

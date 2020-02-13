@@ -1,5 +1,4 @@
 require("app-module-path").addPath(__dirname);
-require('v8-profiler');
 const express = require("express");
 // var socket_io    = require( "socket.io" );
 const helmet = require("helmet");
@@ -52,7 +51,7 @@ const databaseUrl = `${config.db.protocol}://${config.db.host}:${config.db.port}
 app.use("/app", express.static(path.join(__dirname, "public")));
 app.set("port", config.port);
 
-mongoose.connect(databaseUrl, (err) => {
+mongoose.connect(databaseUrl, { useNewUrlParser: true },  (err) => {
   if (err) {
     console.log("connection error", err);
   } else {

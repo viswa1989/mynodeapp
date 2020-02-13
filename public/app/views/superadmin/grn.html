@@ -1,0 +1,317 @@
+<style type="text/css">
+    body{
+        overflow: hidden;
+    }
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 100px;
+        max-width: 270px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a {
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+    td .table>thead>tr>th{border-bottom: 0px;}
+</style>
+<div class="row margin-0" ng-if="PoData.pageaction == 'View'">
+    <div class="purchase_right_section_header">Goods Received Note for <b ng-if="PoData.selectedDivisionname == 'ALL'">Lotus Knits</b><b ng-if="PoData.selectedDivisionname != 'ALL'" ng-bind="PoData.selectedDivisionname"></b>.
+        <div class="fullscreen_icon pull-right margin-right-10 c_full_screen_click" id="full_screen" onclick="return full_screen_purchasestock()"></div>
+
+        <div class="mail_icons pull-right margin-right-10" ng-click="clientdata.showdialogDiv = !clientdata.showdialogDiv"></div>
+
+        <div class="pdf_icons pull-right margin-right-10" ng-click="pdf_reporter()"></div>
+
+        <div class="print_icons pull-right margin-right-10" ng-click="printThisPayments();"></div>
+    </div>
+
+    <div class="purchase_container" style="overflow: hidden;">
+        <div class="purchase_view_container" style="overflow: hidden;">
+            <div class="col-xs-12 padding_10 purchaseheaderresult">
+                <div class="heading_5 margin-bottom-15 margin-top-20">
+                    <b style="font-size: 15px;" ng-if="PoData.selectedDivisionname == 'ALL'" ng-bind="'At Lotus Knits as of '+(PoData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                    <b style="font-size: 15px;" ng-if="PoData.selectedDivisionname != 'ALL'" ng-bind="'At '+(PoData.selectedDivisionname)+' as of '+(PoData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                </div>
+            </div>
+
+            <div class="col-xs-12 padding_10 purchasesearchcnt">
+                <div class="heading_5 margin-bottom-15">
+                    <b class="pull-left margin-top-10" style="font-size: 15px;">{{PoData.grn.length}} Goods Received Note</b>
+
+                    <div class="right_menu" style="margin-top: 0px;float:right; width:330px;">
+                        <div class="search_right_cnt" style="width:100% !important;">
+                            <input type="text" class="search_box_expand" placeholder="Search for GRN" ng-model="grnfilter">
+                            <div class="search_icons">
+                                <span class="search_letter">Search</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 padding_10 margin-top-15 purchase_view_table" style="overflow: auto;">
+                <div class="table_scroll">
+                    <table class="mt_table margin-bottom-10 tb_scroll_style res-table-scroll">
+                        <thead>
+                            <tr>
+                                <th style="min-width:130px;">Division</th>
+                                <th style="min-width:100px;">GRN No.</th>
+                                <th style="min-width:100px;">PO No.</th>
+                                <th style="min-width:85px;">Date</th>
+                                <th style="min-width:200px;">Vendor Name</th>
+                                <th style="min-width:115px;max-width:120px;">Invoice No</th>
+                                <th class="text-right" style="min-width:110px;">Amount</th>
+                                <th style="min-width:50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="scollbody">
+                            <tr ng-repeat-start="grn in PoData.grn"></tr>
+                            <tr class="tr_body" ng-class="{'current_active_row':PoData.currentRow == grn._id}" ng-click="setCurrentrow(grn)">
+                                <td style="min-width:130px;" ng-bind="grn.division_id.name"></td>
+                                <td style="min-width:100px;"><b class="pull-left" ng-bind="grn.grn_no"></b></td>
+                                <td style="min-width:100px;"><b class="pull-left" ng-bind="grn.po_no"></b></td>
+                                <td style="min-width:85px;" ng-bind="grn.grn_date | date:'dd MMM yyyy'"></td>
+                                <td style="min-width:200px;" ng-bind="grn.vendor_id.name"></td>
+                                <td style="min-width:115px;max-width:120px;" ng-bind="grn.invoice_no"></td>
+                                <td style="min-width:110px;" class="text-right" ng-bind="commonobjectService.getCurrency()+(grn.total_amt | number:2)"></td>
+                                <td style="min-width:50px;">
+                                </td>
+                            </tr>
+                            <tr ng-if="PoData.currentRow == grn._id" style="background-color: rgb(255,239,210);">
+                                <!--                                <td colspan="7" ng-if="po.status == 'WAITING' || po.status == 'DENIED'">
+                                                                    <span class="table_editicon margin-right-05" ng-click='editPurchaseorder(po); $event.stopPropagation();' title="Edit"></span>
+                                                                </td>-->
+                                <td colspan="8" class="purchasestock_innertable_view">
+                                    <table class="table margin-top-10 sub_table_center_50">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 80px;">S.No</th>
+                                                <th>Item</th>
+                                                <th class="text-center" style="width: 95px;">Received Qty</th>
+                                                <th class="text-right" style="width: 100px;">Unit Price</th>
+                                                <th class="text-right" style="width: 120px;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="items in grn.stock_details| filter:grnfilter">
+                                                <td class="text-center" style="width: 80px;" ng-bind="$index + 1"></td>
+                                                <td class="text-left" ng-bind="items.product_name"></td>
+                                                <td class="text-center" style="width: 95px;" ng-bind="items.quantity"></td>
+                                                <td class="text-right" style="width: 100px;" ng-bind="commonobjectService.getCurrency()+(items.landing_cost | number:2)"></td>
+                                                <td class="text-right" style="width: 120px;" ng-bind="commonobjectService.getCurrency()+(items.total | number:2)"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row margin-0 itemadd_section" ng-if="PoData.pageaction == 'Create'">
+    <div class="purchase_right_section_header"><span class="heading_3 blue-color">Add New Purchase Order</span>
+        <div class="fullscreen_icon pull-right margin-right-10 c_full_screen_click" id="full_screen" onclick="return full_screen_purchasestock()"></div>
+    </div>
+    
+    <div class="purchase_container" style="overflow: hidden;">
+        <div class="purchase_view_container" style="overflow: auto;">
+            <div class="col-lg-12 margin-top-20" style="font-size: 18px;">
+                <strong>Purchase Order</strong>
+            </div>
+            <div class="col-xs-12 margin-top-30 padding_zero" style="width: 820px;">
+                <div class="col-xs-6 padding_zero">
+                    <div class="col-xs-4" style="line-height: 2;">
+                        <span>Vendor Name</span>
+                    </div>
+                    <div class="col-xs-8 padding_zero">
+                        <input type="text" class="form-control text-left" placeholder="Vendor Name" ng-model="PoData.vendordetails" ui-autocomplete="vendorOption" required>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="col-xs-5" style="line-height: 2;">
+                        <span>Exp.Delivery Date</span>
+                    </div>
+                    <div class="col-xs-7 padding_zero">
+                        <div class="datepicker_custom_style">
+                            <div class="input-group date">
+                                <date-time-picker class="text-left" ng-model="purchaseform.delivery_date" placeholder="Exp.Delivery Date" start-view='2'
+                                                  min-view='2' max-view='4' today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".datepicker_custom_style">
+                                </date-time-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 margin-top-40">
+                <div class="add_edit_div acnt_add_edit_div">
+                    <div class="col-xs-12 acnt_add_edit_click">
+                        <span class="heading_5"> Add/Edit Items</span>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="col-xs-10 col-lg-6 margin-bottom-10">
+                            <div class="col-xs-12 padding_zero">
+                                <div class="col-xs-3 col-lg-4" style="line-height: 2;">
+                                    <b>Product</b>
+                                </div>
+                                <div class="col-xs-9 col-lg-8 padding_zero">
+                                    <input type="text" class="form-control text-left" ng-model="PurchaseData.product_name" placeholder="Item" ui-autocomplete="itemOption">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-lg-6 margin-bottom-10">
+                            <div class="col-xs-6 padding_zero">
+                                <div class="col-xs-5" style="line-height: 2;">
+                                    <b>Quantity</b>
+                                </div>
+                                <div class="col-xs-7 padding_zero">
+                                    <input type="text" class="form-control text-left" valid-numeral ng-model="PurchaseData.quantity" placeholder="Qty" ng-blur="getitemtota1(PurchaseData)">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 padding_zero">
+                                <div class="col-xs-5" style="line-height: 2;">
+                                    <b>Unit Price</b>
+                                </div>
+                                <div class="col-xs-7 padding_zero">
+                                    <input type="text" class="form-control text-left" valid-number ng-model="PurchaseData.price" placeholder="Price" ng-blur="getitemtota1(PurchaseData)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6 col-md-6">
+                            <div class="col-xs-12 padding_zero margin-bottom-10" style="line-height: 2;">
+                                <div class="pull-right text-right"><b ng-bind="'Net Total '+commonobjectService.getCurrency()+(PurchaseData.total | number:2)"></b></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-md-6">
+                            <div class="col-xs-12 padding_zero margin-top-10 margin-bottom-10 text-center">
+                                <a class="common_button pull-right cancel margin-left-15" ng-click="cancelpurchaseItems()">Cancel</a>
+                                <a class="common_button pull-right enter margin-right-15" ng-click="PoData.currentItems > - 1?updatepurchaseItems():addpurchaseItems();">Add Item</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accounts_receivable-row3 margin-top-30">
+                <div class="col-lg-12">
+                    <table>
+                        <thead>
+                            <tr class="tr_header">
+                                <th>S.No</th>
+                                <th>Product</th>
+                                <th style="min-width: 90px;">Qty</th>
+                                <th style="min-width: 100px;" class="text-right">Unit Price (₹)</th>
+                                <th style="min-width: 150px;" class="text-right">Total (₹)</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="order in purchaseform.purchase_details" ng-click="editItem(order)">
+                                <td><span ng-bind="$index + 1"></span></td>
+                                <td><span ng-bind="order.product_name"></span></td>
+                                <td><span ng-bind="order.quantity"></span></td>
+                                <td class="text-right"><span ng-bind="commonobjectService.getCurrency()+(order.price | number:2)"></span></td>
+                                <td class="text-right"><span ng-bind="commonobjectService.getCurrency()+(order.total | number:2)"></span></td>
+                                <td><span class="delete_small" noty-remove noty-update='removePoitem(order)' noty-style="3" 
+                                          noty-content="Are you sure,You want to remove this item from purchase order?" ng-if="order.total"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="footer-sec margin-top-30">
+                    <div class="col-lg-12 col-xs-12">
+                        <div class="col-lg-8 col-xs-8">
+                            <div class="col-lg-2 col-xs-3 heading_7">
+                                Notes
+                            </div>
+                            <div class="col-lg-10 padding_left_zero col-xs-9">
+                                <textarea class="form-control" rows="5" id="comment" ng-model="purchaseform.notes" 
+                                          style="z-index: auto; position: relative; line-height: 20px; font-size: 14px; transition-duration: initial; transition-timing-function: initial; transition-property: none; background: transparent !important;"></textarea>
+                            </div>
+                            <div class="col-lg-12 col-xs-12 margin-top-15 padding_zero">
+                                <a class="common_button cancel pull-right" ng-click="viewData('View'); $event.stopPropagation();">Cancel</a> 
+                                <a class="common_button margin-right-15 margin-left-10 pull-right enter-new" 
+                                   ng-click="purchaseform._id ? updatePurchaseorder() : createPurchaseorder(); $event.stopPropagation();">Save Purchase Order</a>
+                                <a class="text_uderline pull-right print-invoice" ng-click="printThisinvoice(); $event.stopPropagation();">Print this Purchase Order</a>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 text-right heading_7">
+                            <div><strong>Total:</strong>
+                                <div class="price_section margin-top-15">
+                                    <b ng-bind="commonobjectService.getCurrency()+(purchaseform.total | number:2)" class="ng-binding"></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function(){
+            purchasestockresize();
+        },200);
+    });
+
+
+
+
+      var $table = $('table.mt_table'),
+            $bodyCells = $table.find('tbody tr:first').children(),
+            colWidth;
+    
+    function pendingpayreport() {
+        colWidth = $bodyCells.map(function () {
+        return $(this).width();
+        }).get();
+        $table.find('thead tr').children().each(function (i, v) {
+        $(v).width(colWidth[i]);
+        });
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1 - 300;
+        $('.scollbody').css('height', total_height_c1);
+    }
+// Adjust the width of thead cells when window resizes
+    $(window).resize(function () {
+        pendingpayreport();
+    }); // Trigger resize handler
+  
+    setTimeout(function () {
+        pendingpayreport();
+    }, 200);
+</script>

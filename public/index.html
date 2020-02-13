@@ -1,0 +1,480 @@
+<!doctype html>
+<html ng-app='lotusKnit' lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Lotus Knits</title>
+        <base href="/"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/font.css" />
+        <link rel="stylesheet" href="css/divisionadmin.css" />
+        <link rel="stylesheet" href="css/responsive-style.css" />
+
+        <link rel="stylesheet" href="css/plugins/split-pane.css" />
+        <link rel="stylesheet" href="css/angular-ui-notification.css" />
+        <link rel="stylesheet" href="css/plugins/bootstrap-datetimepicker.css" />
+        <link rel="stylesheet" href="js/plugins/dropdown/select.css"/>
+        <link rel="stylesheet" href="js/plugins/dropdown/selectize.bootstrap3.css"/>
+        <link rel="stylesheet" href="css/plugins/ng-tags-input.css"/>
+        <!--<base href="/" />-->
+        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">                
+    </head>
+
+    <body ng-controller="MainController">
+        <div class="overlayout"></div>
+        <div class="overlayoutmenu" ng-if="layout.loading && !$root.loginStatus">
+            <div class="loader_large"></div>
+        </div>
+        
+        <div ng-if="$root.loginStatus" ng-include="'header.html'" class="initialtag hide"></div>
+
+        <!--to load popup menus of this app-->
+
+        <div class="wrapper-div wrapper-div-height initialtag hide" ng-if="$root.loginStatus">
+            <div class="overlayoutmenu" ng-if="layout.loading">
+                <div class="loader_large"></div>
+            </div>
+            <div id="split-pane-1" class="split-pane fixed-left">
+
+                <div class="split-pane-component left-component s_dashboard_section" id="left-component">
+                    <ng-view ng-show="!$root.layout.loading"></ng-view>
+                </div>
+                <div class="clearboth"></div>
+
+                <!-- Right Side Split Screen -->
+                <div class="split-pane-divider" id="divider" value="true"></div>
+
+                <div class="split-pane-component right_component" id="right-component" value="true">
+                    <div class="c_setup_iframe c_scroll_setup_sec" id="setup_frame">
+                        <div class="overlayoutmenu" ng-if="layout.setuploading">
+                            <div class="loader_medium"></div>
+                        </div>
+                        <div ng-if="clientData.splitPanes && clientData.setup == 'SETUP'" ng-include="clientData.headermenu"></div>
+
+                        <div ng-if="clientData.splitPanes && clientData.setup == 'SETUP'" class="viewplace wrapper_hight" ng-include="clientData.iframeloadPage"></div>
+
+                        <!--- Order View Container -->
+                        <div ng-if="clientData.splitPanes && !clientData.setup == 'JOBVIEW'" class="viewplace wrapper_hight" ng-include="clientData.iframeorder"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-view ng-if="!$root.loginStatus" class="initialtag hide"></ng-view>
+
+        <div class="alert_low_resolution">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="error-template">
+                                    <div class="logo_for_low_res"></div>
+                                    <div class="error_res_img"></div>
+                                <div class="screen_oops_text">
+                                    Sorry, your screen resolution is below 768px width, This app may not fit on your screen :(</div>
+                                <div class="error-details">
+                                    You cannot view this app in screen resolution below 768px width. Try using large resolution devices. Eg: Use Devices which having screen resolution higher than 768px width.
+                                </div>
+                                <div class="error_footer">© 2017 - 2018 BETTER LIVES INC.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+						   
+    </body>
+
+    <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwHCH85kvzn-6PNZ6Ai4ozL-OX4e0e9Ho"></script>
+    <script type="text/javascript" src="js/plugins/split-pane.js"></script>
+    <script type="text/javascript" src="js/main_script.js"></script>
+    <script src="js/setupFunction.js" type="text/javascript"></script>
+    <script src="js/dashboardFunction.js" type="text/javascript"></script>
+    <script src="js/rasterizeHTML.allinone.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/socket.io-2.0.1.js"></script>
+
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/angular-locale_en-in.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
+    <script type="text/javascript" src="js/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="js/angular-ui-notification.js"></script>
+    <script type="text/javascript" src="js/angular-animate.min.js"></script>
+    <script type="text/javascript" src="js/angular-filter.js"></script>
+    <script type="text/javascript" src="js/ngMask.js"></script>
+    
+    <script type="text/javascript" src="js/event.js"></script>
+    <script type="text/javascript" src="js/plugins/Chart.min.js"></script>
+    <script type="text/javascript" src="js/plugins/angular-chart.js"></script>
+
+    <script type="text/javascript" src="js/plugins/masonry/angulargrid.js"></script>
+    <script type="text/javascript" src="js/plugins/masonry/script.js"></script>
+    <script type="text/javascript" src="js/plugins/masonry/ng-infinite-scroll.js"></script>
+
+    <script type="text/javascript" src="js/underscore.js"></script>
+    <script type="text/javascript" src="js/plugins/geomaplocation.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+    <script src="js/plugins/daterangepicker.js" type="text/javascript"></script><!-- date-->
+    <script src="js/plugins/angular-daterangepicker.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/plugins/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="js/ui-bootstrap.js"></script>
+    <script type="text/javascript" src="js/plugins/tree-grid-directive.js"></script>
+    <script type="text/javascript" src="js/plugins/dialogs.js"></script>
+    <script type="text/javascript" src="js/plugins/ng-tags-input.js"></script>
+
+    <script type="text/javascript" src="js/angular-file-upload.min.js"></script>
+    <script type="text/javascript" src="js/ng-file-upload-shim.js"></script>
+    <script type="text/javascript" src="js/ng-file-upload.min.js"></script>
+    <script type="text/javascript" src="js/plugins/dropdown/select.js"></script>
+    <script type="text/javascript" src="js/autocomplete.js"></script>
+    <script type="text/javascript" src="js/plugins/multiselect/multiselect.js"></script>
+    <script type="text/javascript" src="js/plugins/html2canvas-angular.js"></script>
+
+    <script type="text/javascript" src="js/offline.js"></script>
+    
+    <!-- services -->
+    <script type="text/javascript" src="app/services/userService.js"></script>
+    <script type="text/javascript" src="app/services/authService.js"></script>
+    <script type="text/javascript" src="app/services/commonService.js"></script>
+
+    <!-- controllers -->
+    <script type="text/javascript" src="app/controllers/navigationCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/mainCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/notificationCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/loginCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/dashboardCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/orderviewCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/profileCtrl.js"></script> 
+    <script type="text/javascript" src="app/controllers/reportCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/jobcardreportCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/pendingpaymentreportCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/ageinganalysisreportCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/categoryCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/accountmasterCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/smsCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/preferenesCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/adminuserCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/customer_groupCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/customerprofileCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/customerCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/accountCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/divisionsCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/vendorCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/purchaseCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/purchasestockCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/manageCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/dyeingCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/contractorCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/productCtrl.js"></script>
+
+    <!-- Branch Admin Controller -->
+    <script type="text/javascript" src="app/controllers/jobCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/orderCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/deliveryCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/returnCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/outwardCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/ordereditCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/deliveryeditCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/returneditCtrl.js"></script>
+    <script type="text/javascript" src="app/controllers/outwardeditCtrl.js"></script>
+    <!-- End Branch Admin Controller -->
+
+    <script type="text/javascript" src="app/directives/directive.js"></script>
+    <script type="text/javascript" src="app/directives/commonFilter.js"></script>
+    <script type="text/javascript" src="app/routes.js"></script>
+    <script type="text/javascript" src="app/core.js"></script>
+
+    <script type="text/ng-template" id="angular-ui-notification.html">
+        <div class="ui-notification">
+        <h3 ng-show="title" ng-bind-html="title"></h3>
+        <div class="message" ng-bind-html="message"></div>
+        </div>
+    </script>
+
+    <script>
+            $(function(){
+                Offline.on('confirmed-down', function () {
+                    if(!$('#flash-toggle').hasClass("disconnect")){
+                        $('#flash-toggle').addClass("disconnect");
+                    }
+                });
+                Offline.on('confirmed-up', function () {
+                    if($('#flash-toggle').hasClass("disconnect")){
+                        $('#flash-toggle').removeClass("disconnect");
+                    }                
+                });
+            });
+            
+            $(document).ready(function () {
+                var menu_height = $(window).height();
+                $(document).on('click', '.desktop_menu_toggle', function () {
+                    if (parseInt($(window).width()) <= 1650 && parseInt($(window).width()) >= 100) {//16500px to 100px responsive view
+                        windowHeight();
+                        $('#desktop-menu').toggle("slide", {direction: "right"}, 100);
+                        $('.overlayout').toggle();
+                        $('.right_toggle').removeClass('desktop_menu_toggle');
+                        $('.right_toggle').addClass('desktop_menu_remove');
+                        var menu_height1 = $(window).height();
+                        $('.overlayout').css('height', menu_height1);
+                    }
+                });
+
+                $(document).on('click', '.desktop_menu_remove , .overlayout', function () {
+                    if (parseInt($(window).width()) <= 1650 && parseInt($(window).width()) >= 100) {//16500px to 100px responsive view
+                        windowHeight();
+                        $('.overlayout').toggle();
+                        $('#desktop-menu').toggle("slide", {direction: "right"}, 100);
+                        $('.right_toggle').addClass('desktop_menu_toggle');
+                        $('.right_toggle').removeClass('desktop_menu_remove');
+                    }
+                });
+
+                $(document).on('click', '.fullview_setup', function () {
+                    var spliwidth = $('.right_component').width();
+                    if (spliwidth < 1190) {
+                        $('.right_component').addClass("splitdrropdown");
+                    } else {
+                        $('.right_component').removeClass("splitdrropdown");
+                    }
+                    if (parseInt($(window).width()) > 1650) {
+                        $('.left-component').css({"width": "55%"});
+                        $('.right_component').css({"left": "55%"});
+                        $('.split-pane-divider').css({"left": "55%"});
+                    }
+                });
+
+                if (parseInt($(window).width()) <= 1650 && parseInt($(window).width()) >= 100) {//16500px to 100px responsive view
+                    $('.list_menu').css('height', menu_height);
+                    $('.overlayout').css('height', menu_height);
+                }
+            });
+
+            function windowHeight() {//Window Highet Set
+                var windowHeight = $(window).height();
+                $('.overlayoutmenu').css('height', windowHeight);
+                $('.overlayout').css('height', windowHeight);
+                $('#desktop-menu').css('height', windowHeight);
+            }
+
+            function WinHeight() {
+                var windowHeight = $(window).height();
+                var headerHeight = $('.header').height();
+                if(headerHeight===null || headerHeight===''){
+                    headerHeight = 65;
+                }
+                var totalHeight = windowHeight - headerHeight;
+                $('.wrapper-div-height').css('height', totalHeight);
+                $('.body_height').css('height', totalHeight - 10);
+                var viewHeight = $('.customer_header').height() + 50;
+                $('.cus_height').css('height', totalHeight - viewHeight);//Customer Page
+            }
+
+            function setupSection() {
+                //SETUP MENUS HEIGHT SET
+                var windowHeight = $(window).height();
+                var setupmenuheight = $('.setup_menuHeight').height();
+                var headerHeight = $('.header').height();
+                var setupPage = windowHeight - (setupmenuheight + headerHeight);
+                if ($('div.orders_page').length) {
+                    setupPage = windowHeight - headerHeight;
+                }
+                $('.wrapper_hight').css('height', setupPage);
+            }
+
+            function resp_menu() { // Toggle Menu Button Click
+                $('#desktop-menu').toggle();
+                $('.overlayoutmenu').toggle();
+                $('.right_toggle').removeClass('desktop_menu_toggle');
+                $('.right_toggle').addClass('desktop_menu_remove');
+                windowHeight();
+            }
+
+            function respon_menu_hide() {  // Hide Menu
+                $('.overlayoutmenu').toggle();
+                $('#desktop-menu').toggle();
+                $('.right_toggle').addClass('desktop_menu_toggle');
+                $('.right_toggle').removeClass('desktop_menu_remove');
+            }
+
+            function setupScroll_fixedmenu() {
+                $('.wrapper_hight').scroll(function () {
+                    setupSection();
+                    if ($('.wrapper_hight').scrollTop() > 370) {
+                        $('.c_menu_scroll').removeClass('hide');
+                    } else {
+                        $('.c_menu_scroll').addClass('hide');
+                    }
+                });
+            }
+
+            function setupScroll() {
+                $('.wrapper_hight').scroll(function () {
+                    setupSection();
+                });
+            }
+
+            setupSection();
+            WinHeight();
+
+            $(window).resize(function () {
+                var spliwidth = $('.right_component').width();
+                if (spliwidth < 1190) {
+                    $('.right_component').addClass("splitdrropdown");
+                } else {
+                    $('.right_component').removeClass("splitdrropdown");
+                }
+                var iframeWidth = $('.c_setup_iframe').width();
+                windowHeight();
+                setupSection();
+                WinHeight();
+                var windowWidth = $(window).width();
+                if (windowWidth > 1650) {
+                    $('.overlayoutmenu').hide();
+                    $('.overlayout').hide();
+                    $('#desktop-menu').hide();
+                }
+                if (iframeWidth <= 767 && iframeWidth >= 10) {
+                    $('.menu_togglg_c').addClass('s_menu_function');
+                    $('.container_header').addClass('s_menu_div');
+                    $('.c_setup_iframe').addClass('s_menu_text');
+                    $('.setup_fixed_postion').addClass('s_height_0');
+                    $('.setup_fixed_postion').removeClass('s_height_1');//setup menu height set remove
+
+                    $('.s_menu_div .top-nav > li').click(function () { //setup menu click hide for responsive menu
+                        $('.s_menu_function').removeClass('in');
+                    });
+                }
+                if (iframeWidth >= 768) {
+                    $('.menu_togglg_c').removeClass('s_menu_function');
+                    $('.container_header').removeClass('s_menu_div');
+                    $('.c_setup_iframe').removeClass('s_menu_text');
+                    $('.setup_fixed_postion').removeClass('s_height_0');
+                }
+            });
+
+            $('.c_scroll_setup_sec').resize(function () {
+                setupSection();
+            });
+
+            // Notification start
+            function expand_div_click_toggle(e, th) {
+                e.stopImmediatePropagation();
+
+                $('.notification').toggleClass('Nofity_full_div');
+                $('.notification_outerbox').toggleClass('Nofity_full_div_outer');
+                $('.header_div').toggleClass('header_expand_div');
+                $('.search_cnt').toggleClass('hide');
+                $('.menu_cnt').toggleClass('menu_cnt_expand');
+                $('.search_div_expand').toggleClass('hide');
+                $('.overlayout_notify').toggle();
+
+                return false;
+            }
+
+            function hideShowNotificationPanel(e, th) {
+                // Assign Notification Directive Start
+                var notification_timer = $('.notification').is(':hidden');
+                if (notification_timer)
+                {
+                    lset('notification_timer', false);
+                } else {
+                    lset('notification_timer', true);
+                }
+                e.stopImmediatePropagation();
+                if ($('.notification').hasClass('Nofity_full_div')) {
+                    $('.overlayout_notify').toggle();
+                }
+                $('.notification').toggle();
+                $('.wrapper-div').removeClass('width_offset_conversation');
+                $('.wrapper-div').toggleClass('width_offset');
+                $('#normalNotification').show();
+                $('#msgNotification').hide();
+                $('.chatconversation').hide();
+
+                $('#notify_card_content').masonry();
+                convClose();
+                return false;
+            }
+
+            function convClose() {
+                var convAttr = $('.conversation_btn').attr('conversation');
+                if (convAttr == 'false') {
+                    $('.chatconversation').hide();
+                    $('.phase-scroll').css('width', '99%');
+                    $('.top_button_container').css('width', '100%');
+                    $('.toggle_icon_small').toggleClass('toggles_icon_small');
+                    $('.wrapper_toggle').toggleClass("active");
+                    $('.conversation_btn').attr('conversation', 'true');
+                }
+            }
+
+            function hideShowConversationPanel(e, th) {
+                var convAttr = $('.conversation_btn').attr('conversation');
+
+                if (convAttr == 'true') {
+                    $('.chatconversation').toggle();
+                    var windowWidth = $(window).width() - 500;
+                    $('.phase-scroll').css('width', windowWidth);
+                    $('.top_button_container').css('width', windowWidth);
+                    $('.notification').hide();
+                    $('.wrapper-div').removeClass('width_offset');
+                    //$('.wrapper-div').toggleClass('width_offset_conversation');   
+                    $('.toggle_icon_small').addClass('toggles_icon_small');
+                    $('.wrapper_toggle').removeClass("active");
+                    $('.conversation_btn').attr('conversation', 'false');
+
+                    return false;
+                } else {
+                    $('.chatconversation').hide();
+                    $('.phase-scroll').css('width', '99%');
+                    $('.top_button_container').css('width', '100%');
+                    $('.notification').hide();
+                    $('.wrapper-div').removeClass('width_offset');
+                    //$('.wrapper-div').toggleClass('width_offset_conversation');
+                    $('.toggle_icon_small').toggleClass('toggles_icon_small');
+                    $('.wrapper_toggle').toggleClass("active");
+                    $('.conversation_btn').attr('conversation', 'true');
+                    return false;
+                }
+            }
+
+            function convResize() {
+                var windowWidth = $('.s_dashboard_section').width() - 500;
+                $('.phase-scroll').css('width', windowWidth);
+                $('.top_button_container').css('width', windowWidth);
+            }
+
+            function convertionSplitResp() {
+                var convAttr = $('.conversation_btn').attr('conversation');
+                if (convAttr == 'false') {
+                    convResize();
+                }
+            }
+            
+            function popup_dropdown(e, th) {
+                $(".dropdown_popup").toggle();
+            }
+
+            function toggle_click_disableenable(e, th) {
+                $(".toggle_disableenable").toggle('Show');
+                $(".toggle_remove").css("display", 'none');
+            }
+
+            function toggle_click_remove(e, th) {
+                $(".toggle_remove").toggle('Show');
+                $(".toggle_disableenable").css("display", 'none');
+            }
+            
+            function hidealldialg(){
+                $(".toggle_remove").css("display", 'none');
+                $(".toggle_disableenable").css("display", 'none');
+            }
+            
+            setInterval(function () {
+                convertionSplitResp();
+            }, 1000);
+    </script>
+</html>

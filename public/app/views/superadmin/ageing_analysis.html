@@ -1,0 +1,158 @@
+<div class="stock_stms c_stock_stms_cnt" ng-controller="AgeinganalysisController">
+    <div class="report_left_section bg_white">
+        <div class="report_filter_header">
+            <div class="heading_3">Ageing Analysis</div>
+        </div>
+        <div class="report_filter_cnt report_left_menu">
+            <div class="overflow_scroll margin-top-05">
+                <div class="filter_cnt">
+                    <div class="filter filter_click store" id="store">
+                        <a class="button repofilterbtn" ng-repeat="division in AgeingreportData.divisionList" ng-class="{'active':AgeingreportData.selectedDivisionid == division._id}" 
+                           ng-click="filterBydivision(division);" ng-bind="division.name"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report_right_section">
+        <div class="report_responsive_cnt">
+            <div class="report_right_section_header">Statements for <b ng-if="AgeingreportData.selectedDivisionname == 'ALL'">ALL</b>
+        <b ng-if="AgeingreportData.selectedDivisionname != 'ALL'" ng-bind="AgeingreportData.selectedDivisionname"></b>.
+
+                <div class="fullscreen_icon pull-right margin-right-10 c_full_screen_click" id="full_screen" onclick="return full_screen_pendingpayment()"></div>
+
+                <div class="mail_icons pull-right margin-right-10" ng-click="clientdata.showdialogDiv = !clientdata.showdialogDiv"></div>
+
+                <div class="excel_icons pull-right margin-right-10" ng-click="exportThisReport();"></div>
+
+                <div class="print_icons pull-right margin-right-10" ng-click="printThisReport();"></div>
+            </div>
+
+            <div class="report_container overflow_scroll">
+                <div class="report_set_container">
+                    <div class="report_fixed_postion">
+                        <div class="report_date_select" style="min-height: 50px;"></div>
+                        <div class="report_date_show c_report_date_show" style="display: none;"></div>
+                    </div>
+                    <div class="clearboth"></div>
+
+                    <div class="heading_5 col-xs-12 reportsearch margin-top-10 margin-bottom-15">
+                        <b class="pull-left margin-top-10" style="font-size: 15px;" ng-if="AgeingreportData.selectedDivisionname == 'ALL'" ng-bind="'At all Divisions as of '+(AgeingreportData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                        <b class="pull-left margin-top-10" style="font-size: 15px;" ng-if="AgeingreportData.selectedDivisionname != 'ALL'" ng-bind="'At '+(AgeingreportData.selectedDivisionname)+' as of '+(AgeingreportData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                        
+                        <div class="print_icons pull-left margin-right-10 margin-top-10" ng-click="printThisReport();"></div>
+                        <div class="excel_icons pull-left margin-right-10 margin-top-10" ng-click="exportThisReport();"></div>
+                        <div class="right_menu" style="margin-top: 0px;float:right; width:330px;">
+                            <div class="search_right_cnt" style="width:100% !important;">
+                                <input type="text" class="search_box_expand" ng-model="AgeingreportData.fillterByCustomer" placeholder="Search for Customer, Mobile No ">
+                                <div class="search_icons">
+                                    <span class="search_letter">Search</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 reporttablez margin-top-15">
+                        <table class="mt_table tb_scroll_style responsive-table-scroll">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 220px;">Customer Name</th>
+                                    <th class="text-right" style="min-width: 120px;">Opening Balance</th>
+                                    <th class="text-right" ng-repeat="ageheader in AgeingreportData.ageingheader" style="min-width: 108px;" ng-bind="ageheader"></th>
+                                    <th class="text-right" style="min-width: 118px;">Total Amt</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="scollbody">
+                                <tr ng-repeat="ageingData in AgeingreportData.ageingList| filter:AgeingreportData.fillterByCustomer" class="tr_body">
+                                    <td style="min-width: 220px;"><b class="pull-left" ng-bind="ageingData.customer_name"></b></td>
+                                    <td style="min-width: 120px;" class="text-right">
+                                        <b ng-if="ageingData.openingBalance>0" ng-bind="ageingData.openingBalance | number:2"></b>
+                                        <b ng-if="!ageingData.openingBalance || ageingData.openingBalance<=0">-</b>
+                                    </td>
+                                    <td class="text-right" style="min-width: 108px;" ng-repeat="ageheader in AgeingreportData.ageingheader">
+                                        <b ng-if="ageingData[ageheader]>0" ng-bind="ageingData[ageheader] | number:2"></b>
+                                        <b ng-if="!ageingData[ageheader] || ageingData[ageheader]<=0">-</b>
+                                    </td>
+                                    <td class="text-right" style="min-width: 118px;">
+                                        <b ng-if="ageingData.totalBalance>0" ng-bind="ageingData.totalBalance | number:2"></b>
+                                        <b ng-if="!ageingData.totalBalance || ageingData.totalBalance<=0">-</b>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 220px;" class="text-center"><b>Total</b></td>
+                                    <td style="min-width: 120px;" class="text-right">
+                                        <b ng-bind="AgeingreportData.ageingList | sumByKey:'openingBalance'"></b>
+                                    </td>
+                                    <td class="text-right" style="min-width: 108px;" ng-repeat="ageheader in AgeingreportData.ageingheader">
+                                        <b ng-bind="AgeingreportData.ageingList | sumByKey:ageheader"></b>
+                                    </td>
+                                    <td class="text-right" style="min-width: 118px;">
+                                        <b ng-bind="AgeingreportData.ageingList | sumByKey:'totalBalance'"></b>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script class="ng-scope">
+    
+    var $table = $('table.mt_table'),
+            $bodyCells = $table.find('tbody tr:first').children(),
+            colWidth;
+    
+    function pendingpayreport() {
+        colWidth = $bodyCells.map(function () {
+            return $(this).width();
+        }).get();
+        $table.find('thead tr').children().each(function (i, v) {
+            $(v).width(colWidth[i]);
+        });
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1 - 55;
+        var r1 = $('.report_date_select').height() + 20;
+        var r2 = $('.reportheader').height() + 50;
+        var r3 = $('.reportsearch').height() + 25;
+        var r4 = $(".reporttablez .mt_table thead").height() + 45;
+        var totalr1 = r1 + r2 + r3 + r4;
+        $('.report_right_section .overflow_scroll').css('height', total_height_c1);
+        if (parseInt($(window).width()) <= 840) {
+            if (!$('.report_right_section').hasClass('full_width_acc')) {
+                totalr1 += 375;
+            }
+            $('.scollbody').css('height', total_height_c1 - totalr1);
+        } else {
+            $('.scollbody').css('height', total_height_c1 - totalr1);
+        }
+    }
+    
+    // Adjust the width of thead cells when window resizes
+    $(window).resize(function () {
+        pendingpayreport();
+        if($(window).width() <= 840){
+            reportsFullviewshow();
+        }
+    });
+    if($(window).width() <= 840){
+        reportsFullviewshow();
+    }
+    
+    // Trigger resize handler    
+    function full_screen_pendingpayment() {
+        $('.report_left_section').toggle();
+        $('.report_right_section').toggleClass('full_width_acc');
+        pendingpayreport();
+    }
+    
+    setTimeout(function () {
+        pendingpayreport();
+    }, 200);
+</script>

@@ -1,0 +1,71 @@
+<div class="store_view_content" id="store4">    
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 margin-bottom-10">
+                <div class="stores_titles">Available Stock</div>
+                <div class="stores_subtitle">Manage Division consumables stock items here.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loader_large" ng-show="divisionData.contentLoad"></div>
+    
+    <div class="container" ng-show="!divisionData.contentLoad || divisionData.process != 'ADD'">
+        <div class="row">
+            <div class="col-lg-12 margin-bottom-30">
+                <div class="consume_tree">
+                    <table class="table tree-grid">
+                        <thead>
+                            <tr class='tree_tr_title'></tr>
+                        <th><a class='tree_title'>Category</a></th>
+                        <th style="width: 15%"><a class='tree_title'>Item Name</a></th>
+                        <th class="text-center"><a class='tree_title'>Current stock</a></th>
+                        <th class="text-center"><a class='tree_title'>Status</a></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="con in stockData.stocklist">
+                                <td class="acc_td_left">
+                                    <span ng-bind="con.category_id.name"></span>
+                                </td>
+                                <td class="acc_td_left">
+                                    <span ng-bind="con.product_id.product_name"></span>
+                                </td>
+                                <td>
+                                    <input class='tree_input' type="text" ng-model="con.quantity" ng-blur="con.currentStockEdit = true;" style="width:190px;" valid-numeral>
+                                </td>
+                                <td style="padding-left:22px;">
+                                    <span class="indented_center tree-label">
+                                        <label class="switch">
+                                            <input type="checkbox" ng-model="con.is_active" ng-click="con.currentStockEdit = true;">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class='clearboth'></div>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                <button class="common_button" ng-click="updateopeningStock()" ng-show="!divisionData.eventLoad">Update Stock</button>
+                <div class="loader_small" ng-show="divisionData.eventLoad"></div>
+            </div>
+        </div>
+        <div class="clearboth"></div>
+    </div>
+
+    <div class="container" ng-show="!divisionData.contentLoad">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="stores_pre_nex"> ← <a class="blod_line" ng-click="changeChildPage('Accounts'); $event.stopPropagation();">Accounts</a> | <a class="blod_line" ng-click="changeChildPage('Users'); $event.stopPropagation();">  Staff  </a> → </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    setupScroll();
+    setupScroll_fixedmenu();
+</script>

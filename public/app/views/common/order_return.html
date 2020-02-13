@@ -1,0 +1,240 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<head>
+        <link rel="stylesheet" href="../../../css/font.css" />
+    <style type="text/css">
+        body {
+            -webkit-print-color-adjust:exact; margin:0px; font-family: 'Open Sans', sans-serif; letter-spacing: 0.2px;
+        }
+
+        /* fill half the height with each face */
+        .order_details {
+            width: 1100px;
+            height: 800px;
+            margin: 5mm;
+            page-break-after: always;
+        }
+        .width_100{
+            width: 100%;
+            padding: 0px 15px;
+            float: left;
+        }
+    </style>
+
+    <script type="text/javascript" src="../../../js/angular.min.js"></script>
+    <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+
+</head>
+<script>
+    var app = angular.module("OrderPrint", []);
+    app.controller("orderPrintCtrl", function ($scope, $rootScope, $timeout) {
+
+        $scope.returnForm = {};
+        if (window.opener && !window.opener.closed) {
+            $scope.returnForm = window.opener.retData;
+            $timeout(function () {
+                window.print();
+            }, 3000)
+        }
+    }).directive("combineAddress", ($compile) => {
+        return {
+            scope: true,
+            restrict: "A",
+            link(scope, elem, attrs) {
+                function checkIfExistingValue(obj, key) {
+                  return obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== "";
+                }
+
+                attrs.$observe("combineAddress", (newValue) => {
+                  let address = "";
+                  if (angular.isDefined(newValue) && newValue !== null && newValue !== "") {
+                    newValue = JSON.parse(newValue);
+
+                      const nameArray = ["billing_address_line", "billing_area", "billing_city", "billing_state", "billing_pincode","billing_gstin"];
+
+                      // loop through all possible names
+                      for (let i = 0; i < nameArray.length; i += 1) {
+                        if (checkIfExistingValue(newValue, nameArray[i]) && newValue[nameArray[i]] !== null && newValue[nameArray[i]] !== "") {
+                          if (nameArray[i] === "billing_gstin") {
+                            address = `${address}, <br>GSTIN : ${newValue.billing_gstin}`;
+                          } else if (address === "") {
+                            address = newValue[nameArray[i]];
+                          } else {
+                            if(nameArray[i] === "billing_pincode") {
+                                address = `${address} - ${newValue[nameArray[i]]}`;
+                            } else {
+                                address = `${address},<br> ${newValue[nameArray[i]]}`;
+                            }
+                          }
+                        }
+                      }
+                      address += ".";
+                  }
+
+                  elem.html(address);
+                });
+            },
+        };
+  }).directive("combineAddr", ($compile) => {
+        return {
+            scope: true,
+            restrict: "A",
+            link(scope, elem, attrs) {
+                function checkIfExistingValue(obj, key) {
+                  return obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== "";
+                }
+
+                attrs.$observe("combineAddress", (newValue) => {
+                  let address = "";
+                  if (angular.isDefined(newValue) && newValue !== null && newValue !== "") {
+                    newValue = JSON.parse(newValue);
+
+                      const nameArray = ["delivery_address_line", "delivery_city", "delivery_state", "delivery_pincode"];
+
+                      // loop through all possible names
+                      for (let i = 0; i < nameArray.length; i += 1) {
+                        if (checkIfExistingValue(newValue, nameArray[i]) && newValue[nameArray[i]] !== null && newValue[nameArray[i]] !== "") {
+                          if (nameArray[i] === "billing_gstin") {
+                            address = `${address}, <br>GSTIN : ${newValue.billing_gstin}`;
+                          } else if (address === "") {
+                            address = newValue[nameArray[i]];
+                          } else {
+                            if(nameArray[i] === "delivery_pincode") {
+                                address = `${address} - ${newValue[nameArray[i]]}`;
+                            } else {
+                                address = `${address},<br> ${newValue[nameArray[i]]}`;
+                            }
+                          }
+                        }
+                      }
+                      address += ".";
+                  }
+
+                  elem.html(address);
+                });
+            },
+        };
+  }).directive("combineProcess", function () {
+        return {
+            restrict: "A",
+            link: function (scope, elem, attrs) {
+
+                attrs.$observe("combineProcess", function (newValue) {
+                    var process = "";
+                    if (newValue !== "") {
+                        newValue = JSON.parse(newValue);
+                        if (angular.isDefined(newValue)) {
+
+                            //loop through all possible names
+                            for (var i = 0; i < newValue.length; i++) {
+                                if (newValue[i] && angular.isDefined(newValue[i].process_name) && newValue[i].process_name !== null && newValue[i].process_name !== "") {
+                                    if (process === "") {
+                                        process = newValue[i].process_name;
+                                    } else {
+                                        process = process + ", " + newValue[i].process_name;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    elem.html(process);
+                });
+            }
+        };
+    }).filter('sumOfValue', function () {
+        return function (data, key) {
+            if (angular.isUndefined(data) || angular.isUndefined(key))
+                return 0;
+            var sum = 0;
+
+            angular.forEach(data, function (v, k) {
+                sum = sum + parseInt(v[key]);
+            });
+            return sum;
+        };
+    });
+</script>
+<body ng-app="OrderPrint" ng-controller="orderPrintCtrl">
+    <div class="order_details" ng-if="returnForm._id">
+        <div class="width_100" style="margin-left:45px;">
+            <div style="width:100%;text-align:center;font-weight:bold;font-size:15px;">
+                RETURN NOTE
+            </div>
+            <div style="width:500px;margin-left: 10px;margin-top:10px;float:left;line-height:1.3;height:180px;font-size: 14px;">
+                <b><p ng-if="!returnForm.delivery_company_name" ng-bind="returnForm.customer_name"></p>
+                    <p ng-if="!returnForm.delivery_company_name" style="margin-bottom:0px;" combine-address="{{returnForm}}"></p>
+                    <p ng-if="returnForm.delivery_company_name && returnForm.delivery_company_name!=''" ng-bind="returnForm.delivery_company_name"></p>
+                    <p ng-if="returnForm.delivery_company_name && returnForm.delivery_company_name!=''" style="margin-bottom:0px;" combine-addr="{{returnForm}}"></p></b>
+                <p style="margin:0px;" 
+                   ng-if="returnForm.customerDetail && returnForm.customerDetail.gstin && returnForm.customerDetail.gstin != null && returnForm.customerDetail.gstin !==''">
+                    <span>GSTIN : </span> <span ng-bind="returnForm.customerDetail.gstin"></span> 
+                </p>
+                <p style="margin:0px;" 
+                   ng-if="!returnForm.customerDetail && returnForm.gstin && returnForm.gstin != null && returnForm.gstin !==''">
+                    <span>GSTIN : </span> <span ng-bind="returnForm.gstin"></span> 
+                </p>
+                <p style="margin:0px;" 
+                   ng-if="returnForm.customer_mobile_no && returnForm.customer_mobile_no != null && returnForm.customer_mobile_no !==''">
+                    <span>Contact No : </span> <span ng-bind="returnForm.customer_mobile_no"></span> 
+                </p>
+            </div>
+            <div style="width:394px;margin-top:20px;float:left;line-height:1.4;margin-left:1.1in;height:190px;font-size: 14px;">
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Delivery No</div>:<span style="margin-left: 10px;" ng-bind="returnForm.delivery_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Delivery Date</div>:<span style="margin-left: 10px;" ng-bind="returnForm.delivery_date | date:'dd-MM-yyyy h:mma'"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Vehicle</div>:<span style="margin-left: 10px;" ng-bind="returnForm.vehicle_no"></span>
+                </div>
+                <div style="width: 350px;">
+                    <div style="width: 90px;display: inline-block;float: left;">Dyeing Name</div>:<span style="margin-left: 10px;" ng-bind="returnForm.dyeing.dyeing_name"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Dyeing DcNO</div>:<span style="margin-left: 10px;" ng-bind="returnForm.dyeing_dc_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Job NO</div>:<span style="margin-left: 10px;" ng-bind="returnForm.order_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Cust Dc No</div>:<span style="margin-left: 10px;" ng-bind="returnForm.customer_dc_no"></span>
+                </div>
+            </div>
+        </div>
+        <div class="width_100">
+            <div style="width: 100%; margin-top:50px;float: left;height: 3.5in;">
+                <table style="table-layout: fixed;text-transform: uppercase;font-size: 13px;">
+                    <tbody>
+                        <tr ng-repeat="inwards in returnForm.outwardData" style="vertical-align: top !important;">
+                            <td class="table_print" align="center" width="45px">{{$index + 1}}</td>
+                            <td class="table_print" align="left" width="250px" ng-bind="inwards.fabric_type"></td>
+                            <td class="table_print" align="left" width="260px" ng-bind="inwards.fabric_color"></td>
+                            <td class="table_print" align="left" width="250px">
+                                <!--<span combine-process="{{inwards.process}}"></span>-->
+                            </td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.lot_no"></td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.dia"></td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.delivery_roll" totalroll></td>
+                            <td class="table_print" align="right" width="80px" ng-bind="inwards.delivery_weight | number:3"></td>
+                        </tr>
+                    </tbody> 
+                </table>
+            </div>
+
+            <div style="width: 100%; margin-top:10px;float: left;">
+                <table style="table-layout: fixed;text-transform: uppercase;font-size: 13px;">
+                    <tbody>
+                        <tr style="vertical-align: top !important;">
+                            <td class="table_print" width="895px"></td>
+                            <td class="table_print" align="right" width="60px"></td>
+                            <td class="table_print" align="center" width="60px">{{returnForm.outwardData| sumOfValue:'delivery_roll'}}</td>
+                            <td class="table_print" align="right" width="80px">{{returnForm.outwardData| sumOfValue:'delivery_weight' | number:3}}</td>
+                        </tr>
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+    </div>
+</body>

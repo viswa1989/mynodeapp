@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reset Password</title>
+</head>
+<style>
+body,html{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	margin:0px;
+	padding:0px;
+	color:rgb(83,83,83);
+	background:#EEE;
+}
+table,thead,tbody,tr, td{
+	border:0px;
+	padding:0px;
+	margin:0px;
+	outline:0px;
+}
+</style>
+
+<body>
+<table style="width:600px; margin:0 auto;">
+	<tr align="center" style="background:#EEE;">
+    	<td style="padding-bottom:10px;padding-top: 10px;font-size: 18px;font-weight: bold;">Lotus Knits</td>
+    </tr>
+    <tr>
+    	<td>
+            <table  style="width:100%;background:#fff;padding-left:70px; padding-right:70px;">
+                <tr align="center">
+                    <td style="color:rgb(70,70,70);font-size:18px;font-weight:bold;text-align:center;padding-top:40px; padding-bottom:35px;">Your password has been reset.</td>
+                </tr>
+                <tr align="center">
+                    <td style="color:rgb(84,84,84);text-align:center;padding-bottom:20px;">Hello <%= username %>,</td>
+                </tr>
+                <tr align="center">
+                    <td style="color:rgb(85,85,85);text-align:center;padding-bottom:60px;">Your Lotus Knits login password has been reset. Make a note of the new password and change it as soon as you login.</td>
+                </tr>
+                <tr align="center">
+                    <td style="color:rgb(85,85,85);text-align:center;padding-bottom:15px;">Your username is <%= username %>.</td>
+                </tr>
+                 <tr align="center">
+                    <td style="color:rgb(31,31,31);text-align:center;padding-bottom:60px; font-size:15px;">New Password: <b> <%= password %></b></td>
+                </tr>
+                <tr align="center">
+                    
+                    
+                    <td style="padding-bottom:40px;"><a href="<%= applink%>" style="cursor:pointer;color:rgb(255,255,255);text-decoration: none;text-align:center;padding:10px 10px; font-size:18px; font-weight:bold; width:310px; margin:0 auto; background:#7F7F7F;">Login to your dashboard</a></td>
+                    
+                </tr>
+                <tr align="center">
+                    <td style="color:rgba(0, 0, 0, 0.5);text-align:center;padding-bottom:80px; font-size:11px;">Powered by PROBESEVEN.</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>

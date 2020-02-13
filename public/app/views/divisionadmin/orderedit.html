@@ -1,0 +1,580 @@
+<style>
+    .customorderdate .datetimepicker.dropdown-menu{
+        left: 0px !important;
+        margin-top: -12px !important;
+    }
+    .new-job-card-tab .billappend{
+        width: 150px;
+        float: left;
+    }
+</style>
+<div class="container-fluid padding_zero" ng-controller="OrdereditController">
+    <div id="page_loader" ng-show="$root.orderpageLoader"></div>
+    <div class="jobcard_page dashboard_container left_panel_toggle">
+        <div id="wrapper" class="active">
+            <div id="wrapper_content">
+                <div>
+                    <div class="access_alert" ng-if="!$root.canaccess && !$root.orderpageLoader">
+                        <div class="col-xs-12 outer_div">
+                            <div class="inner_div">
+                                <div class="msg_content">Oops! You cannot access job card page right now :( </div>
+                                <p>Master setup details such as Process details / Fabric Type / Fabric Colour / Dyeing details / Measurement details not found. </p>
+                                <p>So please contact your administrator. </p>
+                            </div> 
+                        </div>
+                    </div>
+
+                    <!-- bill_container -->
+                    <div class="billshow_container">
+                        <div class="row" style="margin:0px">
+                            <div class="col-xs-12 job_card_left padding_zero">
+                                <div class="order_tabpane active">
+                                    <div class="bill_section_1 bill_auto_height col-xs-2 col1 customerview_tabpane" ng-if="orderData.jobstatus != 'COMPLETED'">
+                                        <div class="card_overlay"></div>
+
+                                        <div class="bill_sec_container margin-bottom-40">
+                                            <div class="bill_search orderinputs">
+                                                <input id="cussrch" placeholder="Enter Mobile no / Company name" numbersonly="10" type="text" ng-model="orderData.customer_mobile" ng-change="getcustomerDetails()" 
+                                                       tabindex="1" focus="orderData.focusinput">
+                                            </div>
+                                            <div class="bottom-jobcard customer_page col-lg-12 center-block margin-top-20">
+                                                <div ng-show="orderData.customerSearchloader" class="loader_altmedium"></div>
+
+                                                <div class="no_customer" ng-if="!orderData.customerSearchloader && orderData.customer_mobile.length > 4 && orderData.customers.length == 0">
+
+                                                    <!-- No customer -->
+                                                    <div class="col-xs-12 text-center margin-bottom-20 margin-top-20">
+                                                        <div class="margin-bottom-20">
+                                                            <b>No customers found.</b>
+                                                        </div>
+                                                        <div class="margin-bottom-05">
+                                                            <b>Add the new customer below.</b>
+                                                        </div>
+                                                    </div>
+                                                    <div class="no_cutomer_container">
+                                                        <form name="customerform" novalidate>
+                                                            <!-- No customer_container -->
+                                                            <div class="bill_search margin-top-10">
+                                                                <input type="text" id="cmpnyname" class="input_large margin-bottom-15" name="company_name" placeholder="Company Name" ng-model="customerForm.name"
+                                                                       ng-class="{'input_error_class':(!customerform.company_name.$valid && customerData.formsubmission)}" required>
+                                                                <div class="input-group s_input_style">
+                                                                    <span class="input-group-addon">+91</span> 
+                                                                    <input type="text" class="input_large" name="mobile_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" placeholder="Mobile No" ng-model="customerForm.mobile_no"
+                                                                           ng-class="{'input_error_class':(!customerform.mobile_no.$valid && customerData.formsubmission)}" required>
+                                                                </div>
+                                                                <input type="text" class="input_large margin-bottom-15" ng-model="customerForm.contact_person" name="contact_person" placeholder="Contact Person Name" 
+                                                                       ng-class="{'input_error_class':(!customerform.contact_person.$valid && customerData.formsubmission)}" required>
+                                                                <div class="input-group s_input_style">
+                                                                    <span class="input-group-addon">+91</span> 
+                                                                    <input type="text" class="input_large" name="contactperson_mobile_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                                                           placeholder="Contact Person Mobile No" ng-model="customerForm.contactperson_mobile_no" 
+                                                                           ng-class="{'input_error_class':(!customerform.contactperson_mobile_no.$valid && customerData.formsubmission)}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearboth"></div>
+                                                            <div class="col-xs-12 text-center margin-bottom-15 margin-top-15">
+                                                                <div class="margin-bottom-05">
+                                                                    <b>GST Treatment</b>
+                                                                </div>
+                                                                <div class="margin-bottom-05">Manage customer's GST information here.</div>
+                                                            </div>
+                                                            <div class="clearboth"></div>
+                                                            <div class="bill_search margin-top-10">
+                                                                <ui-select ng-model="customerForm.gstTreatmentcopy" class="customer_ui_select" theme="selectize" search-enabled='true'
+                                                                           on-select="assignCustomergsttreatment(customerForm)">
+                                                                    <ui-select-match placeholder="GST Treatement">{{$select.selected.name}}</ui-select-match>
+                                                                    <ui-select-choices repeat="gsttreat in customerData.Gsttreatmentdetails">
+                                                                        <span ng-bind-html="gsttreat.name"></span>
+                                                                    </ui-select-choices>
+                                                                </ui-select>
+                                                                <input type="text" class="input_large margin-bottom-15" name="gstin_number" placeholder="GSTIN" ng-model="customerForm.gstin" ng-pattern='/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/'
+                                                                       ng-class="{'input_error_class':(!customerform.gstin_number.$valid && customerData.formsubmission)}"
+                                                                       ng-if="customerForm.gstTreatmentcopy.name == 'Registered Business - Regular' || customerForm.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                                                                                       || customerForm.gstTreatmentcopy.name == 'Special Economic Zone'"/>
+
+                                                                <ui-select ng-model="customerForm.statecopy" class="customer_ui_select" theme="selectize" search-enabled='true' 
+                                                                           ng-if="customerForm.gstTreatmentcopy.name == 'Registered Business - Regular' || customerForm.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                                                                                           || customerForm.gstTreatmentcopy.name == 'Special Economic Zone' || customerForm.gstTreatmentcopy.name == 'Unregistered Business'
+                                                                                                           || customerForm.gstTreatmentcopy.name == 'Consumer'" on-select="assignCustomerplaceofsupply(customerForm)">
+                                                                    <ui-select-match placeholder="Place Of Supply">{{$select.selected.name}}</ui-select-match>
+                                                                    <ui-select-choices repeat="state in customerData.Statelistdetails | filter: $select.search">
+                                                                        <span ng-bind-html="state.name | highlight: $select.search"></span>
+                                                                    </ui-select-choices> 
+                                                                </ui-select>
+                                                            </div>
+
+                                                            <div class="col-xs-12 text-center margin-bottom-15 margin-top-20">
+                                                                <div class="margin-bottom-05">
+                                                                    <b>Delivery Addresses</b>
+                                                                </div>
+                                                                <div class="margin-bottom-05">Default delivery addresses.</div>
+                                                            </div>
+                                                            <div class="bill_search margin-top-10">
+                                                                <input type="text" class="input_large margin-bottom-15" name="companyname" placeholder="Company Name" ng-model="customerForm.address[0].company_name" 
+                                                                       ng-class="{'input_error_class':(!customerform.companyname.$valid && customerData.formsubmission)}" required/>
+                                                                
+                                                                <input type="text" class="input_large margin-bottom-15" name="address" placeholder="Address Line" ng-model="customerForm.address[0].address_line" 
+                                                                       ng-class="{'input_error_class':(!customerform.address.$valid && customerData.formsubmission)}" required/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="area" placeholder="Area" ng-model="customerForm.address[0].area" 
+                                                                       ng-class="{'input_error_class':(!customerform.area.$valid && customerData.formsubmission)}" required/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="city" placeholder="City" ng-model="customerForm.address[0].city" 
+                                                                       ng-class="{'input_error_class':(!customerform.city.$valid && customerData.formsubmission)}" required/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="pincode" placeholder="PIN Code" ng-model="customerForm.address[0].pincode" 
+                                                                       ng-class="{'input_error_class':(!customerform.pincode.$valid && customerData.formsubmission)}" required/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="state" placeholder="State" ng-model="customerForm.address[0].state" 
+                                                                       ng-class="{'input_error_class':(!customerform.state.$valid && customerData.formsubmission)}" required/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="landmark" placeholder="Landmark" ng-model="customerForm.address[0].landmark" 
+                                                                       ng-class="{'input_error_class':(!customerform.landmark.$valid && customerData.formsubmission)}"/>
+
+                                                                <input type="text" class="input_large margin-bottom-15" name="contact_no" placeholder="Contact No" ng-model="customerForm.address[0].contact_no" 
+                                                                       ng-class="{'input_error_class':(!customerform.contact_no.$valid && customerData.formsubmission)}"/>
+                                                            </div>
+                                                            <div class="add_card_container">
+                                                                <ul>
+                                                                    <li style="margin: 10px 0px 20px 68px">
+                                                                        <a class="common_button save_print_btn red_button text-center" 
+                                                                           ng-click="customerData.formsubmission = true;createCustomer(customerform.$valid)">Save Customer</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                <div ng-if="orderData.customerSearch && orderData.customers.length > 0">
+                                                    <div class="customer_btn" ng-click="selectCustomer(customer); $event.stopPropagation();" ng-repeat="customer in orderData.customers"
+                                                         ng-class="{'active':customer._id == orderForm.customer_id, 'disabled':customer.status_inward}" tabindex="2" ng-enter="selectCustomer(customer)">
+                                                        <div class="favorite" ng-class="{'active':customer.is_favourite}">F</div>
+                                                        <div class="profile_img"></div>
+                                                        <div class="customer_name" ng-bind="customer.name"></div>
+                                                        <div class="customer_phone" ng-bind="commonobjectService.getPhonenoprefix() + ' ' + customer.mobile_no"></div>
+                                                        <div class="customer_phone">
+                                                            <span ng-if="customer.alternate_no && customer.alternate_no != ''" ng-bind="customer.alternate_no"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 text-center margin-bottom-10 viewcustomer_placeholder_title" ng-if="!orderData.customerSearch && orderForm.customer_id && orderForm.customer_id != ''">
+                                                    <div class="viewcustomer_placeholder">
+                                                        <b ng-bind="orderForm.customer_name"></b>
+                                                    </div>
+                                                    <div class="col-xs-12 text-center contact_font_color" ng-show="orderData.morecustomerdetails">
+                                                        <div class="viewcustomer_placeholder">
+                                                            <b ng-bind="commonobjectService.getPhonenoprefix() + ' ' + orderForm.customer_mobile_no"></b>
+                                                        </div>
+                                                        <div class="margin-bottom-05" ng-if="orderForm.customer_alternate_no && orderForm.customer_alternate_no != ''">
+                                                            <b ng-bind="'Alt. Contact No.: '+orderForm.customer_alternate_no"></b>
+                                                        </div>
+                                                        <div class="margin-bottom-05">
+                                                            <b combine-Address="{{orderForm}}"></b>
+                                                        </div>
+                                                    </div>
+                                                    <div class="more_icon" ng-class="{'expand_detail_icon':!orderData.morecustomerdetails,'less_detail_icon':orderData.morecustomerdetails}" 
+                                                         ng-click="orderData.morecustomerdetails = !orderData.morecustomerdetails"></div>
+                                                </div>
+
+                                                <div class="col-xs-12 text-center margin-bottom-15 margin-top-15">
+                                                    <div class="margin-bottom-05">
+                                                        <b>Job card Details</b>
+                                                    </div>
+                                                    <div class="margin-bottom-05">Add and manage job card details here.</div>
+                                                </div>
+
+                                                <div class="col-xs-12 padding_zero margin-top-10">
+                                                    <div class="col-xs-12">
+                                                        <ui-select ng-model="orderForm.contactperson" id="contactperson" theme="selectize" search-enabled='true' ng-change="updateJobData()" tabindex="3">
+                                                            <ui-select-match placeholder="Contact Person">{{$select.selected.name}}</ui-select-match>
+                                                            <ui-select-choices repeat="contact as contact in orderForm.contactlist | filter: $select.search">
+                                                                <div ng-bind-html="contact.name | highlight: $select.search"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10 orderinputs">
+                                                        <input type="text" class="common_input" name="order_reference_no" placeholder="Order Ref No" ng-model="orderForm.order_reference_no" ng-blur="updateJobData()"
+                                                               ng-class="{'input_error_class':(!myorderdetailsForm.order_reference_no.$valid && myorderdetailsForm.order_reference_no.$touched) ||
+                                                                                           (!myorderdetailsForm.order_reference_no.$valid && inwardData.detailformSumission)}" ng-readonly="inwardData.showtext" tabindex="4" required>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10 orderinputs">
+                                                        <input type="text" class="common_input" name="customer_dc_no" placeholder="Customer DC No" ng-model="orderForm.customer_dc_no" ng-blur="updateJobData()"
+                                                               ng-readonly="inwardData.showtext" ng-class="{'input_error_class':(!myorderdetailsForm.customer_dc_no.$valid && myorderdetailsForm.customer_dc_no.$touched) ||
+                                                                                           (!myorderdetailsForm.customer_dc_no.$valid && inwardData.detailformSumission)}" tabindex="5" required>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10">
+                                                        <div class="datepicker_custom_style pickerstyle1 common_input customorderdate" ng-if="!inwardData.showtext">
+                                                            <div class="input-group date common_input_date">
+                                                                <manualdate-time-picker ng-model="orderForm.customer_dc_date" placeholder="Date" start-view='2' 
+                                                                                        min-view='2' max-view='4' today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".pickerstyle1" 
+                                                                                        picker-position="top-left" ng-blur="updateJobData()" tabattr="6" update-scope="updateJobData()">
+                                                                </manualdate-time-picker>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10">
+                                                        <ui-select ng-model="orderForm.dyeing" theme="selectize" search-enabled='true' name="dyeing_name" ng-change="updateJobData()" tabindex="7" required>
+                                                            <ui-select-match placeholder="Dyeing Name">{{$select.selected.dyeing_name}}</ui-select-match>
+                                                            <ui-select-choices repeat="order in orderData.dyeing | filter: $select.search">
+                                                                <div ng-bind-html="order.dyeing_name | highlight: $select.search"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10 orderinputs">
+                                                        <input type="text" class="common_input" name="dyeing_dc_no" placeholder="Dyeing DC No" ng-model="orderForm.dyeing_dc_no" ng-blur="updateJobData()"
+                                                               ng-class="{'input_error_class':(!myorderdetailsForm.dyeing_dc_no.$valid && myorderdetailsForm.dyeing_dc_no.$touched) ||
+                                                                                           (!myorderdetailsForm.dyeing_dc_no.$valid && inwardData.detailformSumission)}" tabindex="8" required>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10">
+                                                        <div class="datepicker_custom_style pickerstyle2 common_input customorderdate">
+                                                            <div class="input-group date common_input_date">
+                                                                <manualdate-time-picker ng-model="orderForm.dyeing_dc_date" placeholder="Date" start-view='2' 
+                                                                                        min-view='2' max-view='4' today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".pickerstyle2" 
+                                                                                        picker-position="top-left" ng-blur="updateJobData()" tabattr="9" update-scope="updateJobData()">
+                                                                </manualdate-time-picker>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 margin-top-10">
+                                                        <div class="bil_check_cnt pull-left orderinputs margin-left-30">
+                                                            <input type="checkbox" ng-model="orderForm.order_type" ng-hide="true">
+                                                            <div class="class_checkbox pull-left margin-left-30" ng-class="{'checked':orderForm.immediate_job == true}" ng-click="toggleimmediatejob(orderForm.immediate_job);" 
+                                                                 style="width: 40px;" ng-enter="toggleimmediatejob(orderForm.immediate_job)"tabindex="10"></div>
+                                                            <span class="bill_check_span">Immediate</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bill_section_1 bill_auto_height col-xs-2 col2" ng-if="orderData.jobstatus != 'COMPLETED'" ng-click="selectedCard('FABRIC');">
+                                        <div class="card_overlay"></div>
+                                        <div class="bill_title">
+                                            <div class="margin-bottom-15">2. Choose Fabric Type and Colour</div>
+
+                                            <div class="bill_search orderinputs" ng-if="orderForm.order_type == 'Normal'">
+                                                <input type="text" id="fabsrch" placeholder="Search Fabric Type" ng-model="orderData.fabric" tabindex="13" 
+                                                       ng-focus="selectedCard('FABRIC');" ng-change="getfabricDetails()">
+                                            </div>
+                                        </div>
+
+                                        <div class="bill_store_container" >
+                                            <div class="sales_bill_brand_list margin-bottom-30" ng-if="orderForm.order_type == 'Normal'">
+                                                <div ng-show="orderData.fabricSearchloader" class="loader_altmedium"></div>
+
+                                                <div class="fabriclisting" ng-repeat="fab in orderData.fabrics" tabindex="14" ng-enter="selectFabrics(fab)">
+                                                    <div class="bill_brands bill_fab" ng-click="selectFabrics(fab); $event.stopPropagation();" ng-if="fab._id != orderData.formData.fabric_id">
+                                                        <div class="item_name item_name_hover">
+                                                            <div class="card_name" ng-bind="fab.fabric_type"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bill_brands_expand" ng-if="fab._id == orderData.formData.fabric_id">
+                                                        <div class="item_name margin-top-20 margin-bottom-10">
+                                                            <div class="card_name" ng-bind="orderData.formData.fabric_type"></div>
+                                                            <input id="fabcolor" class="search_input" placeholder="Search Colour" type="search" ng-model="orderData.colourname" ng-if="fab._id == orderData.formData.fabric_id" tabindex="15">
+                                                        </div>
+                                                        <div class="item-add" ng-if="fab._id == orderData.formData.fabric_id && (orderData.colourname != '' || orderData.selectedIndex>=0)">
+                                                            <div class="item_add_btn " ng-repeat="color in orderData.colors| filter:orderData.colourname" 
+                                                                 ng-click="selectColor(color, fab); $event.stopPropagation();" ng-class="{'active':color._id == orderData.formData.fabric_color_id}" tabindex="16" ng-enter="selectColor(color, fab)">
+                                                                <div class="card_name" ng-bind="color.fabric_color"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bill_section_1 bill_auto_height col-xs-2 col3" ng-if="orderData.jobstatus != 'COMPLETED'" ng-click="selectedCard('PROCESS');">
+                                        <div class="card_overlay"></div>
+                                        <div class="row margin-0 orderdetailPanel">
+                                            <div class="bill_title">3. Enter Job Details</div>
+
+                                            <div class="col-lg-12 margin-top-10">
+                                                <div class="col-xs-12 margin-top-10 orderinputs">
+                                                    <input type="text" id="fablotno" class="common_input" name="lot_no" placeholder="Lot No" ng-model="orderData.formData.lot_no" 
+                                                           ng-class="{'input_error_class':(!myorderdetailsForm.lot_no.$valid && myorderdetailsForm.lot_no.$touched) ||
+                                                                                       (!myorderdetailsForm.lot_no.$valid && inwardData.detailformSumission)}" ng-focus="selectedCard('PROCESS');" tabindex="17">
+                                                </div>
+                                                <div class="col-xs-6 margin-top-10 orderinputs">
+                                                    <input type="text" valid-onlynumber class="common_input" name="dia" placeholder="Enter Dia" ng-model="orderData.formData.dia" 
+                                                           ng-class="{'input_error_class':(!myorderdetailsForm.dia.$valid && myorderdetailsForm.dia.$touched) ||
+                                                                                       (!myorderdetailsForm.dia.$valid && inwardData.detailformSumission)}" tabindex="18" required>
+                                                </div>
+                                                <div class="col-xs-6 margin-top-10 orderinputs">
+                                                    <input type="text" valid-onlynumber class="common_input" name="rolls" placeholder="Enter No of Rolls" ng-model="orderData.formData.rolls" 
+                                                           ng-class="{'input_error_class':(!myorderdetailsForm.rolls.$valid && myorderdetailsForm.rolls.$touched) || 
+                                                            (!myorderdetailsForm.rolls.$valid && inwardData.detailformSumission)}" tabindex="19" required>
+                                                </div>
+                                                <div class="col-xs-6 margin-top-10">
+                                                    <ui-select ng-model="orderData.formData.measurement" theme="selectize" search-enabled='true' name="units" required tabindex="20">
+                                                        <ui-select-match placeholder="Units">{{$select.selected.fabric_measure}}</ui-select-match>
+                                                        <ui-select-choices repeat="measurement in orderData.measurement | filter: $select.search">
+                                                            <div ng-bind-html="measurement.fabric_measure | highlight: $select.search"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="col-xs-6 margin-top-10 orderinputs">
+                                                    <input type="text" valid-number3 class="common_input" name="weight" placeholder="Enter Weight" ng-model="orderData.formData.weight" 
+                                                           ng-class="{'input_error_class':(!myorderdetailsForm.weight.$valid && myorderdetailsForm.weight.$touched) || 
+                                                            (!myorderdetailsForm.weight.$valid && inwardData.detailformSumission)}" tabindex="21" required>
+                                                </div>
+                                                <div class="col-xs-12 margin-top-20">
+                                                    <div class="bill_title">Choose Fabric type</div>
+                                                </div>
+                                                <div class="col-xs-12 margin-top-10 margin-bottom-20" style="padding: 0px 50px;">
+                                                    <div class="col-lg-6">
+                                                        <input ng-model="orderData.formData.fabric_condition" ng-hide="true" type="checkbox">
+                                                        <div class="class_checkbox pull-left" ng-class="{'checked':orderData.formData.fabric_condition == 'Dry'}"
+                                                             ng-click="selectfabricCondition('Dry');" tabindex="22" ng-enter="selectfabricCondition('Dry')">
+                                                        </div>
+                                                        <span class="bill_check_span" style="vertical-align: sub;">Dry</span>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="class_checkbox pull-left" ng-class="{'checked':orderData.formData.fabric_condition == 'Wet'}" 
+                                                             ng-click="selectfabricCondition('Wet');" tabindex="23" ng-enter="selectfabricCondition('Wet')">
+                                                        </div>
+                                                        <span class="bill_check_span" style="vertical-align: sub;">Wet</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearboth"></div>
+                                        <div class="row margin-0 processPanel">
+                                            <div class="bill_title">4. Choose Process
+                                                <div class="bill_search orderinputs">
+                                                    <input type="text" placeholder="Search Process" ng-model="orderData.process_type" class="margin-top-15" tabindex="24">
+                                                </div>
+                                            </div>
+                                            <div class="bill_store_container">
+                                                <div class="sales_bill_brand_list margin-bottom-30">
+                                                    <div class="bill_brands bill_process" ng-repeat="process in orderData.process| filter:{process_name:orderData.process_type} | processselectioneditFilter:orderData.formData" 
+                                                         ng-class="{'active':process.checked}" ng-sel="selectProcess(process)">
+                                                        <div class="item_name item_name_hover" ng-click="selectProcess(process); $event.stopPropagation();" 
+                                                             ng-class="{'white_bg':process._id == orderForm.process_id}" tabindex="25">
+                                                            <div class="selectedproces margin-right-10 pull-left"></div>
+                                                            <div class="card_name" ng-bind="process.process_name"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bill-view-section" ng-class="{'job_completed':orderData.jobstatus == 'COMPLETED'}">
+                                        <div class="orders_page margin-bottom-30">
+                                            <div class="order_header">
+                                                <div class="col-xs-12 padding_zero order_page_container margin-top-20 margin-bottom-20">
+                                                    <div class="col-xs-6">
+                                                        <div class="order_no heading_4 title_content">
+                                                            <span class="label_title">Job No: </span>
+                                                            <span class="heading_4 title_content" ng-if="orderForm.order_no && orderForm.order_no != null && orderForm.order_no != ''" 
+                                                                  ng-bind="orderForm.order_no"></span>
+                                                            <span class="heading_4 title_content" ng-if="!orderForm.order_no || orderForm.order_no == null || orderForm.order_no == ''"><b>---</b></span>
+                                                        </div>
+                                                        <div class="order_cus_name heading_4 title_content"><b ng-bind="orderForm.customer_name"></b></div>
+                                                        <!-- <div class="col-xs-12 margin-top-10 padding_zero billing_address_title label_title">Billing Address</div> -->
+                                                        <div class="col-xs-7 margin-top-05 padding_zero billing_address title_content" combine-Address="{{orderForm}}" style="white-space: normal;"></div>
+                                                        <div class="col-xs-12 margin-top-10 padding_zero">
+                                                            <span class="label_title">Followup Person: </span>
+                                                            <span class="title_content" ng-if="orderForm.contactperson && orderForm.contactperson != null && orderForm.contactperson != '' &&
+                                                                                            orderForm.contactperson.name && orderForm.contactperson.name != null && orderForm.contactperson.nam != ''" ng-bind="orderForm.contactperson.name"></span>
+                                                            <span class="title_content" ng-if="!orderForm.contactperson || orderForm.contactperson == null || orderForm.contactperson == '' ||
+                                                                                            !orderForm.contactperson.name || orderForm.contactperson.name == null || orderForm.contactperson.name == ''"><b>---</b></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Order Ref No:</span>
+                                                            <span class="title_content" ng-if="orderForm.order_reference_no && orderForm.order_reference_no != null && orderForm.order_reference_no != ''" 
+                                                                  ng-bind="orderForm.order_reference_no"></span>
+                                                            <span class="title_content" ng-if="!orderForm.order_reference_no || orderForm.order_reference_no == null || orderForm.order_reference_no == ''"><b>---</b></span>
+                                                        </div>
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Customer DC No:</span>
+                                                            <span class="title_content" ng-if="orderForm.customer_dc_no && orderForm.customer_dc_no != null && orderForm.customer_dc_no != ''" 
+                                                                  ng-bind="orderForm.customer_dc_no"></span>
+                                                            <span class="title_content" ng-if="!orderForm.customer_dc_no || orderForm.customer_dc_no == null || orderForm.customer_dc_no == ''" ><b>---</b></span>
+                                                        </div>
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Customer DC Date:</span>
+                                                            <span class="title_content" ng-if="orderForm.customer_dc_date && orderForm.customer_dc_date != null && orderForm.customer_dc_date != ''" 
+                                                                  ng-bind="orderForm.customer_dc_date | date:'dd - MM - yyyy'"></span>
+                                                            <span class="title_content" ng-if="!orderForm.customer_dc_date || orderForm.customer_dc_date == null || orderForm.customer_dc_date == ''" ><b>---</b></span>
+                                                        </div>
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Dyeing Name:</span>
+                                                            <span class="title_content" ng-if="orderForm.dyeing && orderForm.dyeing != null && orderForm.dyeing != '' && orderForm.dyeing.dyeing_name &&
+                                                                                            orderForm.dyeing.dyeing_name != null && orderForm.dyeing.dyeing_name != ''" ng-bind="orderForm.dyeing.dyeing_name"></span>
+                                                            <span class="title_content" ng-if="!orderForm.dyeing || orderForm.dyeing == null || orderForm.dyeing == '' || !orderForm.dyeing.dyeing_name ||
+                                                                                            orderForm.dyeing.dyeing_name == null || orderForm.dyeing.dyeing_name == ''" ><b>---</b></span>
+                                                        </div>
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Dyeing DC No: </span>
+                                                            <span class="title_content" ng-if="orderForm.dyeing_dc_no && orderForm.dyeing_dc_no != null && orderForm.dyeing_dc_no != ''" 
+                                                                  ng-bind="orderForm.dyeing_dc_no"></span>
+                                                            <span class="title_content" ng-if="!orderForm.dyeing_dc_no || orderForm.dyeing_dc_no == null || orderForm.dyeing_dc_no == ''" ><b>---</b></span>
+                                                        </div>
+                                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                            <span class="label_title order_label">Dyeing DC Date: </span>
+                                                            <span class="title_content" ng-if="orderForm.dyeing_dc_date && orderForm.dyeing_dc_date != null && orderForm.dyeing_dc_date != ''" 
+                                                                  ng-bind="orderForm.dyeing_dc_date | date:'dd - MM - yyyy'"></span>
+                                                            <span class="title_content" ng-if="!orderForm.dyeing_dc_date || orderForm.dyeing_dc_date == null || orderForm.dyeing_dc_date == ''" ><b>---</b></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearboth"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="clearboth"></div>
+                                            <div class="bill_view_order">
+                                                <div class="col-xs-12 padding_zero">
+                                                    <div class="col-xs-12 margin-top-10 heading_5">
+                                                        <b>Job Details</b>
+                                                    </div>
+
+                                                    <div class="col-xs-12 order_detail_content margin-top-20">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-left">Fabric Type</th>
+                                                                    <th class="text-left">Colour</th>
+                                                                    <th class="text-left">Process</th>
+                                                                    <th class="text-left">Lot No</th>
+                                                                    <th class="text-center">Dia</th>
+                                                                    <th class="text-center">No of Rolls</th>
+                                                                    <th class="text-right">Weight</th>
+                                                                    <th class="text-center" ng-if="orderData.jobstatus != 'COMPLETED'"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="inwards in orderForm.inwards[0].inward_data" ng-dblclick="currentInward(inwards)" 
+                                                                    ng-class="{'current_active_row':orderData.selectedIndex==$index}">
+                                                                    <td class="fabric_types" ng-bind="inwards.fabric_type"></td>
+                                                                    <td class="fabric_color" ng-bind="inwards.fabric_color"></td>
+                                                                    <td class="fabric_process" combine-process="{{inwards.process}}"></td>
+                                                                    <td ng-bind="inwards.lot_no"></td>
+                                                                    <td class="text-center" ng-bind="inwards.dia"></td>
+                                                                    <td class="text-center" ng-bind="inwards.rolls"></td>
+                                                                    <td class="fabric_weight text-right" ng-bind="inwards.weight"></td>
+                                                                    <td ng-if="orderData.jobstatus != 'COMPLETED'">
+                                                                        <span class="delete_small" noty-remove="" noty-update="removeInward(inwards)" noty-style="3" 
+                                                                              noty-content="Are you sure,You want to remove this fabric from job card?"></span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="col-xs-12 text-left margin-top-10" ng-if="orderData.jobstatus == 'PENDING'"></div>
+
+                                                    <div class="col-xs-12 margin-top-20" ng-if="orderData.jobstatus == 'COMPLETED'">
+                                                        <button class="common_button red_button pull-right" ng-click="closeThisJob();$event.stopPropagation();" 
+                                                                tabindex="30">Close</button>
+                                                        <a class="print_bill" ng-click="printThisbill(); $event.stopPropagation();" style="vertical-align: sub;" 
+                                                           tabindex="29" ng-enter="printThisbill();">Print this job card</a>
+                                                    </div>
+
+                                                    <div class="col-xs-12 margin-top-20" ng-if="orderData.jobstatus == 'PENDING'">
+                                                        <a class="add_customer" ng-if="orderData.selectedIndex<0" ng-click="addInward();$event.stopPropagation();" style="padding: 7px 15px;" 
+                                                           tabindex="26" ng-enter="addInward();">
+                                                            <span class="add_icon_smalls" style="vertical-align: middle;"></span>
+                                                            <span class="add_customer_text" style="vertical-align: middle;">Add New</span>
+                                                        </a>
+                                                        <a class="add_customer" ng-if="orderData.selectedIndex>=0 && orderForm.inwards[0] && 
+                                                        orderForm.inwards[0].inward_data && orderForm.inwards[0].inward_data.length > 0" ng-click="updateInward();$event.stopPropagation();" style="padding: 7px 15px;" 
+                                                           tabindex="26" ng-enter="updateInward();">
+                                                            <span class="add_customer_text" style="vertical-align: middle;">Update</span>
+                                                        </a>
+                                                        <button class="common_button pull-right" ng-if="orderForm.inwards[0] && 
+                                                        orderForm.inwards[0].inward_data && orderForm.inwards[0].inward_data.length > 0" ng-click="saveInward('save');$event.stopPropagation();" 
+                                                                tabindex="28">Save</button>
+                                                        <button class="common_button margin-right-20 pull-right red_button" ng-if="orderForm.inwards[0] && 
+                                                        orderForm.inwards[0].inward_data && orderForm.inwards[0].inward_data.length > 0"ng-click="saveInward('print');$event.stopPropagation();" 
+                                                                tabindex="27">Save &amp; Print</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.toggle-card-size').click(function () {
+            $(this).toggleClass('active');
+            if ($(this).hasClass('active') == true) {
+                $('.dash_body').show();
+                $('.dash_tab-section').show();
+                $(".dashboard_card").removeClass("Minmizelist");
+                $(this).text('Minmize List');
+            } else {
+                $('.dash_body').slideUp("scale");
+                $('.dash_tab-section').slideUp("scale");
+                $(".dashboard_card").addClass("Minmizelist");
+                $(this).text('Maxmize List');
+            }
+        });
+    });
+    function button_toggle_closeslide() { //Left Section show
+        $('.jobcard_page').addClass('left_panel_toggle');
+    }
+    function button_toggle_openslide() { //Left Section show
+        $('.jobcard_page').removeClass('left_panel_toggle');
+    }
+    function openEnterdetails() {
+        $("#myModal").modal();
+    }
+    function openCustomerdetails() {
+        $("#customerdetail").modal();
+    }
+
+    //Card Height Set
+    function cardHeight() {
+        var headerHeight = $('.header').height();
+        var left_panel_height = $(window).height() - headerHeight;
+        var windowHeight = $(window).height();
+        var WinHeight = windowHeight - headerHeight;
+        var windowWidth = $(window).width();
+        var totalHeight = windowHeight - (headerHeight + 5);
+        $('.billshow_container').css('height', WinHeight); //Total common div Height'
+        $('#wrapper_left').css('height', left_panel_height);
+        $('.s_card_height').css('height', left_panel_height);
+        $('.s-dashboard-container-width').css('width', windowWidth - 50);
+    }
+
+    cardHeight();
+    splite_screen();
+
+    //Card Height Set
+    function ordcardHeight() {
+        var headerHeight = $('.header').height();
+        var windowHeight = $(window).height();
+        var totalHeight = windowHeight - headerHeight;
+        $('.order_tabpane').css('height', totalHeight);
+        $('.bill_auto_height').css('height', totalHeight);
+        var orderdetailPanelHeight = $('.orderdetailPanel').height();
+        var processPanelHeight = totalHeight - orderdetailPanelHeight;
+        $('.processPanel').css('height', processPanelHeight);
+        $('.bill-view-section').css('height', totalHeight);
+    }
+    setTimeout(function () {
+        ordcardHeight();
+    }, 300);
+
+    $(window).resize(function () {
+        cardHeight();
+        ordcardHeight();
+    });
+</script>

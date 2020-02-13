@@ -1,0 +1,38 @@
+<style>
+    body{
+        overflow: hidden;
+    }
+</style>
+<div class="login_background customeruser" ng-controller="LoginController" ng-show="!$root.layout.loading">
+    <div class="login_tiles"></div>
+    <div class="wrapper_signin_s" id="wrapper_signin">
+        <div class="login-content" ng-if="profileData.loginsection">
+            <div class="col-xs-12">
+                <form class="sign_in form-signin" method="post" novalidate name="login" ng-submit="oncustomerLogin()">
+                    <div class="logo"><a href="javascript:void(0);"><img src="images/logo_big.png" alt="logo"></a></div>
+                    <div class="text-center heading_1 margin-bottom-20 hide">Login</div>
+                    <div class="text-center heading_4 email-type" ng-bind="'Hello ' + loginForm.username + ','"></div>
+
+                    <div class="form-group">																														 
+                        <div class="heading_6">Email ID or Mobile Number</div>
+                        <input type="text" name="username" ng-model="loginForm.username" placeholder="Username" ng-required="required" autofocus/>
+                    </div>
+                    <div class="form-group">																														 										   
+                        <div class="heading_6">Password</div>
+                        <input type="password" name="password" ng-model='loginForm.password' placeholder="Password" ng-required="required"/>
+                    </div>							  
+                    <button class="sign-in-btn heading_4" ng-disabled="login.$invalid" type="submit" ng-show="!profileData.eventLoad">Sign In</button>
+
+                    <div class="alert alert-danger margin-top-30" ng-if="profileData.loginerror">
+                        <span ng-bind="errormsg"></span>
+                    </div>
+                    <div class="alert alert-danger margin-top-30" ng-if="profileData.emptyfield">
+                        <span ng-bind="errormsg"></span>
+                    </div>
+                    <div class="loader_small" ng-show="profileData.eventLoad"></div>
+                    <div class="copy-rights">&copy; 2018 BETTER LIVES.</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

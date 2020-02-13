@@ -1,0 +1,452 @@
+<!doctype html>
+<html ng-app='ramnathApp'>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/divisionadmin.css" /> <!-- Branch Admin, all Class Prefixes set for eg. ba_classname -->
+        <link rel="stylesheet" href="css/responsive-style.css" />
+
+        <link rel="stylesheet" href="css/plugins/split-pane.css" />
+        <link rel="stylesheet" href="css/angular-ui-notification.css" />
+        <link rel="stylesheet" href="css/plugins/bootstrap-datetimepicker.css" />
+        <link rel="stylesheet" href="js/plugins/dropdown/select.css"/>
+        <link rel="stylesheet" href="js/plugins/dropdown/selectize.bootstrap3.css"/>
+        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+        <!-- <link rel="stylesheet" href="js/plugins/sortable/ng-sortable.min.css"> -->
+        <!-- <link rel="stylesheet" href="js/plugins/sortable/ng-sortable.style.min.css"> -->
+        <link rel="stylesheet" href="css/plugins/angularjs-color-picker.min.css" />
+
+        <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script src='http://maps.googleapis.com/maps/api/js?sensor=false'></script>
+
+        <script type="text/javascript" src="js/socket.io-1.7.0.js"></script>
+
+        <script type="text/javascript" src="js/plugins/masonry/masonry.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/plugins/masonry/imagesloaded.pkgd.min.js"></script>
+
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/angular-route.js"></script>
+        <script type="text/javascript" src="js/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="js/angular-ui-notification.js"></script>
+        <script type="text/javascript" src="js/angular-filter.js"></script>
+
+        <!-- Allows $event object and $params object to be passed -->
+        <script type="text/javascript" src="js/event.js"></script>
+
+        <script type="text/javascript" src="js/plugins/tinycolor.min.js"></script>
+        <script type="text/javascript" src="js/plugins/angularjs-color-picker.js"></script>
+        <script type="text/javascript" src="js/plugins/masonry/angular-masonry.js"></script>
+        <script type="text/javascript" src="js/plugins/masonry/script.js"></script>
+        <script type="text/javascript" src="js/plugins/masonry/ng-infinite-scroll.js"></script>
+
+        <script type="text/javascript" src="js/underscore.js"></script>
+        <script type="text/javascript" src="js/plugins/geomaplocation.js"></script>
+        <script type="text/javascript" src="js/moment.js"></script>
+        <script type="text/javascript" src="js/plugins/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript" src="js/ui-bootstrap.js"></script>
+        <script type="text/javascript" src="js/plugins/tree-grid-directive.js"></script>
+        <script type="text/javascript" src="js/plugins/dialogs.js"></script>
+
+        <script type="text/javascript" src="js/angular-file-upload.min.js"></script>
+        <script type="text/javascript" src="js/ng-file-upload-shim.js"></script>
+        <script type="text/javascript" src="js/ng-file-upload.min.js"></script>
+        <script type="text/javascript" src="js/plugins/dropdown/select.js"></script>
+        <script type="text/javascript" src="js/autocomplete.js"></script>
+        <script type="text/javascript" src="js/plugins/multiselect/multiselect.js"></script>
+        <!-- <script type="text/javascript" src="js/plugins/sortable/ng-sortable.js"></script> -->
+
+        <!-- services -->
+        <script type="text/javascript" src="app/services/userService.js"></script>
+        <script type="text/javascript" src="app/services/authService.js"></script>
+        <script type="text/javascript" src="app/services/commonService.js"></script>
+
+        <!-- controllers -->
+        <script type="text/javascript" src="app/controllers/navigationCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/mainCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/notificationCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/userCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/loginCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/dashboardCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/jobviewCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/profileCtrl.js"></script>             
+        <script type="text/javascript" src="app/controllers/branchesCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/vendorCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/categoryCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/brandsCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/itemsCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/codesCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/accountmasterCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/smsCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/preferenesCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/customer_groupCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/adminuserCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/customerCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/accountCtrl.js"></script>
+
+
+        <!-- Branch Admin Controller -->
+        <script type="text/javascript" src="app/controllers/jobcardCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/divisionadmin/scrap_stockCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/divisionadmin/item_stockCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/divisionadmin/branchsetupCtrl.js"></script>
+        <script type="text/javascript" src="app/controllers/divisionadmin/purchaseCtrl.js"></script>
+         <!-- End Branch Admin Controller -->
+
+
+        <script type="text/javascript" src="app/directives/directive.js"></script>
+        <script type="text/javascript" src="app/directives/commonFilter.js"></script>
+        <script type="text/javascript" src="app/routes.js"></script>
+        <script type="text/javascript" src="app/core.js"></script>
+
+
+        <script type="text/javascript" src="js/plugins/split-pane.js"></script>
+        <script type="text/javascript" src="js/main_script.js"></script>
+        <script src="js/setupFunction.js" type="text/javascript"></script>
+        <script src="js/dashboardFunction.js" type="text/javascript"></script>
+
+    </head>
+
+    <body ng-controller="mainController">
+
+        <div class="overlayoutmenu"  onClick="respon_menu_hide();" ng-if="loginStatus"></div>
+
+        <div class="notification" ng-if="loginStatus && clientData.showNotification" ng-include="clientData.notifyPage" ng-controller="NotificationController"></div>
+        <div class="overlayout" ng-if="loginStatus"></div>
+
+        <div class="header header_set_height" ng-controller="NavigationController" ng-if="loginStatus" ng-class="$root.currentapp">
+            <nav class="navbar navbar-inverse" role="navigation">
+                
+                <div class="navbar-header nav margin-top-05">
+                    <a class="navbar-brand logo_header" href="#" >
+                        <img src="images/logo.png" style="width:100%;">
+                    </a>
+                </div>
+                
+                <div class="navbar-header-container menu-hide-desktop">
+                    <div class="navbar-header nav heading_6 ">
+                        <ul class="nav navbar-right  top-nav">
+                            <li ng-repeat="menus in items.mainMenu" ng-if="UserPrivilege.canAccess(menus.title,'View')">
+                                <a href="#/{{menus.url}}" ng-if="menus.title != 'Setup'">{{menus.title}}</a>
+                                <a ng-click="iframeLoadPage()" ng-if="menus.title == 'Setup'">{{menus.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ul class="nav navbar-right top-nav right_menu_list  margin-right-05">
+                    <li class="desktopmenu">
+                        <form class="ng-pristine ng-valid" role="search" name="conversion">
+                            <div>
+                                <input type="text"  class="form-control search_header_box" placeholder="Search for Job Nos or Customers.." 
+                                    style="width: 290px;">
+                            </div>
+                            <button type="submit" class="btn btn-default" style="display: none;">Submit</button>
+                        </form>
+                    </li>
+                    <li class="btn-top-split">
+                        <div class="splite_icon" id="split-toggle" status="true" onClick="return splitToggleIcon(event, $(this));"></div>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle admin_user_name white_color" data-toggle="dropdown">
+                            <img src="images/icon/admin_img.png">&nbsp;SuperAdmin&nbsp;
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu header_logout">
+                            <li class="text-center list_store_title">SuperAdmin<span class=" close  trans_close">
+                                    <span class="close_icon_small_dropdown"></span></span>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="li_day_close"><a href="#/{{items.logoutmenu}}">Profile</a></li>
+                            <li><a href="#" ng-click="logout();">Log Out</a></li>
+							<!-- <li><a href="#" ng-click="logout();" onClick="return factorylogout();">Log Out</a></li> -->
+                        </ul>
+                    </li>
+                    <li id="notify_click">
+                        <a class="dropdown-toggle white_color" data-toggle="dropdown" ng-click="togglenotificationPanel()">
+                            <img src="images/svg_images/notify_alert_view.svg">
+                        </a>
+                    </li>
+
+                    <li class="menu-hide">
+                        <a class="right_toggle desktop_menu_toggle" onClick="resp_menu();"> <img src="images/svg_images/toggle_btn.svg"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="navbar-header-container list_menu" ng-controller="NavigationController" id="desktop-menu" ng-if="loginStatus" ng-class="$root.currentapp">
+            <div class="navbar-header nav heading_6">
+                <div class="responsive_menu_logo">
+                    <img src="images/logo.png" style="width:100%;"><!-- Logo -->
+                </div>
+                <ul class="nav navbar-right  top-nav">
+                    <li ng-repeat="menus in items.mainMenu" ng-if="UserPrivilege.canAccess(menus.title,'View')">
+                        <a href="#/{{menus.url}}" class="dropdown-toggle s_menu_click menu_link_responsive white_color" onClick="respon_menu_hide();" ng-if="menus.title != 'Setup'">{{menus.title}}</a>
+                        <a class="dropdown-toggle white_color menu_link_responsive setuplinkhref s_setup_link" onClick="s_setup_link();" ng-click="iframeLoadPage()" ng-if="menus.title == 'Setup'" id="setup_link">{{menus.title}}</a>
+                    </li>
+                  
+                    <li>
+                        <form class="navbar-form sidebar_search" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control wholeSearchTxt"  placeholder="Search for Job Nos or Customers..">
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="wrapper-div wrapper-div-height"  ng-if="loginStatus">
+            <div id="split-pane-1" class="split-pane fixed-left">
+
+                <div class="split-pane-component left-component s_dashboard_section" id="left-component">
+                    <ng-view></ng-view>
+                </div>
+                <div class="clearboth"></div>
+
+                <!-- Right Side Split Screen -->
+                <div class="split-pane-divider" id="divider" value="true"></div>
+
+                <div class="split-pane-component right_component" id="right-component" value="true">
+                    <div class="c_setup_iframe c_scroll_setup_sec" id="setup_frame">
+
+                        <div ng-if="clientData.splitPanes && clientData.setup == 'SETUP'" ng-include="clientData.headermenu"></div>
+
+                        <div ng-if="clientData.splitPanes && clientData.setup == 'SETUP'" class="viewplace  wrapper_hight"  ng-include="clientData.iframeloadPage"></div>
+
+						<!--- Order View Container -->
+                        <div ng-if="clientData.splitPanes && !clientData.setup == 'JOBVIEW'" class="viewplace body_height order_container" ng-include="clientData.iframeorder"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-view  ng-if="!loginStatus"></ng-view>
+
+    </body>
+
+    <script type="text/ng-template" id="angular-ui-notification.html">
+        <div class="ui-notification">
+            <h3 ng-show="title" ng-bind-html="title"></h3>
+            <div class="message" ng-bind-html="message"></div>
+        </div>
+    </script>
+
+    <script>
+
+        function windowHeight() {//Window Highet Set
+            var windowHeight = $(window).height();
+            $('.overlayoutmenu').css('height', windowHeight);
+            $('#desktop-menu').css('height', windowHeight);
+        }
+
+        function WinHeight() {
+            var windowHeight = $(window).height();
+            var headerHeight = $('.header').height();
+            var totalHeight = windowHeight - headerHeight;
+            $('.wrapper-div-height').css('height', totalHeight);
+    		$('.body_height').css('height', totalHeight - 10);
+    		var viewHeight = $('.customer_header').height() + 50;
+    		$('.cus_height').css('height', totalHeight - viewHeight);//Customer Page
+        }
+
+        function setupSection() {
+            //SETUP MENUS HEIGHT SET
+            var windowHeight = $(window).height();
+            var setupmenuheight = $('.setup_menuHeight').height();
+            var headerHeight = $('.header').height();
+            var setupPage = windowHeight - (setupmenuheight + headerHeight);
+            $('.wrapper_hight').css('height', setupPage);
+        }
+
+        function setupOrderviewSection() {
+            //SETUP MENUS HEIGHT SET
+            var windowHeight = $(window).height();
+            var headerHeight = $('.header').height();
+            var setupPage = windowHeight - headerHeight;
+            $('.wrapper_hight').css('height', setupPage);
+        }
+
+        function resp_menu() { // Toggle Menu Button Click
+            $('#desktop-menu').toggle();
+            $('.overlayoutmenu').toggle();
+            $('.right_toggle').removeClass('desktop_menu_toggle');
+            $('.right_toggle').addClass('desktop_menu_remove');
+            windowHeight();
+        }
+
+        function respon_menu_hide() {  // Hide Menu
+            $('.overlayoutmenu').toggle();
+            $('#desktop-menu').toggle();
+            $('.right_toggle').addClass('desktop_menu_toggle');
+            $('.right_toggle').removeClass('desktop_menu_remove');
+        }
+
+        function setupScroll_fixedmenu() {
+            $('.wrapper_hight').scroll(function () {
+                setupSection();
+                if ($('.wrapper_hight').scrollTop() > 370) {
+                    $('.c_menu_scroll').removeClass('hide');
+                } else {
+                    $('.c_menu_scroll').addClass('hide');
+                }
+            });
+        }
+
+        function setupScroll() {
+            $('.wrapper_hight').scroll(function () {
+                setupSection();
+            });
+        }
+
+        setupSection();
+        setupSection();
+        WinHeight();
+
+        $(window).resize(function () {
+            windowHeight();
+            setupSection();
+            WinHeight();
+            var windowWidth = $(window).width();
+            if (windowWidth > 1650) {
+                $('.overlayoutmenu').hide();
+                $('#desktop-menu').hide();
+            }
+        });
+
+        $('.c_scroll_setup_sec').resize(function () {
+            setupSection();
+        });
+
+        // Notification start
+        $(document).ready(function (e) {
+            var HeaderHeightpanel = $('.header_set_height').height();//header height
+            //var right_panel_height = $(window).height() - (HeaderHeightpanel -110 );
+            
+            $('.notification').css({'top': HeaderHeightpanel});
+            
+        });
+
+        function expand_div_click_toggle(e, th)
+        {
+            e.stopImmediatePropagation();
+
+            $('.notification').toggleClass('Nofity_full_div');
+            $('.notification_outerbox').toggleClass('Nofity_full_div_outer');
+            $('.header_div').toggleClass('header_expand_div');
+            $('.search_cnt').toggleClass('hide');
+            $('.menu_cnt').toggleClass('menu_cnt_expand');
+            $('.search_div_expand').toggleClass('hide');
+            $('.overlayout_notify').toggle();
+           
+            return false;
+        }
+
+        function hideShowNotificationPanel(e, th)
+        {
+            // Assign Notification Directive Start
+            var notification_timer = $('.notification').is(':hidden');
+            if (notification_timer)
+            {
+                lset('notification_timer', false);
+            } else {
+                lset('notification_timer', true);
+            }
+            e.stopImmediatePropagation();
+            if ($('.notification').hasClass('Nofity_full_div')) {
+                $('.overlayout_notify').toggle();
+            }
+            $('.notification').toggle();
+            $('.wrapper-div').removeClass('width_offset_conversation');
+            $('.wrapper-div').toggleClass('width_offset');
+            $('#normalNotification').show();
+            $('#msgNotification').hide();
+            $('.chatconversation').hide();
+
+            $('#notify_card_content').masonry();
+            convClose();
+            return false;
+        }
+
+        function convClose() {
+            var convAttr = $('.conversation_btn').attr('conversation');
+            if (convAttr == 'false') {
+                $('.chatconversation').hide();
+                $('.phase-scroll').css('width', '99%');
+                $('.top_button_container').css('width', '100%');
+                $('.toggle_icon_small').toggleClass('toggles_icon_small');
+                $('.wrapper_toggle').toggleClass("active");
+                $('.conversation_btn').attr('conversation', 'true');
+            }
+        }
+
+        function hideShowConversationPanel(e, th)
+        {
+            var convAttr = $('.conversation_btn').attr('conversation');
+
+            if (convAttr == 'true') {
+                $('.chatconversation').toggle();
+                var windowWidth = $(window).width() - 500;
+                $('.phase-scroll').css('width', windowWidth);
+                $('.top_button_container').css('width', windowWidth);
+                $('.notification').hide();
+                $('.wrapper-div').removeClass('width_offset');
+                //$('.wrapper-div').toggleClass('width_offset_conversation');   
+                $('.toggle_icon_small').addClass('toggles_icon_small');
+                $('.wrapper_toggle').removeClass("active");
+                $('.conversation_btn').attr('conversation', 'false');
+
+                return false;
+            }
+            else {
+                $('.chatconversation').hide();
+                $('.phase-scroll').css('width', '99%');
+                $('.top_button_container').css('width', '100%');
+                $('.notification').hide();
+                $('.wrapper-div').removeClass('width_offset');
+                //$('.wrapper-div').toggleClass('width_offset_conversation');
+                $('.toggle_icon_small').toggleClass('toggles_icon_small');
+                $('.wrapper_toggle').toggleClass("active");
+                $('.conversation_btn').attr('conversation', 'true');
+                return false;
+            }
+        }
+
+        function convResize() {
+            var windowWidth = $('.s_dashboard_section').width() - 500;
+            $('.phase-scroll').css('width', windowWidth);
+            $('.top_button_container').css('width', windowWidth);
+        }
+
+        function convertionSplitResp() {
+            var convAttr = $('.conversation_btn').attr('conversation');
+            if (convAttr == 'false') {
+                convResize();
+            }
+        }
+        setInterval(function () {
+            convertionSplitResp();
+        }, 1000);
+
+        // function conversationheight() {
+        //     var HeaderHeightpanel_1 = $('.header_set_height').height();
+        //     var windowHeight = $(window).height();
+        //     var totalconversation = windowHeight - HeaderHeightpanel_1;
+        //     //$('.chatconversation').css({'top': HeaderHeightpanel_1});
+        //     $('.chatconversation').css('height', totalconversation);
+        // }
+        // conversationheight();
+        // $(window).resize(function () {
+        //     conversationheight();
+        // });
+    </script>
+
+</html>

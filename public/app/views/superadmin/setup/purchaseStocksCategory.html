@@ -1,0 +1,36 @@
+<div class="container" ng-controller="CategoryController">
+    <div class="row" ng-init="categoryorder = ''">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Manage Category</div>
+            <div class="subtitle">Click on the category to edit or add more details.</div>
+            <div class="sort_list heading_7">
+                Sort by
+                <a ng-click="categoryorder = '+name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (categoryorder == '+name') ? 'underline' : 'none' }">0A-Z</a>,
+                <a ng-click="categoryorder = '-name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (categoryorder == '-name') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="categoryfilter">
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-30 margin-bottom-30">
+            <div class="center_content center_alg">
+                <div class="branch_card_add manage-category" ng-click="addCategory(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Category</div>
+                </div>
+                <div class="branch_card" ng-repeat="category in categoryData.categorylist| orderBy:categoryorder | filter:categoryfilter" 
+                     ng-click="getCategorydetailsById(category._id); $event.stopPropagation();" ng-class="{'disabled':!category.is_active}">
+                    <span class="disable_small_brand" ng-if="!category.is_active"></span>
+                    <span class="branch" ng-bind="category.name"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="stores_pre_nex"> ← <a class="blod_line" ng-click="purchaseStockChildPage('Managevendor'); $event.stopPropagation();">Manage Vendor</a> | <a ng-click="purchaseStockChildPage('Manageproducts'); $event.stopPropagation();" class="blod_line">Manage Products</a> → </div>
+    </div>
+</div>

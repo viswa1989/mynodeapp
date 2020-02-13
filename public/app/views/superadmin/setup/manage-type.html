@@ -1,0 +1,41 @@
+<div class="container" ng-init="faborder = ''">
+    <div class="row">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Fabric Types</div>
+            <div class="subtitle">Click on the fabric to edit or add more details.</div>
+            <div class="sort_list heading_7">
+                Sort by
+                <a ng-click="faborder = '+fabric_type'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (faborder == '+fabric_type') ? 'underline' : 'none' }">0A-Z</a>,
+                <a ng-click="faborder = '-fabric_type'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (faborder == '-fabric_type') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="fabfilter">
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-30 margin-bottom-30">
+            <div class="center_content center_alg">
+                <div class="branch_card_add fabric-type" ng-click="newType(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Fabric</div>
+                </div>
+                <div class="branch_card add-card card_customized" ng-repeat="type in (manageData.types | orderBy:faborder | orderEmpty:'_id':'toTop') | filter:fabfilter" ng-class="{'disabled':!type.is_active}">
+                    <span class="disable_small_brand activebrand" ng-if="type.is_active" noty-disable="" noty-update="toggleFabrictype(type)" noty-style="3" 
+                          noty-content="Disabling {{type.fabric_type}} Fabric type will hide the items. You can re-enable the items anytime. Do you want to continue? "></span>
+                    <span class="disable_small_brand" ng-if="!type.is_active" noty-enable="" noty-update="toggleFabrictype(type)" noty-style="3" 
+                          noty-content="Enabling {{type.fabric_type}} Fabric type will show the items. You can disable the items anytime. Do you want to continue? "></span>
+                    <span>
+                        <input type="text" class="small" placeholder="New Type" ng-model="type.fabric_type" ng-model-options="{updateOn: 'blur'}" ng-change="addType(type, $index);" required>
+                    </span>
+                    <span class="delete-add" ng-click="deleteType(type._id, $index); $event.stopPropagation();"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="stores_pre_nex"><a class="blod_line" ng-click="managePage('color'); $event.stopPropagation();">Colour</a> → </div>
+    </div>
+</div>

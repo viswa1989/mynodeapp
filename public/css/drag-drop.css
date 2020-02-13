@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+                #sortable-horizontal {
+                   
+                    width:100%;
+                    text-align: center;
+                }
+
+                #sortable-horizontal > div {
+                    width: 361px;
+                    margin: 10px 20px 10px 0; 
+					position: relative;
+                    
+                }
+
+                .placeholder {
+                    display: inline-block;
+                    width: 361px;
+                    border: 1px dashed #ddd;
+                    background-color: #f3f5f7;
+                    margin: 10px 20px 10px 0;
+                    font-size: 1.3em;
+                    font-weight: bold;
+                    line-height: 125px;
+                    
+                    color: #777;
+                }
+			  .tooltip {
+                    opacity: .6;
+                }
+
+
+
+                .handler {
+                       display: inline-block;
+						cursor: move;
+						position: absolute;
+						top: 38px;
+						right: 0;
+						width: 87%;
+						height: 106px;
+						float: right;
+						z-index: 3;
+                }

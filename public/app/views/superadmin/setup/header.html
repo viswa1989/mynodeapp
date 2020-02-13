@@ -1,0 +1,119 @@
+<div class="container-fluid padding_zero">
+    <div class="col-xs-12 padding_zero overflow_hidden">
+        <div class="col-xs-12  padding_zero">
+            <div class="purchase-container">
+                <div class="container_header setup_menuHeight" id="setup_menu">
+                    <div class="container margin-top-50" style="width: 52%;">
+                        <div class="title heading_3">Setup</div>
+                        <div class="navbar-header margin-bottom-20">
+                            <a class="navbar-toggle menu_icon navbar-btn collapsed" data-toggle="collapse" data-target="#navbar_innermenu" aria-expanded="false" aria-controls="navbar"></a>
+                        </div>
+                        <div id="navbar_innermenu" class="navbar-collapse collapse menu_togglg_c responsive-tab">
+                            <ul class="nav navbar-left top-nav heading_5 setup_menu_navbar_c purchase-menu">
+                                <li> 
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'DIVISIONS'}" ng-click="setSetupFrameLoadingPage('DIVISIONS');">Divisions</a>
+                                </li>
+                                <li> 
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'MANAGE'}" ng-click="setSetupFrameLoadingPage('MANAGE');">Manage Fabrics</a>
+                                </li>
+                                <li> 
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'DYEING'}" ng-click="setSetupFrameLoadingPage('DYEING');">Dyeing Details</a>
+                                </li>
+                                <li> 
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'CONTRACTOR'}" ng-click="setSetupFrameLoadingPage('CONTRACTOR');">Contractor</a>
+                                </li>
+                                <li> 
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'PURCHASESTOCK'}" ng-click="setSetupFrameLoadingPage('PURCHASESTOCK');">Purchase & Stocks</a>
+                                </li>
+                                <li>
+                                    <a class="menu_list" ng-class="{'active':clientData.pageMenu == 'CUSTOMERGROUP'}" ng-click="setSetupFrameLoadingPage('CUSTOMERGROUP');">Customer Groups</a>
+                                </li>
+                                <li> 
+                                    <a ng-class="{'active':clientData.pageMenu == 'ADMINUSER'}" ng-click="setSetupFrameLoadingPage('ADMINUSER');" class="menu_list">Admin Users</a>
+                                </li>
+                                <li> 
+                                    <a ng-class="{'active':clientData.pageMenu == 'ACCOUNT'}" ng-click="setSetupFrameLoadingPage('ACCOUNT');" class="menu_list">Accounts & Payroll</a>
+                                </li>
+                                <li>
+                                    <a ng-class="{'active':clientData.pageMenu == 'SMS'}" ng-click="setSetupFrameLoadingPage('SMS')" class="menu_list">SMS</a>
+                                </li>
+                                <li>
+                                    <a ng-class="{'active':clientData.pageMenu == 'PREFERENCES'}" ng-click="setSetupFrameLoadingPage('PREFERENCES');" class="menu_list">Preference</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearboth"></div>
+                    <div class="setup_store_menu_scroll c_menu_scroll hide" ng-if="clientData.pageMenu == 'DIVISIONS'">
+                        <div class="container text-center" style="width: 85%;">
+                            <b class="breadcrumb_menu"><span class="heading_4">Division  → </span> <span class="heading_6" ng-bind="$root.clientData.setupdivisionchildpage"> </span></b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearboth"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".setup-printing-divsion-card").click(function () {
+            $("#faq-cat-30 > .container.division-setup").toggle();
+            $('.setup-printing-division').show();
+        });
+        $('.back-to-division').click(function () {
+            $('#faq-cat-30 > .container.division-setup').toggle();
+            $('.setup-printing-division').hide();
+        });
+        $('.admin_profile').click(function () {
+            $('.user-add-new').slideUp(500);
+            $('.user-add-new').show();
+        });
+        $('.close_icon_small').click(function () {
+            $('.user-add-new').hide();
+        });
+
+        $(".primary-table a").on("click", function () {
+            var primaryTable = $(this).closest('tr').next('tr.secondary-table');
+            if ($(this).hasClass('remove') == false) {
+                $(this).closest('table').find('.secondary-table').slideUp(10);
+                $(".primary-table a").text('View').removeClass('remove');
+                primaryTable.slideDown(100);
+                $(this).addClass('remove');
+                $(this).text('Close');
+            } else {
+                primaryTable.slideUp(100);
+                $(this).removeClass('remove');
+                $(this).text('View');
+            }
+
+        });
+
+        $('#customer-group .customer-form a').click(function () {
+            $('#customer_group_tab1').slideToggle();
+        });
+        $('.class_checkbox').click(function () {
+            $(this).toggleClass('checked');
+        });
+        $('#date').datetimepicker();
+        $('#date1').datetimepicker();
+        $('#date2').datetimepicker();
+        
+        $('.branch_card_add.manage-process').on('click', function () {
+            $(this).before('<div class="branch_card setup-printing-divsion-card add-card"><div class="branch"><input type="text" class="small" placeholder="" required=""></div><div class="place ng-binding"><input type="text" class="small" placeholder="" required=""></div><span class="delete-add"></span></div>');
+        });
+        $('.branch_card_add.fabric-type').on('click', function () {
+            $(this).before('<div class="branch_card add-card"><span class=""><input type="text" class="small" placeholder="" required=""></span><span class="delete-add"></span></div>');
+        });
+        $('.branch_card_add.colours').on('click', function () {
+            $(this).before('<div class="branch_card add-card"><span class=""><input type="text" class="small" placeholder="" required=""></span><span class="delete-add"></span></div>');
+        });
+        $('.branch_card_add.dyeing-detail').on('click', function () {
+            $(this).before('<div class="branch_card setup-printing-divsion-card add-card"><div class="branch"><input type="text" class="small" placeholder="" required=""></div><div class="place"><input type="text" class="small" placeholder="" required=""></div><span class="delete-add"></span></div>');
+        });
+        $('.branch_card_add.measurement-add').on('click', function () {
+            $(this).before('<div class="branch_card add-card"><span class=""><input type="text" class="small" placeholder="" required=""></span><span class="delete-add"></span></div>');
+        });
+    });
+</script>

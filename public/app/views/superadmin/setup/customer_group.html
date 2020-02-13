@@ -1,0 +1,207 @@
+<style type="text/css">
+    .heading_4, .heading_5 {
+        font-weight: bold;
+    }
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 100px;
+        max-width: 270px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a {
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="customer-group-form" ng-controller="CustomergroupController">
+    <div class="loader_large" ng-show="customergroupData.pageLoad"></div>
+
+    <div class="wrapper" ng-show="!customergroupData.pageLoad">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="content_title heading_4">Customer Groups</div>
+                    <div class="content_subtitle">Manage Customer Groups with their discount preferences.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="customer_group_expend">
+                <div class="tempcus_group" ng-repeat="customergroup in customergroupForm.customergroups" ng-init="groupIndex = $index;">
+                    <div class="customer_group">
+                        <div class="col-xs-5 customer_group_content input-group-lg">
+                            <input type="text" ng-model="customergroup.name" ng-model-options="{updateOn: 'blur'}" placeholder="Group Name" 
+                                   ng-change="updateCustomergroup(customergroup.name, customergroup._id, $index)"  class="form-control margintop-10" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-4 customer_group_content">
+                            <a class="cutomer_group_link" ng-click="manageDiscount(customergroup); $event.stopPropagation();">Manage Discounts</a>
+                        </div>
+                        <div class=" col-xs-3 customer_group_content" style="width: 30px; height: 60px;">
+                            <span ng-if="!customergroup.default" class="delete_icon" noty-remove noty-update='delete(customergroup._id,$index)' noty-style="3"
+                                  noty-content="Removing {{customergroup.name}} Customer Group will lose all associated discounts with this groups. You need to re-assign customers to a new group if required. Do you want to continue?"></span>
+                        </div>
+                    </div>
+
+                    <div id="cutomer_group_1" ng-if="customergroupData.manage_discount_details !== '' && customergroupData.manage_discount_details === $index;" class="customer_group_cnt discountpartdiv" t1="{{customergroupData.manage_discount_details}}" t2="{{$index}}">
+                        <div id="discount_group_wrapper">
+                            <div class="discount_group_wrapper">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-xs-12 margin-top-20">
+                                            <span ng-click="customergroupData.manage_discount_details = ''" class="GI_TW_close GI_TW_Controls close_icon_small pull-right close_icon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="content_titles heading_4">Discounts for
+                                                ‘{{customergroup.name}}’</div>
+                                            <div class="content_subtitle content_subtitle_margin">
+                                                <p class="margin-bottom-10">You can enter the prices for disabled process and measurements too.</p>
+                                                <p class="margin-bottom-10">Please be noted that the prices here are default prices
+                                                    for this customer group. Customer accounts can have their own pricing set for them.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center content_subtitle_margin">Sort by
+                                            <a href="" ng-click="customergroupData.defaultCustomerGroup = 'price';">Enter by Price</a>, 
+                                            <a href="" ng-click="customergroupData.defaultCustomerGroup = 'percentage';">Enter by percentage</a>, 
+                                            <a href="" ng-if="!accessPermission[currentPageName]['Modify']" ng-click="clearDiscount(customergroupData.manage_discount_details)">Clear Discounts</a>,
+                                            <a href="" ng-click="revertOurchanges();">Reset Discounts</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="discount_group_wrapper" ng-init="clientdata.customergroupsort = true;clientdata.customergroupsortbyfield = 'itemcode';">
+                                        <div class="row margin-0" style="overflow-x: auto;">
+                                            <table align="center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="discont_table_header">
+                                                            <div class="heading_7">
+                                                                Sort by <a class="sort" ng-click="customergroupData.customergroupsortbyfield = '+division_name';"> 0A-Z</a>,
+                                                                <a class="sort" ng-click="customergroupData.customergroupsortbyfield = '-division_name';">Z-A0</a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="discont_table_header ng-scope" align="center"></td>
+                                                        <td class="discont_table_header ng-scope" align="center"></td>
+                                                        <td align="center" class="discount_table_body" ng-repeat="measurement in customergroupForm.measurement">
+                                                            <b>Cost per {{measurement.measurement_name}}</b>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            <table class="table_row_discount" ng-repeat="division in customergroupForm.divisions| orderBy:customergroupData.customergroupsortbyfield" ng-init="division.loopcount = 1">
+                                                <tbody>
+                                                    <tr class="hover_bg" ng-repeat-start="discounts in manage_discount_form.group_discount" ng-if="discounts.division_id == division.division_id">
+                                                    <tr ng-if="discounts.division_id == division.division_id">
+                                                        <td class="discont_table_header">
+                                                            <b>{{division.division_name}}</b>
+                                                        </td>
+                                                        <td class="discont_table_header">
+                                                            <b>{{discounts.process_name}}</b>
+                                                        </td>
+                                                        <td class="discont_table_header" align="center">Actual Price</td>
+                                                        <td align="center" class="discount_table_body" ng-repeat="measure in discounts.measurements">
+                                                            <div>{{customergroupData.currency}}{{measure.cost| number:2}}</div>
+                                                        <td>  
+                                                    </tr>
+                                                    <tr ng-if="discounts.division_id == division.division_id">
+                                                        <td class="discont_table_header">&nbsp;</td>
+                                                        <td class="discont_table_header">&nbsp;</td>
+                                                        <td class="discont_table_header" align="center">Discount Price</td>
+                                                        <td align="center" class="discount_table_body" ng-repeat="measure in discounts.measurements" 
+                                                            ng-class="{'empty_price':(parseFloat(measure.cost) <= 0) && customergroupData.defaultCustomerGroup == 'price'}">
+                                                            <div class="input-group s_input_style" ng-if="customergroupData.defaultCustomerGroup == 'price'">
+                                                                <input tabindex="1" class="input percentage" id="1" valid-number ng-model="measure.discount_price" 
+                                                                       ng-blur="discountApply(measure, 'PAGE')" ng-readonly="parseFloat(measure.cost) <= 0">
+                                                            </div>
+                                                            <div ng-if="customergroupData.defaultCustomerGroup == 'percentage'">{{customergroupData.currency}}{{measure.discount_price| number:2}}</div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="brd_btm_black" ng-if="discounts.division_id == division.division_id">
+                                                        <td class="discont_table_header">&nbsp;</td>
+                                                        <td class="discont_table_header">&nbsp;</td>
+                                                        <td class="discont_table_header">&nbsp;</td>
+                                                        <td align="center" class="discount_table_body" ng-repeat="measure in discounts.measurements" 
+                                                            ng-class="{'empty_price':(parseFloat(measure.cost) <= 0) && customergroupData.defaultCustomerGroup == 'percentage'}">
+                                                            <div class="input-group s_input_style" ng-if="customergroupData.defaultCustomerGroup == 'percentage'">
+                                                                <input tabindex="1" class="input percentage" id="1" valid-number ng-model="measure.discount_percentage" 
+                                                                       ng-blur="discountApply(measure, 'PRICE')" ng-readonly="parseFloat(measure.cost) <= 0">
+                                                                <span class="input-group-addon cus_group_percentage">%</span>
+                                                            </div>
+                                                            <div ng-if="customergroupData.defaultCustomerGroup == 'price'">{{measure.discount_percentage| number:2}}%</div>
+                                                        </td>
+                                                    </tr>
+                                                <tr ng-repeat-end>
+                                                </tbody>
+                                            </table>                                           
+                                        </div>
+                                        
+                                        <div class="discount_btn">
+                                            <div class="col-xs-12 margin-top-30 margin-bottom-30">
+                                                <div class="text-center">
+                                                    <a class="common_button" ng-click="updateCustomerGroupdata(manage_discount_form); group.hidediscount = !group.hidediscount;"
+                                                       ng-if="!accessPermission[currentPageName]['Modify']">Set Discounts
+                                                        <div class="button_loader_cnt" ng-if="clientdata.loader_button_start">
+                                                            <div ng-class="{'button_loader':clientdata.loader_button_start}"></div>
+                                                        </div>
+                                                    </a> 
+                                                    <a class="line margin-left-20 close_icon" ng-click="group.hidediscount = !group.hidediscount; revertOurchanges()">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xs-12 padding_zero">
+                <div class="customer_group">
+                    <div class=" col-xs-5 customer_group_content">
+                        <div class="customer_group_addnew hide" ng-click="addCustomergroup(); $event.stopPropagation();" ng-show="!customergroupData.eventLoad">
+                            <div class="center">
+                                <div class="add_icon"></div>
+                            </div>
+                        </div>
+						<a class="add_customer accountpage_click_resize" ng-click="addCustomergroup(); $event.stopPropagation();" ng-show="!customergroupData.eventLoad">
+                            <span class="add_icon_smalls"></span>
+                            <span class="add_customer_text">Add New</span>
+                        </a>
+                        <div class="loader_small" ng-show="customergroupData.eventLoad"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

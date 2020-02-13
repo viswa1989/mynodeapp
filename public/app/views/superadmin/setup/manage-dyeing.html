@@ -1,0 +1,32 @@
+<div class="container division-setup" id="dyeing-details" ng-controller="DyeingController">
+    <div class="row" ng-init="dyeingorder = ''">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Dyeing Details</div>
+            <div class="subtitle">Click on the dyeing to edit or add more details.</div>
+            <div class="sort_list"> Sort by 
+                <a ng-click="dyeingorder = '+dyeing_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (dyeingorder == '+dyeing_name') ? 'underline' : 'none' }">0A-Z</a>, 
+                <a ng-click="dyeingorder = '-dyeing_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (dyeingorder == '-dyeing_name') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="dyeingfilter">
+            </div>
+        </div>
+        
+        <div class="col-xs-12 padding_zero margin-top-20 setup">
+            <div class="center_content center_alg_w95">
+                <div class="branch_card_add dyeing-modal dyeing-detail" ng-click="add_dyeing(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Dyeing</div>
+                </div>
+                <div class="branch_card setup-printing-divsion-card" ng-repeat="dyeing in dyeingData.dyeingList| filter:dyeingfilter | orderBy:dyeingorder" 
+                     ng-dblclick="updateDyeing(dyeing)" ng-class="{'disabled':!dyeing.is_active}">
+                    <span class="disable_small_brand" ng-if="!dyeing.is_active"></span>
+                    <div class="branch" ng-bind="dyeing.dyeing_name"></div>
+                    <div class="place" ng-bind="dyeing.dyeing_address"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

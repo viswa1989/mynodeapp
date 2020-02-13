@@ -1,0 +1,41 @@
+<style>
+    body{
+        /*background: rgb(35, 137, 159);*/
+        background: rgb(187,187,187);
+        overflow: hidden;
+    }
+</style>
+
+<div class="container-fluid padding_zero" ng-controller="ContractController">
+    <div id="page_loader" ng-show="$root.contractpageLoader"></div>
+    <div class="jobcard_page dashboard_container left_panel_toggle">
+        <div id="wrapper" class="active">
+            <div id="wrapper_content" ng-include="$root.contractData.loadPage">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Card Height Set
+    function cardHeight() {
+        var headerHeight = $('.header').height();
+        var left_panel_height = $(window).height() - headerHeight;
+        var windowHeight = $(window).height();
+        var BillMenu = $('#common_header_contianer').height(); // Bill add section height
+        var WinHeight = windowHeight - (headerHeight + (BillMenu + 7));
+        var windowWidth = $(window).width();
+        var totalHeight = windowHeight - (headerHeight + 5);
+        $('.billshow_container').css('height', WinHeight); //Total common div Height'
+        $('#wrapper_left').css('height', left_panel_height);
+        $('.s_card_height').css('height', left_panel_height);
+        $('.s-dashboard-container-width').css('width', windowWidth - 50);
+    }
+
+    cardHeight();
+    splite_screen();
+    $(window).resize(function () {
+        cardHeight();
+    });
+</script>

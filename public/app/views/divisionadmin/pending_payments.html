@@ -1,0 +1,309 @@
+<div class="stock_stms c_stock_stms_cnt" ng-controller="PendingpaymentController">
+    <div class="report_left_section bg_white">
+        <div class="report_filter_header">
+            <div class="heading_3">Pending Customer Payments</div>
+        </div>
+        <div class="report_filter_cnt report_left_menu">
+            <div class="overflow_scroll margin-top-05">
+                <div class="filter_cnt">
+                    <div class="filter filter_click store" id="store">
+                        <a class="button repofilterbtn" ng-repeat="division in PendingreportData.divisionList" ng-class="{'active':PendingreportData.selectedDivisionid == division._id}" 
+                           ng-click="filterBydivision(division);" ng-bind="division.name"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report_right_section">
+        <div class="report_responsive_cnt">
+            <div class="report_right_section_header">Statements for <b ng-if="PendingreportData.selectedDivisionname == 'ALL'">ALL</b>
+        <b ng-if="PendingreportData.selectedDivisionname != 'ALL'" ng-bind="PendingreportData.selectedDivisionname"></b>.
+
+                <div class="fullscreen_icon pull-right margin-right-10 c_full_screen_click" id="full_screen" onclick="return full_screen_pendingpayment()"></div>
+
+                <div class="mail_icons pull-right margin-right-10" ng-click="clientdata.showdialogDiv = !clientdata.showdialogDiv"></div>
+
+                <div class="excel_icons pull-right margin-right-10" ng-click="exportThisReport();"></div>
+
+                <div class="print_icons pull-right margin-right-10" ng-click="printThisPayments();"></div>
+            </div>
+
+            <div class="report_container overflow_scroll">
+                <div class="report_set_container">
+                    <div class="report_fixed_postion">
+                        <div class="report_date_select" style="min-height: 50px;"></div>
+                        <div class="report_date_show c_report_date_show" style="display: none;"></div>
+                    </div>
+                    <div class="clearboth"></div>
+
+                    <div class="col-xs-12 reportheader margin-top-30 heading_5 margin-bottom-15">
+                        <b style="font-size: 15px;" ng-if="PendingreportData.selectedDivisionname == 'ALL'" ng-bind="'At all Divisions as of '+(PendingreportData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                        <b style="font-size: 15px;" ng-if="PendingreportData.selectedDivisionname != 'ALL'" ng-bind="'At '+(PendingreportData.selectedDivisionname)+' as of '+(PendingreportData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                    </div>
+
+                    <div class="heading_5 col-xs-12 reportsearch margin-top-10 margin-bottom-15">
+                        <b class="pull-left margin-top-10" style="font-size: 15px;">{{PendingreportData.pendingpayments.length}} Customers having pending Invoice Payments</b>
+                        <div class="print_icons pull-left margin-right-10 margin-top-10" ng-click="printThisPayments();"></div>
+                        <div class="excel_icons pull-left margin-right-10 margin-top-10" ng-click="exportThisReport();"></div>
+                        <div class="right_menu" style="margin-top: 0px;float:right; width:330px;">
+                            <div class="search_right_cnt" style="width:100% !important;">
+                                <input type="text" class="search_box_expand" ng-model="PendingreportData.fillterByCustomer" placeholder="Search for Customer, Mobile No ">
+                                <div class="search_icons">
+                                    <span class="search_letter">Search</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 reporttablez margin-top-15">
+                        <table class="mt_table tb_scroll_style responsive-table-scroll">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 108px;">Division</th>
+                                    <th style="min-width: 300px;">Customer Name</th>
+                                    <th class="text-right" style="min-width: 98px;">Pending Amount</th>
+                                    <th class="text-right" style="min-width: 98px;">Total Pending Amount</th>
+                                    <th class="text-right" style="min-width: 108px;">Ledger Balance</th>
+                                    <th class="text-right" style="min-width: 118px;">Excess Payments</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="scollbody">
+                                <tr ng-repeat-start="pendingreport in PendingreportData.pendingpayments| filter:PendingreportData.fillterByCustomer"></tr>
+                                <tr class="tr_body" ng-class="{'current_active_row':PendingreportData.currentRow == pendingreport._id}" ng-click="setCurrentrow(pendingreport)">
+                                    <td style="min-width: 108px;" ng-bind="PendingreportData.selectedDivisionname"></td>
+                                    <td style="min-width: 300px;"><b class="pull-left" ng-bind="pendingreport.name"></b></td>
+                                    <td style="min-width: 98px;" class="text-right"><b ng-bind="(pendingreport | pendingbydivision:PendingreportData.selectedDivisionid)"></b></td>
+                                    <td class="text-right" style="min-width: 98px;" ng-bind="commonobjectService.getCurrency()+(pendingreport.total_pendingamount | number:2)"></td>
+                                    <td class="text-right" style="min-width: 108px;">
+                                        <span ng-if="pendingreport.previous_balance && pendingreport.previous_balance>0" 
+                                              ng-bind="commonobjectService.getCurrency()+(pendingreport.previous_balance | number:2)"></span>
+                                    </td>
+                                    <td class="text-right" style="min-width: 118px;">
+                                        <span ng-if="pendingreport.excess_payment && pendingreport.excess_payment>0" 
+                                              ng-bind="commonobjectService.getCurrency()+(pendingreport.excess_payment | number:2)"></span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr ng-if="PendingreportData.currentRow == pendingreport._id" style="background-color: rgb(255,239,210);">
+                                    <td></td>
+                                    <td colspan="3">
+                                        <div class="col-xs-12 padding_zero in" collapse="isCollapsed" aria-expanded="true" aria-hidden="false" style="height: auto;">
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="col-xs-4 no-padding-left pull-left">
+                                                    <div class="text-left"><b>Address: </b><span display-address="{{pendingreport.address}}"></span></div>
+                                                </div>
+                                                <div class="col-xs-8 padding_zero pull-right" ng-repeat="billloop in pendingreport.pending_detail">
+                                                    <div class="col-xs-2"></div>
+                                                    <div class="col-xs-4 text-right" ng-bind="billloop.division_name"></div>
+                                                    <div class="col-xs-3 padding_zero text-right" ng-bind="(billloop.invoice_count) + ' Pending Bills'"></div>
+                                                    <div class="col-xs-3 text-right no-padding-right" ng-bind="commonobjectService.getCurrency()+(billloop.pending_amount | number:2)"></div>
+                                                </div>
+                                                <div class="col-xs-8 padding_zero pull-right" ng-if="pendingreport.previous_balance && pendingreport.previous_balance>0">
+                                                    <div class="col-xs-2"></div>
+                                                    <div class="col-xs-4 text-right"></div>
+                                                    <div class="col-xs-3 padding_zero text-right">Pending Balance</div>
+                                                    <div class="col-xs-3 text-right no-padding-right" ng-bind="commonobjectService.getCurrency()+(pendingreport.previous_balance | number:2)"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 margin-top-10 padding_zero">
+                                                <div class="col-xs-4 no-padding-left pull-left">
+                                                    <div class="col-xs-8 no-padding-left" ng-class="{'col-xs-8': clientdata.toggle_expand == false, 'col-xs-6': clientdata.toggle_expand == true}">
+                                                        <div style="width: 110px;display: inline-block;">
+                                                            <span class="pull-left">Paid Bills</span>
+                                                            <span class="pull-right" ng-bind="pendingreport.total_paidbill"></span>
+                                                        </div>
+                                                        <div style="width: 110px;display: inline-block;">
+                                                            <span class="pull-left">Pending Bills</span>
+                                                            <span class="pull-right" ng-bind="pendingreport.total_pendinginvoice"></span>
+                                                        </div>
+                                                        <div style="width: 110px;display: inline-block;">
+                                                            <span class="pull-left">Total Bills</span>
+                                                            <span class="pull-right" ng-bind="(pendingreport.total_paidbill + pendingreport.total_pendinginvoice)"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-8 padding_zero pull-right" style="margin-bottom:20px;">
+                                                    <div class="col-xs-6 text-right"><b>Total</b></div>
+                                                    <div class="col-xs-6 text-right no-padding-right"><b ng-bind="commonobjectService.getCurrency()+(pendingreport.total_pendingamount | number:2)"></b></div>
+                                                </div>
+
+                                                <div class="col-xs-8 padding_zero pull-right" style="position: absolute;bottom: 0;right: 0;">
+                                                    <div class="no-padding-right text-right col-xs-4" ng-class="{'col-xs-4': clientdata.toggle_expand == false, 'col-xs-3': clientdata.toggle_expand == true}">
+                                                        <!--<a style="text-decoration: underline;" ng-click="gotoCustomerProfile(pendingpay)">Go to Customer</a>-->
+                                                    </div>
+                                                    <div class="padding_zero text-right col-xs-4" ng-class="{'col-xs-4': clientdata.toggle_expand == false, 'col-xs-3': clientdata.toggle_expand == true}">
+                                                        <!--<a style="text-decoration: underline;" ng-click="customerPaymentRecive(pendingpay.customerID)">Receive Payment</a>-->
+                                                    </div>
+                                                    <div class="padding_zero text-right col-xs-4" ng-class="{'col-xs-4': clientdata.toggle_expand == false, 'col-xs-3': clientdata.toggle_expand == true}">
+                                                        <a style="text-decoration: underline;" ng-click="customerTransactions(pendingreport);">View Transactions</a></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td colspan="3"></td>
+                                </tr>
+                                <tr ng-repeat-end></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cus_notify_section" states="close" style="overflow: hidden; top: 143px; height: 557px;">
+        <div class="cus_ns_sec1">
+            <span class="close_icon_small  cus_reportS_close_icon" onclick="customerNotifyClose(true);"></span>
+            <div class="ns_history_track">History Track for</div>
+            <div class="ns_title" ng-bind="PendingreportData.cusTrans.customer_name+', '+PendingreportData.cusTrans.mobile_no"><br></div>            
+</div>
+
+        <div class="ns_sec_title">
+            <div class="pull-left heading_4">Pending Dues<span class="ns_print_icons"></span></div>
+            <div class="pull-right heading_5"><b ng-bind="'Due '+commonobjectService.getCurrency()+(PendingreportData.cusTrans.pendingDues | number:2)"></b></div>            
+        </div>
+
+        <div class="cus_ns_sec2">
+            <div class="loader_small" ng-if="PendingreportData.cusTansloading"></div>
+            <div class="row margin-bottom-15" id="customer_billdata" ng-if="!PendingreportData.cusTansloading" ng-repeat="bills in PendingreportData.cusTrans.Billdetails">                    
+                <div class="ns_left">
+                    <div style="line-height: 20px;">Invoice Bill <b ng-bind="bills.invoice_no"></b>  <span ng-bind="commonobjectService.getCurrency()+(bills.total | number:2)"></span></div>
+                    <div style="line-height: 20px;" ng-bind="'on '+(bills.invoice_date | date:'EEE, dd-MM-yyyy')"></div>
+                </div>
+                <div class="ns_right">
+                    <b ng-bind="commonobjectService.getCurrency()+(bills.balance | number:2)"></b>
+                </div>
+            </div>
+            <div class="row margin-bottom-15" id="customer_billdata" ng-if="!PendingreportData.cusTansloading && PendingreportData.cusTrans.previousbalance>0">                    
+                <div class="ns_left">
+                    <div style="line-height: 20px;">Pending Opening Balance</div>
+                </div>                        
+                <div class="ns_right">
+                    <b ng-bind="commonobjectService.getCurrency()+(PendingreportData.cusTrans.previousbalance | number:2)"></b>
+                </div>
+            </div>
+        </div>
+
+        <div class="ns_sec_title">
+            <div class="pull-left heading_4">Transactions<span class="ns_print_icons"></span></div>
+        </div>
+
+        <div class="cus_ns_sec3">
+            <div class="loader_small" ng-if="PendingreportData.cusTansloading"></div>
+            <div class="row margin-bottom-15" ng-if="!PendingreportData.cusTansloading" ng-repeat="trans in PendingreportData.cusTrans.Transactiondetails">
+                <div class="ns_left">                   
+                    <div style="line-height: 20px;"><b ng-bind="trans.category_name">Payment for Invoices and Bills</b></div>
+                    <!--<div class="heading_7" style="line-height: 20px;">KVB GOPAL9965732052 </div>-->
+                    <div class="heading_7" style="line-height: 20px;">Account Entry: <b ng-bind="trans.ledger_id.name"></b> at <b ng-bind="trans.division_id.name"></b></div>
+                    <div class="heading_7" style="line-height: 20px;" ng-bind="'on '+(trans.transaction_date | date:'EEE, dd-MM-yyyy')"></div>
+                </div>
+                <div class="ns_right">
+                    <b ng-bind="commonobjectService.getCurrency()+(trans.transaction_amount | number:2)"></b>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+<script class="ng-scope">
+    function CustomerNotificationHeight(){
+        var HeaderHeightpanel = $('.header_set_height').height(); //header height
+        var windowHeight = $(window).height() - HeaderHeightpanel;
+        $('.cus_notify_section').css({'top': HeaderHeightpanel + 66, 'height' : windowHeight});
+        $('.cus_notify_btn').css({'top': HeaderHeightpanel + 80});
+    }
+
+    function customerPreviousBillSidePanelClose(){
+        $('.cus_notify_btn').addClass('hide');
+        $('.cus_notify_section').addClass('hide');
+        CustomerNotificationHeight();
+    }
+
+    function customerPreviousBillSidePanelOpen(){
+        $('.cus_notify_btn').addClass('hide');
+        $('.cus_notify_section').removeClass('hide');
+        CustomerNotificationHeight();
+    }
+
+    function customerNotifyToggle(show){
+        $('.cus_notify_section').toggle();
+        if (show === 1){
+            $('.cus_notify_section').show();
+        }
+        $('.cus_notify_btn').addClass('hide');
+        CustomerNotificationHeight();
+    }
+
+    function customerNotifyClose(command){
+        if ('' + command === 'true'){
+            $('.cus_notify_section').addClass('hide');
+            $('.cus_notify_btn').removeClass('hide');
+        } else{
+            $('.cus_notify_btn').addClass('hide');
+            $('.cus_notify_section').removeClass('hide');
+        }
+    }
+
+    $(window).resize(function(){
+        CustomerNotificationHeight();
+    });
+    
+    $(document).ready(function(e) {
+        CustomerNotificationHeight();
+    });
+    CustomerNotificationHeight();
+    customerNotifyClose(true);
+    
+    var $table = $('table.mt_table'),
+            $bodyCells = $table.find('tbody tr:first').children(),
+            colWidth;
+    
+    function pendingpayreport() {
+        colWidth = $bodyCells.map(function () {
+            return $(this).width();
+        }).get();
+        $table.find('thead tr').children().each(function (i, v) {
+            $(v).width(colWidth[i]);
+        });
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1 - 55;
+        var r1 = $('.report_date_select').height() + 20;
+        var r2 = $('.reportheader').height() + 50;
+        var r3 = $('.reportsearch').height() + 25;
+        var r4 = $(".reporttablez .mt_table thead").height() + 45;
+        var totalr1 = r1 + r2 + r3 + r4;
+        $('.report_right_section .overflow_scroll').css('height', total_height_c1);
+        if (parseInt($(window).width()) <= 840) {
+            if (!$('.report_right_section').hasClass('full_width_acc')) {
+                totalr1 += 375;
+            }
+            $('.scollbody').css('height', total_height_c1 - totalr1);
+        } else {
+            $('.scollbody').css('height', total_height_c1 - totalr1);
+        }
+    }
+    // Adjust the width of thead cells when window resizes
+    $(window).resize(function () {
+        pendingpayreport();
+        if($(window).width() <= 840){
+            reportsFullviewshow();
+        }
+    });
+    if($(window).width() <= 840){
+        reportsFullviewshow();
+    }
+     // Trigger resize handler
+    
+    function full_screen_pendingpayment() {
+        $('.report_left_section').toggle();
+        $('.report_right_section').toggleClass('full_width_acc');
+        pendingpayreport();
+    }
+    
+    setTimeout(function () {
+        pendingpayreport();
+    }, 200);
+</script>

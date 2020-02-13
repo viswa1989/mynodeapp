@@ -1,0 +1,394 @@
+<style>
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 50px;
+        max-width: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a{
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+    .new-job-card-tab .billappend{
+        width: 150px;
+        float: left;
+    }
+</style>
+<div ng-controller="InwardController">
+    <div class="bill_container menu" id="common_header_contianer" style="margin-left: 0px;width: 100%">
+        <ul class="nav nav-tabs faq-cat-tabs new-job-card-tab">
+            <li class="dash_menu_list">
+                <a href="/divisionadmin/contract/outward">
+                    <div class="bill-name heading_4">Outward</div>
+                </a>
+            </li>
+            <li class="dash_menu_list active">
+                <div class="bill-name heading_4">Inward</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- bill_contianer -->
+    <div class="billshow_container">
+        <div class="row" style="margin:0px">
+            <div class="col-xs-12 job_card_left padding_zero">
+                <div class="delivery_tabpane">
+                    <div class="bill_section_1 bill_auto_height col-xs-3 col1" ng-if="!inwardForm._id || inwardForm._id == ''">
+                        <div class="bill_sec_container margin-bottom-20">
+                            <div class="bill_search">
+                                <input placeholder="Enter Contractor Mobile no / name" tabindex="1" numbersonly="10" type="text" 
+                                       ng-model="inwardData.contractor_mobile" ng-change="getcontractorDetails()" autofocus>
+                            </div>
+                            <div class="bottom-jobcard customer_page col-lg-12 center-block margin-bottom-20">
+                                <div ng-if="inwardData.contractorSearch && inwardData.contractors.length > 0">
+                                    <div class="customer_btn" ng-click="selectContractor(contractor); $event.stopPropagation();" ng-repeat="contractor in inwardData.contractors"
+                                         ng-class="{'active':contractor._id == inwardForm.contractor_id}" tabindex="2" ng-enter="selectContractor(contractor);">
+                                        <div class="profile_img"></div>
+                                        <div class="customer_name">{{contractor.company_name}}</div>
+                                        <div class="customer_phone">{{commonobjectService.getPhonenoprefix()}} {{contractor.phone_no}}</div>
+                                        <div class="customer_phone">
+                                            <span ng-if="contractor.alternate_no && contractor.alternate_no != ''">{{contractor.alternate_no}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 text-center margin-top-20 margin-bottom-10 viewcustomer_placeholder_title" ng-if="!inwardData.contractorSearch && inwardForm.contractor_mobile && inwardForm.contractor_mobile != ''">
+                                    <div class="viewcustomer_placeholder">
+                                        <b ng-bind="inwardForm.contractor_name"></b>
+                                    </div>
+                                    <div class="viewcustomer_placeholder">
+                                        <b ng-bind="commonobjectService.getPhonenoprefix() + ' ' + inwardForm.contractor_mobile_no"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bill_section_1 bill_auto_height col-xs-3 col2 customer-card" ng-if="!inwardForm._id || inwardForm._id == ''">
+                        <div class="bill_sec_container margin-bottom-20">
+                            <div class="bill_title margin-bottom-20">Outwards in progress</div>
+                            
+                            <div class="bill_search" ng-if="inwardForm.contractor_id && inwardData.orders.length > 0">
+                                <input id="ordersrch" placeholder="Search order" type="text" ng-model="inwardData.searchorder" tabindex="3">
+                            </div>
+                            <div class="neworder_container">
+                                <div class="text-center margin-top-40" ng-if="inwardForm.contractor_id && !inwardData.contractorSearch && inwardData.orders.length == 0">No Outwards is in progress.</div>
+                                <div class="dashboard_card_list" ng-repeat="orders in inwardData.orders | filter:inwardData.searchorder" ng-click="selectOrder(orders); $event.stopPropagation();"
+                                     ng-class="{'active_inward':inwardForm.order_id && inwardForm.order_id == orders._id}" ng-enter="selectOrder(orders);" tabindex="4">
+                                    <div class="left_strip" applystatus="{{orders.order_status}}"></div>
+                                    <div class="right_sec">
+                                        <div class="card_txt_cnt">
+                                            <div class="col-xs-12 padding_zero customer-name"> <b class="pull-left" ng-bind="orders.customer_name"></b></div>
+                                            <div class="col-xs-12 padding_zero order-name">Job No: <b ng-bind="orders.order_no"></b> 
+                                                <b class="pull-right" ng-bind="orders.order_date| date:'dd / MM / yyyy'"></b> 
+                                            </div>
+                                            <div class="col-xs-12 padding_zero order-name">Outward No: <b ng-bind="orders.outward_no"></b> 
+                                                <b class="pull-right" ng-bind="orders.outward_date| date:'dd / MM / yyyy'"></b> 
+                                            </div>
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="name process">Process: <b class="txt_blue" ng-bind="orders.processes"></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bill-view-section sec3" ng-class="{'job_completed':inwardForm._id && inwardForm._id != ''}">
+                        <div class="orders_page">
+                            <div class="order_header">
+                                <div class="col-xs-12 padding_zero order_page_container margin-top-20 margin-bottom-20">
+                                    <div class="col-xs-6">
+                                        <div class="order_no heading_4 title_content pull-left" style="width: 100%">
+                                            <span class="label_title">Job No: </span>
+                                            <span class="heading_4 title_content" ng-if="inwardForm.order_no && inwardForm.order_no != null && inwardForm.order_no != ''" 
+                                                  ng-bind="inwardForm.order_no"></span>
+                                            <span class="heading_4 title_content" ng-if="!inwardForm.order_no || inwardForm.order_no == null || inwardForm.order_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="order_cus_name heading_4 title_content pull-left" style="width: 100%"><b ng-bind="inwardForm.contractor_name"></b></div>
+                                        <div class="col-xs-7 padding_zero billing_address title_content" bill-gstin="true" contract-Address="{{inwardForm}}" style="white-space: normal;"></div>
+                                        <div class="col-xs-12 margin-top-15 padding_zero billing_address_title label_title">Driver Details</div>
+                                        <div class="col-xs-12 padding_zero driver_details margin-top-05" ng-if="!inwardForm._id">
+                                            <input type="text" class="common_input" ng-model="inwardForm.vehicle_no" ui-autocomplete="vehicleOption" placeholder="Vehicle No." tabindex="9"/>
+                                            <input type="text" class="common_input margin-left-05" ng-model="inwardForm.driver_name" ui-autocomplete="driverOption" placeholder="Driver Name" tabindex="10"/>
+                                            <input type="text" class="common_input margin-left-05" placeholder="Phone No." ng-model="inwardForm.driver_no" tabindex="11"/>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero margin-top-05" ng-if="!inwardForm._id">
+                                            <div class="col-xs-6 padding_zero">
+                                                <input type="text" class="common_input" ng-model="inwardForm.contract_delivery_no" placeholder="Delivery DC No" tabindex="11"/>
+                                            </div>
+                                            <div class="col-xs-6 padding_left_zero">
+                                                <div class="datepicker_custom_style pickerstyle1 common_input customorderdate">
+                                                    <div class="input-group date common_input_date">
+                                                        <manualdate-time-picker ng-model="inwardForm.contract_dc_date" placeholder="Date" start-view='2' 
+                                                                          min-view='2' max-view='4' today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".pickerstyle1" 
+                                                                          picker-position="bottom-right" tabattr="12" manualdt>
+                                                        </manualdate-time-picker>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero driver_details margin-top-05" ng-if="inwardForm._id && inwardForm._id!=''">
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Vehicle No:</span>
+                                                <span class="title_content" ng-if="inwardForm.vehicle_no && inwardForm.vehicle_no != null && inwardForm.vehicle_no != ''" 
+                                                      ng-bind="inwardForm.vehicle_no"></span>
+                                                <span class="title_content" ng-if="!inwardForm.vehicle_no || inwardForm.vehicle_no == null || inwardForm.vehicle_no == ''"><b>---</b></span>
+                                            </div>
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Driver Name:</span>
+                                                <span class="title_content" ng-if="inwardForm.driver_name && inwardForm.driver_name != null && inwardForm.driver_name != ''" 
+                                                      ng-bind="inwardForm.driver_name"></span>
+                                                <span class="title_content" ng-if="!inwardForm.driver_name || inwardForm.driver_name == null || inwardForm.driver_name == ''" ><b>---</b></span>
+                                            </div>
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Driver Phone No:</span>
+                                                <span class="title_content" ng-if="inwardForm.driver_no && inwardForm.driver_no != null && inwardForm.driver_no != ''" 
+                                                      ng-bind="inwardForm.driver_no"></span>
+                                                <span class="title_content" ng-if="!inwardForm.driver_no || inwardForm.driver_no == null || inwardForm.driver_no == ''" ><b>---</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero driver_details margin-top-05" ng-if="inwardForm._id && inwardForm._id!=''">
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Delivery DC No:</span>
+                                                <span class="title_content" ng-if="inwardForm.contract_delivery_no && inwardForm.contract_delivery_no != null && inwardForm.contract_delivery_no != ''" 
+                                                      ng-bind="inwardForm.contract_delivery_no"></span>
+                                                <span class="title_content" ng-if="!inwardForm.contract_delivery_no || inwardForm.contract_delivery_no == null || inwardForm.contract_delivery_no == ''"><b>---</b></span>
+                                            </div>
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Delivery Date:</span>
+                                                <span class="title_content" ng-if="inwardForm.contract_dc_date && inwardForm.contract_dc_date != null && inwardForm.contract_dc_date != ''" 
+                                                      ng-bind="inwardForm.contract_dc_date | date:'dd - MM - yyyy'"></span>
+                                                <span class="title_content" ng-if="!inwardForm.contract_dc_date || inwardForm.contract_dc_date == null || inwardForm.contract_dc_date == ''" ><b>---</b></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="col-xs-12 margin-bottom-15 padding_zero">
+                                            <span class="label_title order_label">Inward No:</span>
+                                            <span class="title_content" ng-if="inwardForm.inward_no && inwardForm.inward_no != null && inwardForm.inward_no != ''" 
+                                                  ng-bind="inwardForm.inward_no"></span>
+                                            <span class="title_content" ng-if="!inwardForm.inward_no || inwardForm.inward_no == null || inwardForm.inward_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Outward No:</span>
+                                            <span class="title_content" ng-if="inwardForm.outward_no && inwardForm.outward_no != null && inwardForm.outward_no != ''" 
+                                                  ng-bind="inwardForm.outward_no"></span>
+                                            <span class="title_content" ng-if="!inwardForm.outward_no || inwardForm.outward_no == null || inwardForm.outward_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Order Ref No:</span>
+                                            <span class="title_content" ng-if="inwardForm.order_reference_no && inwardForm.order_reference_no != null && inwardForm.order_reference_no != ''" 
+                                                  ng-bind="inwardForm.order_reference_no"></span>
+                                            <span class="title_content" ng-if="!inwardForm.order_reference_no || inwardForm.order_reference_no == null || inwardForm.order_reference_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Customer Name:</span>
+                                            <span class="title_content" ng-if="inwardForm.customer_name && inwardForm.customer_name != null && inwardForm.customer_name != ''" 
+                                                  ng-bind="inwardForm.customer_name"></span>
+                                            <span class="title_content" ng-if="!inwardForm.customer_name || inwardForm.customer_name == null || inwardForm.customer_name == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Customer DC No:</span>
+                                            <span class="title_content" ng-if="inwardForm.customer_dc_no && inwardForm.customer_dc_no != null && inwardForm.customer_dc_no != ''" 
+                                                  ng-bind="inwardForm.customer_dc_no"></span>
+                                            <span class="title_content" ng-if="!inwardForm.customer_dc_no || inwardForm.customer_dc_no == null || inwardForm.customer_dc_no == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Customer DC Date:</span>
+                                            <span class="title_content" ng-if="inwardForm.customer_dc_date && inwardForm.customer_dc_date != null && inwardForm.customer_dc_date != ''" 
+                                                  ng-bind="inwardForm.customer_dc_date | date:'dd - MM - yyyy'"></span>
+                                            <span class="title_content" ng-if="!inwardForm.customer_dc_date || inwardForm.customer_dc_date == null || inwardForm.customer_dc_date == ''" ><b>---</b></span>
+                                        </div>
+<!--                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing Name:</span>
+                                            <span class="title_content" ng-if="inwardForm.dyeing && inwardForm.dyeing != null && inwardForm.dyeing != '' && inwardForm.dyeing.dyeing_name &&
+                                                                    inwardForm.dyeing.dyeing_name != null && inwardForm.dyeing.dyeing_name != ''" ng-bind="inwardForm.dyeing.dyeing_name"></span>
+                                            <span class="title_content" ng-if="!inwardForm.dyeing || inwardForm.dyeing == null || inwardForm.dyeing == '' || !inwardForm.dyeing.dyeing_name ||
+                                                                    inwardForm.dyeing.dyeing_name == null || inwardForm.dyeing.dyeing_name == ''" ><b>---</b></span>
+                                        </div>-->
+<!--                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing DC No: </span>
+                                            <span class="title_content" ng-if="inwardForm.dyeing_dc_no && inwardForm.dyeing_dc_no != null && inwardForm.dyeing_dc_no != ''" 
+                                                  ng-bind="inwardForm.dyeing_dc_no"></span>
+                                            <span class="title_content" ng-if="!inwardForm.dyeing_dc_no || inwardForm.dyeing_dc_no == null || inwardForm.dyeing_dc_no == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing DC Date: </span>
+                                            <span class="title_content" ng-if="inwardForm.dyeing_dc_date && inwardForm.dyeing_dc_date != null && inwardForm.dyeing_dc_date != ''" 
+                                                  ng-bind="inwardForm.dyeing_dc_date | date:'dd - MM - yyyy'"></span>
+                                            <span class="title_content" ng-if="!inwardForm.dyeing_dc_date || inwardForm.dyeing_dc_date == null || inwardForm.dyeing_dc_date == ''" ><b>---</b></span>
+                                        </div>-->
+                                    </div>
+                                    <div class="clearboth"></div>
+                                </div>
+                            </div>
+
+                            <div class="clearboth"></div>
+                            <div class="bill_view_order margin-bottom-20"> 
+                                <div class="col-xs-12 padding_zero" ng-if="!inwardForm._id || inwardForm._id == ''">
+                                    <div class="col-xs-12 margin-top-10 heading_5">
+                                        <b>Outward Details</b>
+                                    </div>
+
+                                    <div class="col-xs-12 order_detail_content margin-top-20">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center"></th>
+                                                    <th class="text-left">Fabric Type</th>
+                                                    <th class="text-left">Colour</th>
+                                                    <th class="text-left">Process</th>
+                                                    <th class="text-left">Lot No</th>
+                                                    <th class="text-center">Dia</th>
+                                                    <th class="text-center">No of Rolls</th>
+                                                    <th class="text-center">Weight</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="inward in inwardForm.outwards" ng-hide="inwardForm.jobstatus == 'COMPLETED' && !inward.fabric_color">
+                                                    <td>
+                                                        <input ng-if="!inward.returncompleted" type="checkbox" ng-model="inward.is_checked" ng-change="selectInward(inward)" ng-enter="selectInward(inward)" tabindex="13"/>
+                                                    </td>
+                                                    <td class="fabric_types" ng-bind="inward.fabric_type"></td>
+                                                    <td class="fabric_color" ng-bind="inward.fabric_color"></td>
+                                                    <td class="fabric_process" combine-process="{{inward.process}}"></td>
+                                                    <td ng-bind="inward.lot_no"></td>
+                                                    <td class="text-center" ng-bind="inward.dia | number:2"></td>
+                                                    <td class="text-center" ng-bind="inward.rolls"></td>
+                                                    <td class="fabric_weight text-right" ng-bind="inward.weight | number:3"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 padding_zero" ng-if="inwardForm.inwardData && inwardForm.inwardData.length > 0">
+                                    <div class="col-xs-12 margin-top-10 heading_5">
+                                        <b>Inward Details</b>
+                                    </div>
+
+                                    <div class="col-xs-12 order_detail_content margin-top-20">
+                                        <table class="table" ng-if="inwardForm.inwardData && inwardForm.inwardData.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th colspan="4" class="text-center" style="color: #777;">Received</th>
+                                                    <th colspan="2" class="text-center" style="color: #777;">Available</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-left">Fabric Type</th>
+                                                    <th class="text-left">Colour</th>
+                                                    <th class="text-left">Process</th>
+                                                    <th class="text-center">Dia</th>
+                                                    <th></th>
+                                                    <th class="text-center">Rolls</th>
+                                                    <th class="text-right">Weight</th>
+                                                    <th></th>
+                                                    <th class="text-center">Rolls</th>
+                                                    <th class="text-right">Weight</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="inward in inwardForm.inwardData" ng-hide="inwardForm.jobstatus == 'COMPLETED' && !inward.fabric_color">
+                                                    <td class="fabric_types" ng-bind="inward.fabric_type"></td>
+                                                    <td class="fabric_color" ng-bind="inward.fabric_color"></td>
+                                                    <td class="fabric_process">
+                                                        <span combine-process="{{inward.process}}" ng-if="inwardForm.currentIndex != inward.inward_data_id"></span>
+                                                        <span ng-if="inwardForm.currentIndex != inward.inward_data_id && (!inwardForm._id || inwardForm._id == '')">
+                                                            <a ng-click="inwardForm.currentIndex = inward.inward_data_id">Change</a>
+                                                        </span>
+                                                        
+                                                        <tags-input ng-if="inwardForm.currentIndex == inward.inward_data_id && (!inwardForm._id || inwardForm._id == '')" 
+                                                                    key-property="process_id" display-property="process_name" class="tax_tags" ng-model="inward.process"
+                                                                    placeholder="Add / Remove Process" replace-spaces-with-dashes="false">
+                                                            <auto-complete source="loadTags($query)" load-on-focus="true" load-on-empty="true" min-length="0" max-results="10">
+                                                            </auto-complete>
+                                                        </tags-input>
+                                                        <span class="pull-right" ng-if="inwardForm.currentIndex == inward.inward_data_id && (!inwardForm._id || inwardForm._id == '')">
+                                                            <a ng-click="inwardForm.currentIndex = ''">Update</a>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center" ng-bind="inward.dia | number:2"></td>
+                                                    <td></td>
+                                                    <td class="text-center" ng-bind="inward.receivedrolls"></td>
+                                                    <td class="fabric_weight text-right" ng-bind="inward.receivedweight | number:3"></td>
+                                                    <td></td>
+                                                    <td class="text-center">
+                                                        <span ng-if="inwardForm._id && inwardForm._id != ''" ng-bind="inward.received_roll"></span>
+                                                        <input ng-if="!inwardForm._id || inwardForm._id == ''" type="text" class="delivery_entry_input delivery_rolls" 
+                                                               ng-class="{'input_error_show':inward.isrollError}" valid-onlynumber ng-model="inward.received_roll" 
+                                                               tabindex="{{13+$index+1}}">
+                                                    </td>
+                                                    <td class="fabric_weight text-right">
+                                                        <span ng-if="inwardForm._id && inwardForm._id != ''" ng-bind="inward.received_weight | number:3"></span>
+                                                        <input ng-if="!inwardForm._id || inwardForm._id == ''" type="text" class="delivery_entry_input delivery_weight" 
+                                                               ng-class="{'input_error_show':inward.isweightError}" valid-number3 ng-model="inward.received_weight" 
+                                                               ng-blur="validateWeight(inward)" tabindex="{{13+$index+2}}">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 margin-top-20" ng-if="inwardForm._id && inwardForm._id != ''">
+                                        <a class="print_bill" ng-click="printThisinward(); $event.stopPropagation();" style="vertical-align: sub;">Print this inward</a>
+                                        <button class="common_button red_button margin-right-20 pull-right" ng-click="initializeDeliverydetails(); $event.stopPropagation();">Close</button>
+                                    </div>
+                                    <div class="col-xs-12 text-center margin-top-20" ng-if="inwardForm.inwardData && inwardForm.inwardData.length > 0 && (!inwardForm._id || inwardForm._id == '')">
+                                        <button class="common_button pull-right" ng-click="saveInward('save'); $event.stopPropagation();" tabindex="{{inwardForm.inwardData.length*2+15}}">Save</button>
+                                        <button class="common_button margin-right-20 pull-right red_button" ng-click="saveInward('print'); $event.stopPropagation();" tabindex="{{inwardForm.inwardData.length*2+14}}">Save &amp; Print</button>
+                                    </div>
+                                </div>
+                            </div>                    
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+        </div>               
+    </div>
+</div>
+
+<script>
+    //Card Height Set
+    function delcardHeight() {
+        var headerHeight = $('.header').height();
+        var windowHeight = $(window).height();
+        var totalHeight = windowHeight - (headerHeight + 5);
+        var rightpaneheight = totalHeight - 65;
+        $('.bill_auto_height').css('height', rightpaneheight);
+        $('.bill-view-section').css('height', rightpaneheight);
+    }
+    setTimeout(function(){
+        delcardHeight();
+    },300);
+    
+    $(window).resize(function () {
+        delcardHeight();
+    });
+</script>

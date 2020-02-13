@@ -1,0 +1,1521 @@
+@media only screen and (max-width: 767px) {
+    /* Customer Page */
+    .customer_page .fliter_cnt .add_customer {
+        padding: 10px 15px 10px;
+    }
+    .customer_page .customer_title {
+        width: 250px;
+    }
+    .customer_page .customer_prof_cnt {
+        height: auto;
+        margin-left: 0px;
+    }
+    .customer_page .customer_btn {
+        margin-right: 5px;
+    }
+    .customer_page .customer_card_container {
+        width: 95%;
+        float: left;
+    }
+    .customer_page .customer_card_container {
+        width: 95%;
+        float: left;
+    }
+    .customer_page .graph {
+        width: 100%;
+        float: left;
+    }
+    .area_chart {
+        width: 100%;
+        float: left;
+    }
+    .pie_chart {
+        float: left;
+    }
+    .graph_container{
+        margin-top: -60px;
+        margin-bottom: 40px;
+    }
+    .donut_chart {
+        float: left;
+    }
+    .container_header{
+        /*position:absolute;*/
+    }
+    .right_menu_list {
+        float:right;
+    }
+    /** Account **/
+    .account .account_left_section {
+        width: 38%;
+    }
+    .account .account_right_section {
+        width: 60%;
+    }
+    .account .right_menu {
+        float: left;
+        width: 100%;
+        margin-top: 5px;
+    }
+    .account .custom_date_style .date_icon {
+        display: none !important;
+    }
+    .account .form_datetime input[type="text"] {
+        width: 160px !important;
+    }
+}
+
+@media only screen and (min-width:500px) and (max-width:699px){
+    /*login Screen */
+    .login_background {
+        background-size: 100% 100%;
+    }
+    .login_tiles {
+        background-size: 50%;
+        margin-left: 20%;
+        height: 150px;
+        bottom: 1%;
+    }
+    .sign_in {
+        /*        margin: 0% auto;
+                width: 80%;
+                padding-top: 30%;*/
+    }
+    #wrapper_signin {
+        width: 400px;
+        height: 80vh !important;
+        position: fixed;
+        top: 0px;
+        left: 0%;
+        margin: 0 auto;
+    }
+    .sign_in .logo {
+        /*        margin-bottom: 40px;*/
+    }
+    .sign_in .email-type {
+        /*        margin-bottom: 30px;*/
+    }
+    .sign_in .copy_right {
+        /*        margin-top: 30px;
+                margin-bottom: 20px;*/
+    }
+}
+@media only screen and (max-width:1200px){
+    .invoice_account_view .acnt_invoice_cus_title{
+        width: 100px;
+    }
+    .invoice_account_view .acnt_invoice_cus_details{
+        margin-left: 30px;
+        width: 45%;
+    }
+    .invoice_account_view .acnt_invoice_right_details{
+        width: 89%;
+    }
+	.purchaseStock_page .purchase_menu_section {
+        width: 18%;
+    }
+    .purchaseStock_page .purchase_right_section {
+        width: 63%;
+    }
+    .purchaseStock_page .headergroup .button{
+        width: 140px;
+    }
+}
+@media only screen  and (min-width:1001px) and (max-width:1200px){
+    table.mt_table td.purchasestock_innertable_view{
+        padding: 20px 110px 20px 100px;
+    }
+}
+@media only screen  and (max-width:1400px){
+    table.mt_table td.purchasestockreturn_innertable_view{
+        padding: 20px 50px 20px 50px;
+    }
+    /* report */
+    .report .report_left_section {
+        padding-left: 30px;
+    }
+    .purchaseStock_page .purchase_menu_section {
+        width: 15%;
+    }
+}
+@media only screen and (max-width:999px){
+    .account .edit_left_sec {
+        width: 60%;
+        padding-left: 50px;
+    }
+    .account .edit_left_sec .left_title{
+        margin-right: 10px;
+    }
+    .account .edit_right_sec .left_title{
+        margin-right: 35px;
+    }
+    .account .edit_right_sec {
+        width: 60%;
+        padding-left: 40px;
+        margin-top: -30px;
+    }
+    .edit_body .left_title{
+        width: 65px;
+    }
+    .account .account_footer .input_right_currency {
+        width: 33% !important;
+    }
+    .edit_body input, .edit_body select {
+        width: 70%;
+    }
+    .account .edit_body .selectize-control {
+        width: 70%;
+    }
+    .account .enter{
+        margin-left: 110px;
+    }
+    .account .full_width_acc .edit_left_sec{
+        width: 52%;
+        padding-left: 10px;
+    }
+    .account .full_width_acc .input_right {
+        width: 160px !important;
+    }
+    .account .full_width_acc .edit_right_sec{
+        width: 48%;
+        padding-left: 10px;
+        margin-top: 0px;
+    }
+    .account .full_width_acc .edit_body .left_title{
+        width: 55px;
+        margin-right: 10px;
+    }
+    .account .full_width_acc .account_footer .input_right_currency {
+        width: 170px !important;
+    }
+    .account .full_width_acc .account_footer .btn_top_margin {
+        margin-top: 24px;
+    }
+    .account .full_width_acc .enter {
+        margin-left: 60px;
+    }
+    /* .report .report_right_section{
+        width: 55%;
+    } */
+    .report .report_left_section{
+        min-width: 209px;
+        padding-left: 20px;
+    }
+}
+@media only screen and (min-width:700px) and (max-width:999px){
+    /*login Screen */
+    .login_background {
+        background-size: 100% 100%;
+    }
+    .login_tiles {
+        background-size: 50%;
+        margin-left: 20%;
+        height: 150px;
+        bottom: 1%;
+    }
+    .sign_in {
+        /*margin: 0% auto;*/
+        /*width: 80%;*/
+        /*padding-top: 30%;*/
+    }
+    #wrapper_signin {
+        width: 400px;
+        height: 80vh !important;
+        position: fixed;
+        top: 0px;
+        left: 0%;
+        margin: 0 auto;
+    }
+    .sign_in .logo {
+        /*        margin-bottom: 40px;*/
+    }
+    .sign_in .email-type {
+        /*        margin-bottom: 30px;*/
+    }
+    .sign_in .copy_right {
+        /*        margin-top: 30px;
+                margin-bottom: 20px;*/
+    }
+    /*Cutomer Page Card add Adddress Form*/
+    .customer-profile-container .add_card_container {
+        width: 98%;
+    }
+    .customer_page .customer_card_container {
+        width: 95%;
+        float: left;
+    }
+    .customer_page .customer_card_container {
+        width: 95%;
+        float: left;
+    }
+    .customer_page .graph {
+        width: 100%;
+        float: left;
+    }
+    .area_chart {
+        width: 100%;
+        float: left;
+    }
+    .pie_chart {
+        float: left;
+    }
+    .graph_container{
+        margin-top: -60px;
+        margin-bottom: 40px;
+    }
+    .donut_chart {
+        float: left;
+    }
+    .customer_page .customer_prof_cnt {
+        height: auto;
+        margin-left: 30px;
+    }
+    .customer_page .customer_btn {
+        margin-right: 20px;
+    }
+    .container_header_pricechart a {
+        color: rgb(0,133,178);
+        margin-left: 15px;
+    }
+    .customer_page .full-view .cus_view_float {
+        width: 100% !important;
+    }
+    .customer_page .full-view .graph {
+        width: 100% !important;
+    }
+    .customer_page .full-view .customer-card-container {
+        width: 100% !important;
+    }
+    .customer_page .customer-payment-container {
+        width: 100%;
+    }
+    .customer-payment-container .customer_paymant_col {
+        width: 100%;
+    }
+    .customer_page .customer-profile-container {
+        width: 100%;
+    }
+    .customer_page .customer-discount-container {
+        width: 100%;
+    }
+    .customer-profile-container .form_contianer {
+        width: 70%;
+    }    
+    .customer_page .cus_view_cnt .customer_card_col {
+        width: 95%;
+    }
+    .customer-card-container, .customer-profile-container, .customer-payment-container, .customer-card-container{
+        padding-bottom:50px !important;
+    }
+    .store_price {
+        margin-bottom:40px;
+    }
+    .account .edit_body .selectize-control {
+        /*width: 55% !important;*/
+    }
+    .account .custom_date_style .input-append {
+        min-width: 100px !important;
+    }
+    .graph_container{
+        margin-top: -60px;
+        margin-bottom: 40px;
+    }
+    .account .input_right_currency {
+        width: 32% !important;
+    }
+
+    /** Account **/
+
+    .setup_fixed_postion {
+        height: 195px;
+    }
+    .account .edit_right_sec {
+        /*        width: 210px !important;
+                margin-top: -20px;*/
+    }
+    .account .account_left_section {
+        width: 33%;
+    }
+    .account .account_right_section {
+        width: 65%;
+    }
+
+    .account .form_datetime input[type="text"] {
+        /*width: 100px !important;*/
+    }
+    .account .edit_right_sec {
+/*        width: 160px;
+        margin-top: -20px;*/
+    }
+/*    .edit_body input, .edit_body select {
+        width: 55% !important;
+    }*/
+    .multiSelect .checkboxLayer {
+        width: 52%;
+    }
+    .edit_body .left_title {
+        /*width: 50px;*/
+    }
+    .account .input_right {
+        width: 110px !important;
+    }
+    .account .search_right_cnt {
+        width: 46% !important;
+    }
+    .account .search_box_expand {
+        width: 100% !important;
+        padding: 5px !important;
+    }
+    .account .enter {
+        font-size: 12px !important;
+        /*padding: 10px 15px !important;*/
+    }
+    .account .cancel {
+        font-size: 12px;
+        padding: 10px 15px;
+    }
+    .account .btn_top_margin {
+        margin-top: 0px;
+    }
+    .account account_footer .btn_top_margin {
+        margin-top: 30px;
+    }
+    .account .custom_date_style .date_icon {
+        display: none !important;
+    }
+/*    .account .edit_body .selectize-control {
+        width: 55% !important;
+    }*/
+    .account .custom_date_style .input-append {
+        min-width: 100px !important;
+    }
+    .graph_container{
+        margin-top: -60px;
+        margin-bottom: 40px;
+    }
+    .account .input_right_currency {
+        width: 32% !important;
+    }
+}
+
+@media only screen and (max-width:999px){
+    .desktopmenu{
+        display:none !important;
+    }
+    .navbar-form {
+        width: auto;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-right: 0;
+        margin-left: 0;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+    .datepicker_custom_style{
+    }
+}
+
+@media only screen and (min-width:1000px) and (max-width:1250px){
+    /** Login **/	
+    .sign_in {
+        /*padding-top: 30%;*/
+    }
+    .login_tiles {
+        background-size: 50%;
+        margin-left: 1%;
+        height: 200px;
+    }
+
+    /* Customer Page Full Screen */	
+    .customer_page .full-view .cus_view_float {
+        width: 100% !important;
+    }
+    .customer_page .full-view .graph {
+        width: 48% !important;
+    }
+    .customer_page .full-view .customer-card-container {
+        width: 48% !important;
+    }
+    .customer_page .customer-payment-container {
+        width: 38%;
+    }
+    .customer-payment-container .customer_paymant_col {
+        width: 100%;
+    }
+    .customer_page .customer-profile-container {
+        width: 50%;
+    }
+    .customeruser.customer_page .customer-profile-container {
+        width: 50%;
+    }
+    .customer_page .customer-discount-container {
+        width: 48%;
+    }
+    .customeruser.customer_page .customer-discount-container {
+        width: 48%;
+    }
+    .customer_page .customer_btn {
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+    }
+    .customer-profile-container .form_contianer {
+        width: 90%;
+    }
+    .customer-profile-container .address_card, .customer-profile-container .address_card_add {
+        margin-bottom: 20px;
+        margin-left: 20px;
+    }
+    /*** Account ***/
+
+
+
+    .edit_body input, .edit_body select {
+        width: 70% !important;
+    }
+    .account_select_box {
+        width: 70%;
+    }
+    .multiSelect .checkboxLayer {
+        width: 57%;
+    }
+    .edit_body .left_title {
+        width: 50px;
+    }
+    .account .input_right {
+        width: 160px !important;
+    }
+    .account .search_right_cnt {
+        width: 55% !important;
+    }
+    .account_footer .custom_date_style .balance_input {
+        width: 160px !important;
+    }
+    .account .edit_body  .selectize-control {
+        position: relative;
+        width: 70% !important;
+    }
+    .account .custom_date_style {
+        width: 150px !important;
+    }
+    .edit_body input, .edit_body select {
+        width: 70% !important;
+    }
+    .account .input_right_currency {
+        /*width: 50% !important;*/
+    }
+    .account .cash_list {
+        width: 80%;
+    }
+    .account .right_menu {
+        width:100%;
+        margin-top:25px;
+    }
+    .right_menu_dropdown{
+        width:20%;
+    }
+    .full_width_acc .right_menu{
+        width:45%;
+        margin-top:0px;
+    }
+    .full_width_acc .cash_list{
+        width:45%;
+    }
+    .account .full_width_acc .right_menu .search_right_cnt {
+        width: 85% !important;
+    }
+
+    .s_height_1 {
+        height: 200px !important;
+    }
+}
+@media only screen and (max-width:1719px){
+/*    .delivery_tabpane .bill-view-section{
+        width: 650px;
+    }
+    .delivery_tabpane .bill-view-section .orders_page{
+        width: 645px;
+    }
+    .delivery_tabpane .order_body .billing_address.col1{
+        width: 190px;
+    }*/
+}
+@media only screen and (max-width:1799px){
+    .billshow_container .order_tabpane .col2, .billshow_container .order_tabpane .col3, .billshow_container .order_tabpane .bill-view-section{
+        -webkit-box-shadow: 0px 4px 5px 0px rgba(50, 50, 50, 0.7);
+        -moz-box-shadow: 0px 4px 5px 0px rgba(50, 50, 50, 0.7);
+        box-shadow: 0px 4px 5px 0px rgba(50, 50, 50, 0.7);
+    }
+    .billshow_container .order_tabpane .bill_current_first.col3{
+        margin-left: -270px;
+    }
+    .billshow_container .order_tabpane .bill-view-section{
+        position: relative;
+        float: none;
+        display: inline-block;
+        z-index: 5;
+    }
+    .billshow_container .order_tabpane .bill-view-section.bill_sec_active{
+        margin-left: -270px; 
+    }
+}
+@media only screen and (max-width:1540px){
+    .billshow_container .delivery_tabpane .bill-view-section{
+        margin-left: 10px;
+        position: relative;
+        float: none;
+        display: inline-block;
+        z-index: 5;
+        box-shadow: rgba(50, 50, 50, 0.7) 0px 4px 5px 0px;
+    }
+}
+@media only screen and (max-width:1904px){
+/*    .order_tabpane .bill-view-section{
+        width: 650px;
+    }
+    .order_tabpane .bill-view-section .orders_page{
+        width: 645px;
+    }
+    .order_tabpane .order_body .billing_address.col1{
+        width: 190px;
+    }*/
+}
+@media only screen and (max-width:1634px){
+/*    .job_card_left .order_tabpane .col2, .job_card_left .order_tabpane .col3{
+        margin-left: -220px;
+    }
+    .left_panel_toggle .job_card_left .order_tabpane .col2, .left_panel_toggle .job_card_left .order_tabpane .col3{
+        margin-left: 0px;
+    }
+    .order_tabpane .bill_current_second , .order_tabpane .bill_current_third {position: relative !important;
+                                                                              background: rgb(0,0,0) !important;
+                                                                              opacity: 0.6;
+    }
+    .order_tabpane .bill_current_second , .order_tabpane .bill_current_third {
+        overflow: hidden !important;
+    }
+    .order_tabpane .bill_current_second .bill_sec_container , .order_tabpane .bill_current_third .bill_sec_container{display: none !important}
+    .order_tabpane .bill_current_second .bill_title , .order_tabpane .bill_current_third .bill_title{display: none !important}*/
+}
+@media only screen and (max-width:1824px){
+/*    .job_card_left .order_tabpane .col2, .job_card_left .order_tabpane .col3{
+        margin-left: -220px;
+    }
+    .left_panel_toggle .job_card_left .order_tabpane .col2, .left_panel_toggle .job_card_left .order_tabpane .col3{
+        margin-left: 0px;
+    }
+    .order_tabpane .bill_current_second , .order_tabpane .bill_current_third {
+        position: relative !important;
+        background: rgb(0,0,0) !important;
+        opacity: 0.6;
+    }
+    .order_tabpane .bill_current_second , .order_tabpane .bill_current_third {
+        overflow: hidden !important;
+    }
+    .order_tabpane .bill_current_second .bill_sec_container , .order_tabpane .bill_current_third .bill_sec_container{display: none !important}*/
+    /*.order_tabpane .bill_current_second .bill_title , .order_tabpane .bill_current_third .bill_title{display: none !important}*/
+}
+@media only screen and (max-width:1449px){
+/*    .left_panel_toggle .job_card_left .order_tabpane .col2, .left_panel_toggle .job_card_left .order_tabpane .col3{
+        margin-left: -220px;
+    }*/
+}
+@media only screen and (min-width:1251px) and (max-width:1350px){
+
+    /** Customer Pge **/
+    .customer_page .customer_prof_cnt {
+        height: auto;
+        margin-left: 5px;
+    }
+    .customer_page .customer_btn {
+        margin-right: 7px;
+    }
+    .customer-profile-container .address_card, .customer-profile-container .address_card_add {
+        margin-left: 70px !important;
+    }
+
+    /** Acccount **/
+    .account .search_right_cnt {
+        width: 60% !important;
+    }
+    .account .input_right {
+        width: 52% !important;
+    }
+    .invoice_account_view input.acnt_invoice_no_input {
+        width:150px !important;
+    }
+}
+
+@media only screen and (min-width:1351px) and (max-width:1600px){
+
+    /** Acccount **/	
+    .account .search_right_cnt {
+        width: 55% !important;
+    }
+    .account .input_right {
+        width: 48% !important;
+    }
+}
+
+@media only screen and  (max-width:1000px){
+
+    /** Account Add Form **/
+    .account .form_left, .account .form_left_bal, .account .form_left_bal_date {
+        font-size: 12px !important;
+    }
+    .account .accont_add_form input.balance_input[type="text"] {
+        width: 60px !important;
+    }
+
+    .editable_ledger .custom_date_style .date_icon{
+        display:block !important;
+    }
+    .account .form_right_bal {
+        max-width: 100px;
+    }
+    .account .accont_add_form input[type="text"], .account select, .account textarea {
+        width: 200px !important;
+    }
+    .ledger_dropdown{
+        width: 200px !important;
+    }
+    .account  .edit_account_datepicker .input-append input[type="text"] {
+        max-width: 125px !important;
+    }
+    .account .accont_add_form {
+        width: 390px;
+    }
+    .account .accont_add_form table {
+        width: 390px;
+    }
+    .account .accont_add_form .fav_check_text {
+        font-size: 12px;
+    }
+    .account table td.acc_table_date {
+        max-width: 80px;
+        width: 80px;
+    }
+    .account .form_left_bal_date {
+        float: none;
+    }
+    .account .search_box_expand {
+        width: 30%;
+    }
+
+    .account .right_menu {
+        width:100%;
+        margin-top:25px;
+    }
+    .right_menu_dropdown{
+        width:30%;
+    }
+    .account .search_right_cnt {
+        width: 98% !important;
+    }
+
+    .account .cash_list {
+        width: 100%;
+    }
+    .cash_list , .account_filter_header .heading_3{
+        font-size:16px !important;
+    }
+    .account .edit_account {
+        font-size: 12px;
+        margin-top:5px;
+
+    }
+    .account_fullview{
+        display: inline-block !important;
+        margin:0px 5px 0px 8px;
+    }
+
+    .full_width_acc{
+        width:100% !important;
+    }
+
+    .custom_date_style {
+        width: 100px !important;
+        float: left;
+        padding-top: 0px;
+    }
+    .account .form_datetime input[type="text"] {
+        /*width: 100px !important;*/
+    }
+    .temp_ledger_opening_balence  input[type="text"]{
+        width: 200px !important;
+    }
+    .account .custom_date_style {
+        width: 100px !important;
+    }
+    .account_footer .custom_date_style .balance_input {
+        width: 120px !important;
+    }
+
+    .acconut_dropdown_menu {
+        left: -150px;
+    }
+
+    .header_set_height .navbar-header {
+        width: 250px;
+        float: left;
+    }
+    table.mt_table td.purchasestock_innertable_view{
+        padding: 20px 160px 20px 20px;
+    }
+}
+@media only screen and (min-width:1000px) and (max-width:1400px){
+    .edit_body .left_title{
+        width: 55px;
+    }
+}
+@media only screen and (min-width:1200px) and (max-width:1600px){
+
+    /** Login **/	
+    .sign_in {
+        /*padding-top: 30%;*/
+    }
+    .sign_in .logo {
+        /*margin-bottom: 55px;*/
+    }	
+    .login_tiles {
+        background-size: 70%;
+        margin-left: 5%;
+        bottom: 5%;
+        height: 250px;
+    }
+
+    /** Customer Page **/
+    .customer_page .customer_card_container {
+        width: 85%;
+        float: left;
+    }
+    .customer_page .graph {
+        width: 100%;
+        float: left;
+    }
+    .area_chart {
+        width: 100%;
+        float: left;
+    }
+    .pie_chart {
+    }
+    .graph_container{
+        margin-top: -60px;
+        margin-bottom: 40px;
+    }
+    .donut_chart {
+        float: left;
+    }
+    .customer-profile-container .address_card, .customer-profile-container .address_card_add {
+        margin-left: 80px !important;
+    }
+    .customer-profile-container .form_contianer {
+        width: 90%;
+    }
+
+    .customer_page ul.cus_menu_1 {
+        margin-top: 0px;
+    }
+    .customer_page .full-view .cus_view_float {
+        width: 48% !important;
+        margin-right: 2%;
+    }
+    .customer_page .full-view .graph {
+        width: 100% !important;
+    }
+    .customer_page .full-view .customer-card-container {
+        width: 98% !important;
+    }
+    .customer_page .customer-payment-container {
+        width: 50%;
+    }
+    .customer-payment-container .customer_paymant_col {
+        width: 100%;
+    }
+    .customer_page .filter_cnt {
+        width: 95%;
+    }
+    .customer_page .filter_cnt .button {
+        padding: 10px 10px;
+    }
+    .customer_page .filter_cnt .add_customer {
+        padding: 10px 10px;
+    }
+    .customer_page .cus_view_cnt .customer_card_col{
+        width:95%;
+    }
+
+    /** ACCOUNT **/
+    .account_select_box {
+        width: 70%;
+    }
+    .account .edit_body  .selectize-control {
+        /*width: 70% !important;*/
+    }
+    .customer_page .cus_view_cnt .customer_card_col{
+        width:95%;
+    }
+
+    .account .cash_list {
+        width: 45%;
+    }
+    .account .right_menu {
+        width:45%;
+    }
+    .right_menu_dropdown{
+        width:20%;
+    }
+    .account .search_right_cnt {
+        width: 75% !important;
+    }
+    .full_width_acc .right_menu{
+        width:50%;
+        margin-top:0px;
+        margin-right:15px;
+    }
+    .full_width_acc .cash_list{
+        width:45%;
+    }
+
+    .full_width_acc  .table_div {
+        width: 100% !important;
+    }
+
+    .account .edit_right_sec {
+        float: left;
+        width: 50%;
+    }
+    .edit_body .left_title {
+        /*width: 20%;*/
+    }
+
+}
+
+@media only screen and (min-width: 1000px) and (max-width: 1400px) {
+    .account .account_left_section {
+        width: 28%;
+        float: left;
+        margin-right: 2%;
+    }
+    .account .account_right_section {
+        width: 70%;
+        float: left;
+    }
+    .sidebar_search {
+        display: none !important;
+    }
+    /** Notification **/
+    .header_div .menu_cnt_expand {
+        width: 35%;
+    }
+    .search_div_expand {
+        width: 65%;
+    }
+    .search_right_cnt {
+        width: 50%;
+    }
+    .header_div .fliter_seach {
+        width: 50%;
+    }
+    .header_div .fliter_seach {
+        padding-top: 15px;
+    }
+    .fliter_seach a {
+        font-size: 12px;
+    }
+    /** End Notification **/
+
+
+}
+
+@media only screen and (min-width:1000px) and (max-width:1274px){
+    .account .edit_left_sec {
+        width: 52%;
+    }
+    .account .edit_right_sec {
+        width: 48%;
+    }
+    .full_width_acc .account_footer{
+        width: 945px;
+    }
+}
+
+@media only screen and (min-width:1000px) and (max-width:1400px){
+    .account .enter{
+        margin-left: 50px;
+    }    
+}
+   
+@media only screen and (min-width: 100px) and (max-width: 1400px) {
+    .map_active {
+        width: 90%;
+    }
+    #map {
+        width: 90%;
+    }
+    .map_btn {
+        background: #E3E3E3;
+    }
+    .map_icon {
+        background-color: #E3E3E3;
+    }
+    .account .table_div {
+        width: 1200px;
+    }
+    .account .account_total_show {
+        padding: 8px 50px 8px 0px;
+    }
+    /* report */
+    .report_table_cnt {
+        margin: 10px auto;
+    }
+    .report_table_div {
+        width: 900px;
+    }
+    /* .report .report_left_section {
+        padding-left: 30px;
+    } */
+}
+
+@media only screen and (min-width: 1600px) and (max-width: 1800px) {
+    .bill_auto_height {
+        overflow: hidden;
+    }
+    /*login Screen */
+    .login_background {
+        background-size: 85%;
+    }
+    .login_tiles {
+        background-size: 85%;
+    }
+    .account .account_total_show {
+        padding: 8px 60px 8px 0px;
+    }
+
+    .multiSelect .checkboxLayer {
+        width: 67%;
+    }
+
+    /** Invoice Account**/
+    .invoice_account_view{
+        padding-right:0px !important;
+    }
+
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1600px) {
+
+    /** Invoice Account**/
+    .invoice_account_view{
+        padding-right:0px !important;
+    }
+    .acnt_text_invoice_input {
+        /*width:25% !important;*/
+    }
+    .resp-col-xs-3{
+        width:100%;
+    }
+    .resp-col-xs-9{
+        width:100%;
+    }
+    .invoice_account_view .acnt_left_sec_2 {
+        /*width: 32%;*/
+        float: left;
+        text-align: right;
+        margin-right: 4%;
+        line-height: 40px;
+        font-size: 12px;
+    }
+    .invoice_account_view .acnt_right_sec_2 {
+        width:73%;
+    }
+    .invoice_account_view .acnt_invoice_qty {
+        /*width: 100%;*/
+    }
+    .invoice_account_view .acnt_input_prefix {
+        /*width: 60%;*/
+    }
+    .resp_left_sec_2{
+        width: 20% !important;
+    }
+
+    .res-col-xs-5{
+        width:50% !important;
+        margin-bottom:20px;
+        padding:0px !important;
+    }
+    .res-col-xs-5-btm{
+        width:50% !important;
+    }
+    .res-col-xs-center{
+        width:50% !important;
+        margin-bottom:20px;
+        padding-left:15px !important;
+    }
+    .acnt_text_invoice_input input {
+        /*width: 80%;*/
+    }
+    .acnt_text_invoice_input_prec input {
+        width: 49%;
+    }
+    .invoice .invoice_total_amount {
+        width: 42%;
+    }
+    .invoice_account_view .acnt_bnt_cnt a{
+        float:none;
+    }
+    .acnt_text_invoice_input_prec  b{
+        margin-left:0px !important;
+    }
+
+
+    /*** Recevice Invoice ***/
+    .receive_left_section{
+        width:50% !important;
+        padding:0px 10px 0px 0px !important;
+    }
+    .receive_right_section{
+        width:50%;
+        padding:0px !important;
+    }
+    .receive_choose_account_resp{
+        margin-bottom:10px;
+    }
+    .receive_number_resp , .receive_choose_account_resp{
+        width:100% !important;
+        padding:0px;
+    }
+    .receive_invoice_cus_title , .receive_invoice_cus_title_left{
+        width: 40% !important;
+    }
+    .receive_invoice_cus_details , .receive_invoice_cus_details_left{
+        width: 55% !important;
+        margin-left:5% !important;
+    }
+    .acnt_receive_table_container {
+        min-width:650px;
+        width: 98%;
+    }
+    .receiving_invoice .acnt_amt_allocate{
+        width:120px;
+    }
+
+
+}
+
+@media only screen and (min-width: 10px) and (max-width: 999px) {
+    /** Invoice Account **/
+
+    .invoice_account_view .acnt_invoice_cus_details {
+        margin-bottom: 25px;
+    }
+    .invoice_account_view .acnt_address_cnt {
+        width: 320px;
+    }
+    .res-col-xs-5-btm {
+        width: 90% !important;
+    }
+    .res-col-xs-center {
+        width: 80% !important;
+    }
+    .invoice_account_view .acnt_left_sec_2 {
+        width: 21%;
+    }
+    .invoice_account_view .acnt_left_sec {
+        /*width: 18%;*/
+    }
+
+    .resp_padding_zero{
+        padding:0px !important;
+    }
+    .text_invoice_text_right {
+        /*margin-left: 10px;*/
+    }
+    .resp_left_sec_2 {
+        width: 21% !important;
+    }
+    .invoice_account_view .acnt_invoice_cus_title {
+        /*width: 15%;*/
+    }
+    .invoice .cancel_invoice {
+        margin-left: 5px;
+    }
+    .invoice .save_invoice {
+        font-size: 14px;
+        margin-left: 5px;
+    }
+
+    .invoice_right_menu .cash_list {
+        width: 75% !important;
+        line-height: 23px;
+    }
+
+
+    /**Receive Invoice **/
+
+    .receiving_payment_form .custom_date_style .input-append , .receiving_payment_form .form_datetime input[type="text"] {
+        width:200px !important;
+    }
+    .receiving_payment_form .custom_date_style .date_icon {
+        display:inline-block !important;
+    }
+    .acnt_receive_table_container{
+        min-width:700px;
+    }
+    tr.invoice_receive td:first-child , tr.invoice_receive th:first-child  {
+        padding-left:20px;
+    }
+    tr.invoice_receive td:last-child, tr.invoice_receive th:last-child  {
+        padding-right:20px;
+    }
+
+
+}
+
+
+@media only screen and (min-width: 1600px) and (max-width: 1800px) {
+
+    /*login Screen */
+    .login_background {
+        background-size: 85%;
+    }
+    .login_tiles {
+        background-size: 85%;
+    }
+
+}
+
+@media only screen and (max-width:1600px){
+     /* Menu */
+
+    .navbar-form .form-group {
+        margin-left: 0px;
+    }
+    .menu-hide-desktop{
+        display:none;
+    }
+    .desktop_menu_toggle{
+        margin-top:5px;
+    }
+    .menu-hide {
+        display: block !important;
+    }
+    .left_toggle {
+        display: none;
+    }
+    .list_menu {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        display: none;
+        width: 300px;
+        z-index: 9999999999;
+    }
+    #desktop-menu li {
+        width: 100%;
+        text-align: center;
+    }
+    #desktop-menu li a {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .mobilemenu {
+        display: block !important;
+    }
+    .navbar-header-container {
+        padding-left: 0px;
+    }   
+    .btn-top-split {
+        display: none !important;
+    }
+    .responsive_menu_logo {
+        float: left;
+        width: 95%;
+        margin: 0px 8px 20px;
+        padding: 30px 20px 30px;
+        border-bottom: 1px solid rgba(255,255,255,0.7);
+    }
+
+    /* end Menu */
+}
+
+@media only screen and (max-width:1650px){  
+
+    /* Splite screen hide */
+    .split-pane-divider {
+        display: none !important;
+    }
+    .right-component {
+        display: none;
+    }
+    .split-pane.fixed-left > .split-pane-component, .split-pane.fixed-right > .split-pane-component, .split-pane.vertical-percent > .split-pane-component {
+        position: static !important;
+    }
+    .left-component {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+    .right_component {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+    #right-component {
+        left: 0px !important;
+        margin-left: 0px !important;
+        overflow: hidden;
+        display:none;
+    }
+
+    .container_header {
+        float: left;
+        background: #DDDDDD;
+        width: 100%;
+        /*padding-top: 57px;*/
+        z-index: 250;
+    }
+    
+    .purchaseStock_page .headergroup .button {
+        padding: 13px 0px;
+        font-size: 14px;
+        width: 150px;
+    }
+    .purchaseStock_page .menugroup .button {
+        padding: 12px 0px;
+        font-size: 13px;
+        width: 130px;
+    }
+    /*End Splite screen hide */
+
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1650px){
+    .purchaseStock_page .purchase_menu_section , .purchaseStock_page .purchase_left_section{
+        padding: 30px 10px 10px 20px;
+    }
+}
+
+@media only screen and (max-width: 1399px){
+    .purchaseStock_page .purchase_left_section{
+        width: 17%;
+    }
+    .purchaseStock_page .purchase_menu_section , .purchaseStock_page .purchase_left_section{
+        padding: 30px 10px 10px 10px;
+    }
+    /* .purchaseStock_page .table_scroll {
+        min-width: 760px;
+    } */
+    .purchaseStock_page .purchase_right_section {
+        width: 66%;
+    }
+    .purchaseStock_page .headergroup .button{
+        width: 138px;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .login_background {
+        background: url(../images/login_screen.png) no-repeat;
+        width: 100%;
+        float: left;
+        height: 100vh;
+        background-size: 100% 100%;
+    }
+    .login_tiles {
+        background: url(../images/login_tile.jpg) no-repeat;
+        width: 980px;
+        height: 350px;
+        position: absolute;
+        bottom: 5%;
+        margin-left: 18%;
+    }
+}
+
+@media only screen and (min-width: 1650px) and (max-width: 1700px) {
+    .navbar-header-container {
+        padding-left: 30px;
+    }
+}
+@media only screen and (max-width: 780px) {
+    .branch_card, .branch_card_add{
+        margin: 0 5px 15px;
+    }
+}
+@media only screen and (max-width: 920px) {
+    .minmize_price{
+        width: 120px !important;
+    }
+    .minmize_qty{
+        width: 100px !important;
+    }
+    .customer_page ul.cus_menu {
+        margin-top: 10px;
+    }
+}
+@media only screen and (max-height: 650px) and (min-height: 100px){
+    .customer_page .cus_view_cnt {
+        overflow-y: hidden;
+        padding-right: 0px !important;
+    }
+    .customer_page .full-view .graph:hover {
+        overflow-y: auto;
+    }
+/*    .customer_page .full-view .graph {
+        overflow-y: hidden;
+        padding-right: 0px !important;
+    }*/
+    .customer_page .full-view .customer-card-container {
+        overflow-y: hidden;
+        padding-right: 0px !important;
+    }
+    .customer_page .height_scroll {
+        overflow-y: hidden;
+        padding-right: 0px !important;
+    }
+}
+@media only screen and (max-width: 850px) and (min-width: 100px){    
+    .customer_page .full-view .customer-card-container {
+        width: 100% !important;
+    }
+}
+@media only screen and (max-width: 899px) and (min-width: 100px){
+    .customer_page .customer-payment-container, .customer_page .customer-discount-container, .customer_page .customer-profile-container {
+        width: 100%;
+    }
+}
+@media only screen and (max-width: 1280px) {
+    .setup .center_content{
+        width: 95%;
+    }
+    .full_width_acc .sub_table_center_50 {
+        width: 100%;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .report .report_right_section {
+        width: 56%;
+    }
+    .account .account_footer .edit_body{
+        overflow-y: auto;
+        height: 0;
+    }
+    .customer_page .cus_view_cnt .customer_card_col{
+        width: 95%;
+    }
+    .setup .center_content{
+        width: 90%;
+    }
+}
+@media only screen and (max-width: 960px) {
+    .report .report_right_section {
+        width: 55%;
+    }
+}
+
+@media only screen and (max-width: 1170px) {
+    .report .report_left_section {
+        min-width: 202px;
+    }
+    .report .report_right_section{
+        margin-left: 0;
+        padding-right: 0;
+    }
+}
+@media only screen and (max-width: 1100px) {
+.report .report_left_section {
+    min-width: 196px;
+}
+.report .report_right_section {
+    width: 61%;
+}
+}
+@media only screen and (max-width: 1020px) {
+    .report .report_right_section {
+        width: 58%;
+    }
+}
+@media only screen and (max-width: 942px) {
+    .report .report_right_section {
+        width: 55%;
+    }
+}
+@media only screen and (max-width: 880px) {
+    .report .report_right_section {
+        width: 53%;
+    }
+}
+
+/* @media only screen and (max-width: 1126px) {
+    .report .report_left_section {
+        min-width: 200px;
+    }
+    .report .report_right_section {
+        width: 62%;
+        margin-left: 1px;
+    }
+} */
+@media only screen and (max-width: 840px) {
+	#wrapper_header_btn .col-xs-12.padding-right-30 .navbar-right.white_color{margin-top: 5px;}
+    .setup-divison-manage-process {
+        margin-left: 10px;
+    }
+    .header_div .fliter_seach{padding: 11px 15px 0 17px;width: 52%;}
+    .header_div .menu_cnt_expand, .search_div_expand {width: 100%;}
+    .search_right_cnt {width: 47%;}
+    .header_expand_div {padding: 0 0 0;}
+    .openscenter {left: 10% !important;}
+
+
+
+
+    .report .report_right_section {padding-top: 20px;padding-left: 0;}
+    .report_right_section, .purchase_right_section{display: none;}
+    .report_right_section.full_width_acc,  .purchase_right_section.full_width_acc{display: block;}
+    .report .report_left_section{width: 50%;}
+    .report .report_right_section, .purchaseStock_page .purchase_right_section {width: 100%;}
+    .report .fullscreen_icon{position: absolute;left: 7px;top: -4px;}
+    .report_right_section_header {padding: 0px 0px 0px 35px;}
+
+    .center_alg{width: 80%;}
+    .purchaseStock_page .full_width_acc .fullscreen_icon{position: absolute;left: 4px;top: -3px;}
+    .purchaseStock_page .fullscreen_icon{position: absolute;left: 5px;top: 6px;}
+    .purchaseStock_page .purchase_right_section.full_width_acc{padding: 17px 10px;}
+    .purchase_right_section .purchase_right_section_header {padding: 10px 0px 10px 36px;}
+    .purchase_right_section.full_width_acc .purchase_right_section_header {padding: 0px 0px 0px 36px;}
+    .purchaseStock_page .purchase_right_section{padding-top: 10px;}
+    .purchaseStock_page .purchase_left_section{background-color: transparent;}
+    .setup .center_content {width: 100%;}
+    .center_alg_w95 {width: 95% !important;}
+    .purchaseStock_page .purchase_menu_section, .purchaseStock_page .purchase_left_section {width: 50%;}
+    .purchaseStock_page .purchase_right_section{margin: 0;}
+   
+    .account .enter{padding: 10px 30px;}
+    .account .full_width_acc .right_menu{margin-top: 0;}
+    .account .account_left_section{width: 100%;margin-right: 0%;}
+    .account > .row.margin-0 > div.col-xs-12{padding: 0;}
+    .account .account_right_section{width: 0;}
+    .account .common_button{transition: .0s linear;-webkit-transition: .0s linear;}
+    .account .account_fav_icon {position: absolute;right: 65px;float: right;top: 0;width: 33px;z-index: 1;}
+    .container-fluid.account{margin-top: 10px;}
+   
+   
+    .cash_list > span, .account .search_right_cnt, .account_right_section .dropdown_icons {display: none;}
+    .full_width_acc .cash_list > span, .full_width_acc .account .search_right_cnt, .account_right_section.full_width_acc .dropdown_icons {display: block;}
+    #wrapper_content #sortable-horizontal{width: 100%;}
+    .dashboard_card{margin: 0 1px;}
+    .dashboard_card.Minmizelist {margin-bottom: 24px;}
+    .customer-profile-container input[type=text], .customer-profile-container input[type=password], .customer-profile-container input[type=email]{width: 100%;}
+
+    .customer_page .cus_view_cnt .customer_card_col{width: 100%;}
+    .customer_page .customer_view{padding-right: 0;}
+    .customer_page .section_customer_select{padding: 0;}
+    .customer_page .letter_cnt > ul.navbar-right{margin-right: 0px;}
+    .customer_page .customer-card-container {margin: 0;}
+
+    .customer_page .full-view .customer_view{padding: 0;}
+    .customer_page .full-view .customer-card-container{margin: 0 !important;}
+    .customer_page .full-view .customer-card-container{padding-right: 0;padding: 30px 0px 0px 0;}
+    .customer_page .full-view .customer-card-container .cus_card{width: 100%;}
+
+
+    
+}

@@ -1,0 +1,133 @@
+<div class="margin-top-20 margin-bottom-30 pull-left">
+    <div class="col-xs-12 margin-bottom-30" style="font-size: 16px;line-height: 130%;color: #333;margin-top: 5px;">
+        <strong>Invoice #<%= invoice_no %></strong>        
+    </div>
+    <div class="col-xs-7 padding_zero">
+        <div class="col-xs-12 padding_zero">
+            <div style="width: 65px;text-align: left;margin-bottom: 10px;float: left;display: block;">Customer</div>
+            <div style="width: 180px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;"> 
+                <b><%= customer_name %></b>
+            </div>
+        </div>
+        <div class="col-xs-12 padding_zero">
+            <div style="width: 65px;text-align: left;float: left;margin-bottom: 10px;">Address</div>
+            <div style="width: 180px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;">
+                <div style="padding: 0!important;width: 50%;float: left;"> 
+                    <div style="font-weight: bold;">
+                        <p>Near Bustand, Mangalam Road, Tiruppur, Tamil Nadu, 641602.</p>
+                    </div>
+                </div>
+            </div>                                       
+        </div>
+        <div class="col-xs-12 padding_zero_div">
+            <div style="width: 65px;text-align: left;float: left;margin-bottom: 10px;">GSTN</div>
+            <div style="width: 180px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;">
+                <span><%= gstin %></span>               
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xs-5 padding_zero" style="width: 41.66666667%;padding: 0px;float: left;display: block;">
+        <div style="width: 100%;float: left;margin-bottom: 10px;display: block;">
+            <span style="text-align:left;float:left;width: 80px;padding-right:0px;">Invoice No.</span>
+            <div style="float: left;width: 105px;text-align: left;font-weight: bold;"><%= invoice_no %></div> 
+        </div>
+
+        <div style="width: 100%;float: left;margin-bottom: 10px;display: block;">
+            <span style="text-align:left;float:left;width: 80px;padding-right:0px;">Invoice Date</span>
+            <div style="text-align: left;font-weight: bold;float: left;width: 105px;margin-bottom: 10px;">
+                <span style="display: block;"><%= invoice_date %></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xs-12 margin-top-30 padding_zero">
+        <div class="col-xs-12 padding_zero">
+            <table style="font-size: 12px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #ccc;">
+                        <th style="padding: 10px 5px 10px;">Del No</th>
+                        <th style="padding: 10px 5px 10px;">Process</th>
+                        <th class="text-right" style="padding: 10px 5px 10px;">Weight</th>
+                        <th style="min-width: 65px;padding: 10px 5px 10px;" class="text-right">Rate (₹)</th>
+                        <th class="text-right" style="padding: 10px 5px 10px;">IGST</th>
+                        <th style="min-width: 100px;padding: 10px 5px 10px;" class="text-right">Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #ccc;padding: 10px 0;">
+                        <td style="padding: 10px 5px;">
+                            <span>OW_12</span>
+                        </td>
+                        <td style="padding: 10px 5px;">
+                            <span>Heat Setting & Dryer</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>240.000</span>
+                        </td>                                                        
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>240.000</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>552.00</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>5,520.00</span>
+                        </td>
+                    </tr>
+                    
+                    <tr style="border-bottom: 1px solid #ccc;padding: 10px 0;">
+                        <td style="padding: 10px 5px;">
+                            <span>OW_12</span>
+                        </td>
+                        <td style="padding: 10px 5px;">
+                            <span>Heat Setting & Dryer</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>240.000</span>
+                        </td>                                                        
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>240.000</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>552.00</span>
+                        </td>
+                        <td class="text-right" style="padding: 10px 5px;">
+                            <span>5,520.00</span>
+                        </td>
+                    </tr>                                                       
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 margin-top-10 padding_zero">
+            <div class="col-xs-12 padding_zero">
+                <div class="col-xs-7 padding_zero">
+                    <div class="col-xs-5 heading_7 padding_zero" style="font-size: 13px;">
+                        Customer Notes
+                    </div>
+                    <div class="padding_left_zero col-xs-7">
+                    </div>
+                </div>
+                <div class="col-xs-5 text-right heading_7 padding_zero" style="font-size: 13px;">
+                    <div><strong>Subtotal:</strong>
+                        <div style="width: 105px;display: inline-block;">
+                            <strong>₹ 9,600.00</strong>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>10% IGST:</strong>
+                        <div style="width: 105px;display: inline-block;margin-top: 5px;">
+                            <strong>₹ 960.00</strong>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Total:</strong>
+                        <div style="width: 105px;display: inline-block;margin-top: 10px;">
+                            <b>₹ 10,560.00</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

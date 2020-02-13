@@ -1,0 +1,93 @@
+<div class="header_div">
+    <div class="search_cnt">
+        <input type="text" class="search_box" ng-model="activity.searchnotification" placeholder="Search Date, User, Bill, etc.">
+        <div class="search_btn">Search</div>
+    </div>
+    
+    <div class="menu_cnt">
+        <div class="fullscreen_icon expand_div_click_toggle" ng-click="expand_notification($event, $(this)); $event.stopPropagation();"></div>
+
+        <div class="menu_list" title="All" ng-click="selectnotifycategory('ALL'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'ALL'}">
+            <span class="all_notify"></span>
+        </div>
+
+        <div class="menu_list" title="Sales" ng-click="selectnotifycategory('SALES'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'SALES'}">
+            <span class="sales_notify"></span>
+        </div>
+
+        <div class="menu_list" title="Stock" ng-click="selectnotifycategory('STOCK'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'STOCK'}">
+            <span class="stock_notify"></span>
+        </div>
+
+        <div class="menu_list" title="User Activity" ng-click="selectnotifycategory('USER ACTIVITY'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'USER ACTIVITY'}">
+            <span class="user_notify"></span>
+        </div>
+
+        <div class="menu_list" title="Todo" ng-click="selectnotifycategory('TODO'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'TODO'}">
+            <span class="task_notify"></span>
+        </div>
+             
+        <div class="menu_list" title="Accounts" ng-click="selectnotifycategory('ACCOUNTS'); $event.stopPropagation();" ng-class="{'active':activity.selectednotifymenu == 'ACCOUNTS'}">
+            <span class="accounts_notify"></span>
+        </div>
+    </div>        
+    <div class="search_div_expand hide">
+        <div class="fliter_seach">Show &nbsp;&nbsp; 
+            <span>
+                <a class="filter_sel_day" ng-class="{'active':activity.selectednotifydates == 'TODAY'}" ng-click="selectnotifyfilter('TODAY'); $event.stopPropagation();">Today</a>,
+            </span>
+            <span>
+                <a class="filter_sel_day" ng-class="{'active':activity.selectednotifydates == 'YESTERDAY'}" ng-click="selectnotifyfilter('YESTERDAY'); $event.stopPropagation();">Yesterday</a>,
+            </span>
+            <span>
+                <a class="filter_sel_day" ng-class="{'active':activity.selectednotifydates == 'SUNDAY'}" ng-click="selectnotifyfilter('SUNDAY'); $event.stopPropagation();">Sunday</a>,
+            </span>
+            <span>
+                <a class="filter_sel_day" ng-class="{'active':activity.selectednotifydates == 'SATURDAY'}" ng-click="selectnotifyfilter('SATURDAY'); $event.stopPropagation();">Saturday</a>,
+            </span>
+
+            <a class="filter_sel_day" ng-class="{'active':activity.selectednotifydates == 'ALL'}" ng-click="selectnotifyfilter('ALL'); $event.stopPropagation();">&nbsp;All Dates</a>
+        </div>
+        
+        <div class="search_right_cnt">
+            <input type="text" class="search_box_expand" ng-model="activity.searchnotification" placeholder="Search Date, User, Bill, etc.">
+            <div class="search_icons">
+                <!--<span class="voice_icon"></span>-->
+                <span class="close_icon_small_notify" ng-click="activity.searchnotification = ''; $event.stopPropagation();"></span>
+                <span class="search_letter">search</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="notify_card_content" id="notify_card_content">
+    <div ag-scroll-container="#notify_card_content" ag-infinite-scroll="loadMorenotification()" ag-infinite-scroll-disabled="activity.disablescroll" 
+         class="dynamic-grid" angular-grid="activity.notificationData" ag-css-grid="false" ag-grid-width="280" ag-gutter-size="20" ag-id="gallery" ag-refresh-on-img-load="true" >
+        <div ng-if="activity.notificationData.length>0" data-ng-repeat="notifymsg in activity.notificationData| orderBy:created" class="grid masonry-brick notify_card item hover_effect active">
+            <div class="card_small">
+                <div class="card_date"><span ng-bind="notifymsg.created | date:'EEE, dd-MM-yyyy h:mm a'"></span> at <b ng-bind="notifymsg.division_name"></b></div>
+                <div class="customer" ng-bind-html="notifymsg.message"></div>  
+            </div>
+        </div>
+		<div ng-if="!activity.notificationData || activity.notificationData.length==0" class="empty-notify-data">No Data available.</div>
+        <div class="col-xs-12 margin-bottom-20" ng-if="activity.loader">
+            <div class="loader_small"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function set_notification_panel_height() {
+        var height = $(window).height() - $('.header').height();
+        var HeaderHeightpanel = $('.header').height();//header height
+
+        $('.notification').css({
+            'height': height,
+            'top': HeaderHeightpanel
+        }); // SET DEFAULT HEIGHT IN CONTAINER
+    }
+    $(window).resize(function () {
+        set_notification_panel_height();
+    });
+    set_notification_panel_height();
+</script>

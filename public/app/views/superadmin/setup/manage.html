@@ -1,0 +1,21 @@
+<div ng-controller="ManageController">
+    <div class="wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="content_title heading_4">Manage Fabrics</div>
+                    <div class="content_subtitle">Manage Fabric type, fabric colour and fabric measurement here.</div>
+                    <div class="regular_price_cnt">
+                        <div class="regular_price heading_6" ng-click="managePage('type'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.managePageName == 'type'}">Fabric Type</div>
+                        <div class="regular_price heading_6" ng-click="managePage('color'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.managePageName == 'color'}">Colour</div>
+                        <div class="regular_price heading_6" ng-click="managePage('measure'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.managePageName == 'measure'}">Measurements</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="setup_submenu_content" ng-include="clientData.manage_page_link"></div>
+    </div>
+</div>

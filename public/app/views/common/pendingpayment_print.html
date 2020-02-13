@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+    <head>    
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../../../css/font.css" />
+        <style>
+            body{
+                color: #393939;font-size: 14px;font-family: 'Open Sans', sans-serif;
+            }
+            .text-right{
+                text-align: right;
+            }
+            .text-left{
+                text-align: left;
+            }
+            .text-center{
+                text-align: center;
+            }
+            .dc_wapper{
+                float:left;width:1020px;margin:10px 10px;
+            }
+            .col-xs{
+                float:left;width:100%;
+            }
+            .dc_customer_details{
+                margin-top: 30px;
+            }
+            .dc_address{
+                display:table-cell;vertical-align: bottom;width: 300px;margin-right: 15px;color: rgb(17,17,17);line-height: 17px;font-size: 14px;
+            }
+            .dc_table{
+                width:100%;border-collapse: collapse;border:1px solid;border-top:0px;
+            }
+            .dc_table .border-right{
+                border-right: 1px solid;
+            }
+            .dc_table .border-bottom-divide{
+                border-bottom: 1px solid #999;
+            }
+            .dc_table .border-bottom{
+                border-bottom: 1px solid;
+            }
+            .dc_table .border-top{
+                border-top: 1px solid;
+            }
+            .dc_table .header{
+                padding:10px 7px;font-size:12px;
+            }
+            .dc_table .row-top .header{
+                font-size: 13px;
+            }
+            .pull-left{
+                float: left;
+            }
+            .pull-right{
+                float: right;
+            }
+            table tbody tr td{
+                vertical-align: top;
+            }
+            .address_detail{
+                margin-top: 5px;
+                line-height: 1.3;
+            }
+            .detail_payment{
+                line-height: 1.3;
+            }
+            @media print {
+                table tr.page-break{
+                    page-break-inside: avoid;
+                } 
+            } 
+        </style>
+        <script type="text/javascript" src="../../../js/angular.min.js"></script>
+        <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+        
+        <script>
+            var app = angular.module("InvoicePrint", []);
+            app.controller("invoicePrintCtrl", function ($scope, $rootScope, $timeout) {
+
+                $scope.returnForm = {};
+                if (window.opener && !window.opener.closed) {
+                    $scope.invoiceDetail = window.opener.invoiceDetail;
+                    $scope.pendingpaymentsDetail = window.opener.pendingpaymentsDetail;
+                    $scope.selectedDivision = window.opener.selectedDivision;
+                    $scope.currentDate = window.opener.currentDate;
+                    $scope.selectedDivisionid = window.opener.selectedDivisionId;
+                    $scope.currency = window.opener.currency;
+                    $timeout(function () {
+                       window.print();
+                    }, 3000);
+                }
+            }).filter('ledgerBalance', function () {
+                return function (modelval) {
+                    var filtered = '';
+                    if (angular.isDefined(modelval) && modelval!==null) {
+                        var totalinvoice = modelval.total_invoiceamount;
+                        if(modelval.paidinvoice_total){
+                            totalinvoice += modelval.paidinvoice_total;
+                        }
+                        if(modelval.payment_received>totalinvoice){
+                            var ledgerbal = modelval.payment_received-totalinvoice;
+                            filtered = '₹ '+ledgerbal.toFixed(2);
+                        }
+                    }
+                    return filtered;
+                };
+            }).filter('pendingbydivision', function () {
+                return function (modelval, id) {
+                    var filtered = 0;
+                    if(angular.isUndefined(modelval.pending_detail) || modelval.pending_detail === null || modelval.pending_detail.length === 0){
+                        return `₹ ${filtered.toFixed(2)}`;
+                    }
+                    if (angular.isDefined(id) && id==="") {
+                        filtered = modelval.total_pendingamount;
+                    } else {
+                        angular.forEach(modelval.pending_detail, function(data){
+                            if(angular.isDefined(data.division_id) && data.division_id === id){
+                                filtered += data.pending_amount;
+                            }
+                        });
+                    }
+                    return '₹ '+filtered.toFixed(2);
+                };
+            }).directive("displayAddress", function($compile){
+                return {
+                    scope: true,
+                    restrict: "A",
+                    link: function (scope, elem, attrs) {
+                        function checkIfExistingValue(obj, key) {
+                            return obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== "";
+                        }
+                        
+                        attrs.$observe("displayAddress", function(newValue){
+                            var address="";
+                            newValue=JSON.parse(newValue);
+                            if(angular.isDefined(newValue)){                    
+                                var nameArray = ["address_line","area","city","state","pincode"];
+
+                                //loop through all possible names
+                                for(var i=0;i<nameArray.length;i++){
+                                    if(checkIfExistingValue(newValue, nameArray[i])){
+                                        if(address===""){
+                                            address = newValue[nameArray[i]];
+                                        }else{
+                                            address=address+", "+newValue[nameArray[i]];
+                                        }
+                                    }
+                                }
+                                address=address+".";
+                            }
+                            
+                            elem.html(address);
+                        });
+                    }
+                };
+            });
+        </script>
+    </head>
+    <body ng-app="InvoicePrint" ng-controller="invoicePrintCtrl">
+        <div class="dc_wapper"> <!-- dc_wapper -->
+            <div class="col-xs" style="display:table;">
+                <div class="dc_address text-center">
+                    <b style="font-size: 16px;">Pending Payment Report</b>
+                </div>
+            </div>
+            <div class="col-xs dc_customer_details">
+                <b style="font-size: 15px;" ng-if="selectedDivision == 'ALL'" ng-bind="'At all Divisions as of '+(currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                <b style="font-size: 15px;" ng-if="selectedDivision != 'ALL'" ng-bind="'At '+(selectedDivision)+' as of '+(currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+            </div>
+            <div class="col-xs" style="margin-top:10px;">
+                <b style="font-size: 15px;">{{pendingpaymentsDetail.length}} Customers having pending Invoice Payments</b>
+            </div>
+
+            <div class="col-xs dc_customer_details">
+                <table class="dc_table">
+                    <thead>
+                        <tr class="border-bottom border-top">
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Division</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="260px;">Customer Details</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Pending Amount</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Total Pending Amount</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="98px;">Ledger Balance</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Excess Payments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="pendingreport in pendingpaymentsDetail" class="page-break"></tr>
+                        <tr class="row-top border-bottom-divide">
+                            <td class="dc_table_list_td text-left header" width="100px;"><span ng-bind="selectedDivision"></span></td>
+                            <td class="text-left header" width="260px;"><b ng-bind="pendingreport.name"></b><br/>
+                                <div class="text-left address_detail"><span display-address="{{pendingreport.address}}"></span></div></td>
+                            <td class="text-right header" width="100px;"><span ng-bind="(pendingreport | pendingbydivision:selectedDivisionid)"></span></td>
+                            <td class="text-right header" width="100px;"><span ng-bind="currency+(pendingreport.total_pendingamount | number:2)"></span></td>
+                            <td class="text-right header" width="98px;">
+                                <span ng-if="pendingreport.previous_balance && pendingreport.previous_balance>0" 
+                                              ng-bind="currency+(pendingreport.previous_balance | number:2)"></span>
+                            </td>
+                            <td class="text-right header  border-right" width="100px;">
+                                <span ng-if="pendingreport.excess_payment && pendingreport.excess_payment>0" 
+                                              ng-bind="currency+(pendingreport.excess_payment | number:2)"></span>
+                            </td>
+                        </tr>
+                        <tr class="border-bottom">
+                            <td width="100px;"></td>
+                            <td colspan="3" class="header detail_payment">
+                                <div class="col-xs" style="font-size: 13px;">
+                                    <div class="col-xs">
+                                        <div class="pull-left" style="width:25%">
+                                            <div style="width: 120px;display: inline-block;">
+                                                <span class="pull-left">Paid Bills</span>
+                                                <span class="pull-right" ng-bind="pendingreport.total_paidbill"></span>
+                                            </div>
+                                            <div style="width: 120px;display: inline-block;">
+                                                <span class="pull-left">Pending Bills</span>
+                                                <span class="pull-right" ng-bind="pendingreport.total_pendinginvoice"></span>
+                                            </div>
+                                            <div style="width: 120px;display: inline-block;">
+                                                <span class="pull-left">Total Bills</span>
+                                                <span class="pull-right" ng-bind="(pendingreport.total_paidbill+pendingreport.total_pendinginvoice)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="pull-left" style="width:75%" ng-repeat="billloop in pendingreport.pending_detail">
+                                            <div class="text-right pull-left" style="width: 40%;" ng-bind="billloop.division_name"></div>
+                                            <div class="text-right pull-left" style="width: 30%;" ng-bind="(billloop.invoice_count)+' Pending Bills'"></div>
+                                            <div class="text-right pull-left" style="width: 30%;" ng-bind="currency+(billloop.pending_amount | number:2)"></div>
+                                        </div>
+                                        <div class="pull-left" style="width:75%" ng-if="pendingreport.previous_balance && pendingreport.previous_balance>0">
+                                            <div class="text-right pull-left" style="width: 40%;">.</div>
+                                            <div class="text-right pull-left" style="width: 30%;">Pending Balance</div>
+                                            <div class="text-right pull-left" style="width: 30%;" ng-bind="currency+(pendingreport.previous_balance | number:2)"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs" style="margin-top:5px;">
+                                        <div class="pull-right" style="width:65%;margin-bottom:20px;">
+                                            <div class="text-right pull-left" style="width:50%;"><b>Total</b></div>
+                                            <div class="text-right pull-left" style="width:50%;"><b ng-bind="currency+(pendingreport.total_pendingamount | number:2)"></b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr ng-repeat-end></tr>
+                    </tbody>
+                </table>
+            </div>       
+        </div>
+    </body>
+</html>

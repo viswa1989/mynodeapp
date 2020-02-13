@@ -1,0 +1,879 @@
+<style>
+    body {
+        overflow: hidden;
+        background: #eee;
+    }
+    .header_set_height{
+        background: rgb(35, 137, 159);
+    }
+    .wrapper-div, .left-component{
+        overflow: hidden !important;
+    }
+    .class_checkbox_div{width:120px;float:left;}
+</style>
+
+<div class="container-fluid customeruser customer_page" ng-controller="CustomerprofileController">
+    <div id="page_loader" ng-show="customerdata.pageLoader"></div>
+    <div class="c_window_height full-view" id="cus-page-full-screen">
+
+        <div class="customer_view sec_3 col-lg-12 col-md-12 col-sm-12 col-xs-12" id="sec_3" status="true">
+
+            <div class="customer_header customer_header_right">
+                <div class="col-xs-12">
+                    <div class="favorite_big" ng-class="{'active':customerdata.viewableCustomerData.is_favourite}">F</div>
+                    <div class="customer_title heading_3" ng-bind="customerdata.viewableCustomerData.mobile_no + ', ' + customerdata.viewableCustomerData.name"></div>
+                    <a ng-href="tel:+91{{customerdata.viewableCustomerData.mobile_no}}" class="voice_call_icon"></a>
+                    <div>
+                        <ul class="cus_menu pull-right">
+                            <li><a class="click profile_click active" id="profile_click" ng-click="customerdata.viewmenu = 'Profile';">Profile</a></li>
+                            <li><a class="click purchase_click" id="purchase_click" ng-click="customerdata.viewmenu = 'Order';">Order History </a></li>
+                            <li><a class="click payment_click" id="payment_click" ng-click="customerdata.viewmenu = 'Payment';">Payments</a></li>
+                            <li><a class="click outward_click" id="outward_click" ng-click="customerdata.viewmenu = 'Outward';">Outwards</a></li>
+                            <li><a class="click return_click" id="return_click" ng-click="customerdata.viewmenu = 'Return';">Return</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customer-name-cnt">
+                
+                <div class="customer-profile-container viewcustomer_profile height_scroll" id="profile">
+                    <!--Profile -->
+                    <div class="row margin-0">
+                        <div class="profile_title heading_4"><b>Profile</b> </div>
+
+                        <div class="form_contianer">
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 text-right">
+                                    <label>Company Name</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="customerdata.viewableCustomerData.name"></div>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>Email ID</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="customerdata.viewableCustomerData.email_id"></div>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>Mobile Number</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="'+91 '+customerdata.viewableCustomerData.mobile_no"></div>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>Alternate Contact Number</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="'+91 '+customerdata.viewableCustomerData.alternate_no"></div>
+                            </div>
+                            
+                            <div class="clearboth"></div>
+                            <!--GSTIN updates begin-->
+                            <div class="col-lg-12 text-center sub_title margin-top-40">
+                                <strong>GST Information</strong>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>GSTIN Number</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="customerdata.viewableCustomerData.gstin"></div>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>Place of Supply</label>
+                                </div>
+                                <div class="col-xs-6" ng-if="customerdata.viewableCustomerData.placeofSupply && customerdata.viewableCustomerData.placeofSupply.name" 
+                                     ng-bind="customerdata.viewableCustomerData.placeofSupply.name"></div>
+                            </div>
+                            <!--GSTIN updates ends-->
+                            
+                            <div class="clearboth"></div>
+                            <!--Contact person start-->
+                            <div class="col-lg-12 text-center sub_title margin-top-40"><strong>Contact Person</strong></div>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 text-right">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="customerdata.viewableCustomerData.contact_person"></div>
+                            </div>
+                            <div class="col-xs-12 margin-top-10">
+                                <div class="col-xs-6 text-right">
+                                    <label>Contact Number</label>
+                                </div>
+                                <div class="col-xs-6" ng-bind="'+91 '+customerdata.viewableCustomerData.contactperson_mobile_no"></div>
+                            </div>
+                            <!--Contact person end-->
+                            
+                            <div class="clearboth"></div>
+                            <!--Followup person start-->
+                            <div class="col-lg-12 text-center sub_title margin-top-40"><strong>Follow Up Person</strong></div>
+                            <div class="add_card_container" id="grid">
+                                <ul>
+                                    <li class="form-toggle" ng-repeat="followup in customerdata.viewableCustomerData.followup_person">
+                                        <div class="address_card">
+                                            <div class="profile_img" style="margin-top: 0px;">
+                                                <img ng-src="{{followup.profile_picture}}" width="75px" fallback-src="profile"/>
+                                            </div>
+                                            <div class="place" ng-if="followup.name" ng-bind="followup.name"></div>
+                                            <div class="phone" ng-if="followup.mobile_no" ng-bind="'+91 ' + followup.mobile_no"></div>
+                                            <div class="phone" ng-if="followup.email_id" ng-bind="followup.email_id"></div>                                            
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--Followup person end-->
+
+                            <div class="col-lg-12 text-center sub_title margin-top-40"><strong>Delivery Addresses</strong></div>
+                            <div class="add_card_container" id="grid">
+                                <ul>
+                                    <span class="append_cnt">
+                                        <li class="form-toggle" ng-repeat="address in customerdata.viewableCustomerData.address">
+                                            <div class="address_card"><!--Address Card -->
+                                                <p>
+                                                    <span ng-if="address.address_line" ng-bind="address.address_line"></span>
+                                                    <span ng-if="address.area" ng-bind="address.area"></span>
+                                                    <span ng-if="address.city" ng-bind="address.city"></span>
+                                                    <span ng-if="address.contact_no" ng-bind="address.contact_no"></span>
+                                                    <span ng-if="address.landmark" ng-bind="address.landmark"></span>
+                                                    <span ng-if="address.pincode" ng-bind="address.pincode"></span>
+                                                    <span ng-if="address.state" ng-bind="address.state"></span>
+                                                </p>
+                                                <div class="place" ng-if="address.area" ng-bind="address.area"></div>
+                                                <div class="phone" ng-if="address.contact_no" ng-bind="'+91 ' + address.contact_no"></div>
+                                            </div>
+                                        </li>														  													
+                                    </span>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cus_view_float hide">    
+                    <div class="graph" id="page-wrapper" style="display: block;">
+                        <div class="area_chart" style="padding: 10px 0px;">
+                            <canvas id="line" class="chart chart-line" chart-data="areadata" chart-labels="arealabels" chart-series="areaseries" chart-click="onClick"></canvas>
+                        </div>
+                        <div class="graph_container">
+<!--                            <div class="donut_chart">
+                                <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2"></canvas>
+                            </div>
+                            <div class="pie_chart_cnt">
+                                <canvas id="pie" class="chart chart-pie" chart-data="data2" chart-labels="labels2"></canvas>
+                            </div>-->
+                        </div>
+                    </div>
+                    
+                    <div class="customer-card-container margin-top-20" id="purchase">
+                        <!--Payments -->
+                        <div class="row margin-0">
+                            <div class="col-lg-12 store_price margin-bottom-20">
+                                <span>Total Bills Amount: &nbsp;</span>
+                                <span class="heading_4"><strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalorder | number:2)"></strong></span>
+                            </div>
+                            <div class="customer_card_col">
+                                <div class="customer_card_col">
+                                    <div class="cus_card card_c cus_card_c" ng-repeat="bills in customerdata.Billdetails" ng-class="{'card_hover_class':bills.hoverClass && !bills.viewInvoice,'highlight_trans': bills.hightlighttrans}"
+                                         ng-mouseenter="bills.hoverClass = 1" ng-mouseleave="bills.hoverClass = 0" ng-init="bills.viewInvoice = false;">
+                                        <div class="col-xs-12 padding_zero" ng-click="viewInvoice(bills);">
+                                            <div class="col-xs-12 date_time" ng-bind="'On '+(bills.invoice_date | date:'EEE, dd-MMM-y hh:mm:ss a')"></div>
+                                            <div class="col-xs-8 invoice_detail" ng-bind="bills.invoice_no"></div>
+                                            <div class="invoice_detail text-right col-xs-4" ng-bind="data.currency+(bills.total | number:2)"></div>
+                                            <div class="col-xs-7 margin-top-15">
+                                                <div ng-if="bills.items && bills.items.length > 0" class="cus_brand_btn" style="background: rgba(255, 201, 38, 0.5);" 
+                                                     ng-bind="getOrderno(bills.items, 'ORDERNO')"></div>
+                                                <span ng-if="bills.items && bills.items.length > 0" class="count" ng-bind="getOrderno(bills.items, 'ORDERCOUNT')"></span>
+                                            </div>
+                                            <div class="heading_6 text-right margin-top-20 col-xs-5">
+                                                <b class="green_color" ng-if="bills.payment_status=='COMPLETED'">✔ PAID</b>
+                                            </div>
+                                        </div>
+                                        <div class="cus_expand_show cus_expand_c" ng-if="bills.viewInvoice">
+                                            <center>
+                                                <div ng-if="bills.invoiceexist && !bills.invoiceloader" ng-include="'app/views/common/invoiceview.html'" 
+                                                     onload="invoiceData = bills.viewinvoiceData">
+                                                </div>
+                                                <div ng-if="bills.invoiceloader" class="loader_small"></div>
+                                                <div ng-if="!bills.invoiceexist && !bills.invoiceloader" class="text-center">
+                                                    <b>No Invoice found.</b>
+                                                </div>
+                                                <div class="col-lg-12 margin-top-20 text-left" style="padding-left: 15px;">
+                                                    <a class="cutomer_group_link" target="_blank" ng-click="printThisinvoice(bills); $event.stopPropagation();">Print Invoice</a>
+                                                    <a class="cutomer_group_link" ng-click="viewJob(customer, 'INVOICE'); $event.stopPropagation();">Go to Invoice</a>
+                                                </div>
+                                            </center>
+                                            <div class="col-xs-12 margin-top-30">
+                                                <div class="col-xs-12 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;">
+                                                    Payment Track
+                                                </div>
+                                                <hr style="display: block;margin: 0px 15px;border-style: inset;border-width: 2px;">
+                                                <div class="col-xs-12" style="margin-top: 5px;font-size: 12px;overflow: hidden;overflow-x: scroll;">
+                                                    <table style="min-width: 400px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Trans.ID</th>
+                                                                <th>Date</th>
+                                                                <th style="text-align: right;">Trans.Amt</th>
+                                                                <th style="text-align: right;">Prev.Owe</th>
+                                                                <th style="text-align: right;">Allocated Amt</th>
+                                                                <th style="text-align: right;">Bal.Due</th>
+                                                            </tr>
+                                                            <tr ng-repeat="trans in bills.transactions">
+                                                                <td ng-bind="trans.transaction_id | limitTo:10">5887492a41</td>
+                                                                <td ng-bind="trans.transaction_date | date:'dd - MM - yyyy'">24-01-2017</td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.transaction_amount | number:2)"></td>
+                                                                <td class="text-center">-</td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.allocated_amount | number:2)"></td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.balance_due | number:2)"></td>
+                                                            </tr>
+                                                            <tr ng-if="bills.transactions.length == 0">
+                                                                <td colspan="6">No transactions found.</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-xs-12" style="margin-top: 10px;" ng-if="customerHightlightshow(bills.transactions)">
+                                                    <a class="line" ng-click="highlightTransaction(bills)" ng-if="!bills.showhighlight" style="font-size:12px">Highlight these transactions</a>
+                                                    <a class="line" ng-click="restoreTransaction(bills)" ng-if="bills.showhighlight" style="font-size:12px">Restore Transactions</a>
+                                                </div>
+                                                <div class="col-xs-12" style="margin-top: 10px;" ng-if="!customerHightlightshow(bills.transactions)">
+                                                    <span ng-if="!bills.showhighlight" style="font-size:12px;font-weight: 600;text-decoration: none;">There are no Transactions to highlight.</span>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <div class="clearboth"></div>
+                                        <div class="col-lg-12 margin-top-20" ng-if="bills.viewInvoice" ng-click="bills.viewInvoice = !bills.viewInvoice">
+                                            <div class="cus_expand_close cus_expand_close_c text-center">
+                                                <div class="up_dropdown_small"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-payment-container hide" id="payment">
+                    <!--Payment -->
+                    <div class="row margin-0">
+                        <div class="customer_paymant_col height_scroll">
+                            <div class="col-lg-12 store_price margin-bottom-30">
+                                <span> Total Received:</span>
+                                <span class="heading_4"> <strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalreceived | number:2)"></strong>
+                                </span> &nbsp; &nbsp; 
+                                <span>Spent:</span><span class="heading_4"> <strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalspend | number:2)"></strong>
+                                </span> &nbsp; &nbsp; 
+                                <span>Yet to receive:</span><span class="heading_4">
+                                    <strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalpending | number:2)"></strong></span>               
+                            </div>
+
+                            <div class="cus_card card_c cus_card_c" ng-repeat = "trans in customerdata.Transactiondetails" ng-class="{'card_hover_class':trans.hoverClass && !trans.paymentcardToggle,'highlight_trans':trans.hightlighttrans}" 
+                                 ng-mouseenter="trans.hoverClass = 1" ng-mouseleave="trans.hoverClass = 0">
+                                <div class="col-xs-12 padding_zero" ng-click="paymentcardOpen(trans); $event.stopPropagation();">
+                                    <div class="col-xs-12 date_payment" ng-bind="'On '+(trans.transaction_date | date:'EEE, dd-MMM-y hh:mm:ss a')+' at '+trans.division_id.name"></div>
+                                    <div class="col-xs-8 heading_5 case_payment" ng-bind="trans.category_name"></div>
+                                    <div class="col-xs-4 heading_5 amount_payment" ng-bind="commonobjectService.getCurrency()+(trans.transaction_amount | number:2)"></div>
+                                </div>
+                                <div class="cus_expand_show cus_pending_expand cus_expand_c" ng-if="trans.paymentcardToggle">
+                                    <div class="col-lg-10 margin-top-10">
+                                        <p ng-if="trans.category_name == 'Payment for Invoices and Bill' && trans.memo && trans.memo != ''">
+                                            <span ng-bind="'Memo: Invoice Payment '"></span> <span ng-repeat="bill in trans.bills">{{bill.bill_no}}<i ng-if="$index != trans.bills.length - 1">, </i></span>
+                                        </p>
+                                        <p ng-if="trans.category_name != 'Payment for Invoices and Bill' && trans.memo && trans.memo != ''" ng-bind="'Memo: '+ (trans.memo) + '.'"></p>
+                                        Account Entry in <a class="line" ng-bind="trans.ledger_id.name"></a>
+                                    </div>
+
+                                    <div class="col-lg-12 margin-top-30" ng-if="trans.category_name == 'Payment for Invoices and Bill' && trans.bills.length > 0">
+                                        <div class="col-xs-6 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;padding-left: 0px;">
+                                            Bills Track
+                                        </div>
+                                        <div class="col-xs-6" style="text-align: right;font-size: 12px;padding-right: 0px;">
+                                            <b>Trans.ID - </b>{{trans._id| limitTo:10}}
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <hr style="display: block;border-style: inset;border-width: 2px;">
+                                        <div class="col-xs-12 margin-top-05" style="font-size: 12px;overflow: hidden;overflow-x: scroll;">
+                                            <table style="min-width: 400px;">
+                                                <tr>
+                                                    <th>Invoice No</th>
+                                                    <th class="text-right">Bill Amt</th>
+                                                    <th class="text-right">Pending Due</th>
+                                                    <th class="text-right">Prev.Owe</th>
+                                                    <th class="text-right">Allocated Amt</th>
+                                                    <th class="text-right">Bal.Due</th>
+                                                </tr>
+                                                <tr ng-repeat="bill in trans.bills">
+                                                    <td ng-bind="bill.bill_no"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount_allocated+bill.balance_due | number:2)"></td>
+                                                    <td class="text-right">-</td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount_allocated | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.balance_due | number:2)"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 margin-top-10">
+                                            <a class="line" ng-click="highlightBills(trans)" ng-if="!trans.showbill" style="font-size:12px">Highlight these bills</a>
+                                            <a class="line" ng-click="restoreBills(trans)" ng-if="trans.showbill" style="font-size:12px">Restore Bills</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 margin-top-30" ng-if="trans.category_name == 'Payment for Invoices and Bills' && (!trans.bills || trans.bills.length == 0)">
+                                        <div class="col-xs-6 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;padding-left: 0px;">
+                                            Bills Track
+                                        </div>
+                                        <div class="col-xs-6" style="text-align: right;font-size: 12px;padding-right: 0px;">
+                                            <b>Trans.ID: </b>{{trans._id| limitTo:10}}
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <hr style="display: block;border-style: inset;border-width: 2px;">
+                                        <div class="col-xs-12 margin-top-05" style="font-size: 12px;">
+                                            <span class="line" style="font-size:12px;font-weight:600">No bills in this transaction was allocated to track.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 margin-top-10" ng-click="paymentcardClose(trans); $event.stopPropagation();">
+                                        <div class="cus_expand_close cus_expand_close_c text-center" ng-click="paymentcardClose(trans); $event.stopPropagation();">
+                                            <div class="up_dropdown_small"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-discount-container" id="discount">
+                    <div class="col-lg-12 heading_4">Customer Group & Discounts</div>
+                    <div class="col-xs-12 margin-bottom-30 margin-top-20">
+                        <span class="pull-left">Customer Group:</span>
+
+                        <strong class="group_name margin-left-10" ng-bind="customerdata.assignedDiscountGroupName"></strong>
+                    </div>
+
+                    <div class="clearboth"></div>
+
+                    <div class="discount_group_wrapper">
+                        <div class="height_scroll_discount_row"
+                             ng-init="customerdata.discountGroupSort = true; clientdata.discountGroupSortByField = 'itemcode';">
+
+                            <table align="center">
+                                <tbody>
+                                    <tr>
+                                        <td class="discont_table_header">
+                                            <div style="font-size: 12px;">
+                                                Sort by <a class="sort" ng-click="customerdata.customergroupsortbyfield = '+division_name'"> 0A-Z</a>,
+                                                <a class="sort" ng-click="customerdata.customergroupsortbyfield = '-division_name'">Z-A0</a>
+                                            </div>
+                                        </td>
+                                        <td class="discont_table_header" align="center">
+                                            <!--<a class="sort" style="font-size: 12px;">Clear all Discounts</a>-->
+                                        </td>
+                                        <td class="discont_table_header" align="center"></td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in customerdata.Measurements">
+                                            <b>Cost per {{measurement.fabric_measure}}</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table_row_discount" ng-repeat="division in customerdata.Customergroupdetails.discountview| orderBy:customerdata.customergroupsortbyfield track by $index">
+                                <tbody>
+                                    <tr>
+                                        <td class="discont_table_header">
+                                            <b>{{division.division_name}}</b>
+                                        </td>
+                                        <td class="discont_table_header">
+                                            <b>{{division.process_name}}</b>
+                                        </td>
+                                        <td class="discont_table_header" align="center">Actual Price</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{data.currency}}{{measurement.cost | number:2}}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header" align="center">Discount Price</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{data.currency}}{{measurement.discount_price | number:2}}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">Percentage</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{measurement.percentage | number:2}} %</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-outward-container height_scroll hide" id="outward">
+                    <div ng-if="customerdata.viewableCustomerData" class="inward-tab-container">
+                        <ul ng-if="customerdata.delivery && customerdata.delivery.length > 0">                                            
+                            <li ng-repeat="outward in customerdata.delivery">
+                                <div class="dash_body">
+                                    <div class="dashboard_card_list" ng-click="viewJob(outward, 'OUTWARD')">
+                                        <div class="left_strip"></div>
+                                        <div class="right_sec">
+                                            <div class="card_txt_cnt">
+                                                <div class="col-xs-12 padding_zero customer-name"> 
+                                                    <b class="pull-left" ng-bind="outward.customer_name"></b> 
+                                                    <span class="on-time pull-right">On Time</span> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Job No: <b ng-bind="outward.order_no"></b> <b class="pull-right" ng-bind="outward.order_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Outward No: <b ng-bind="outward.delivery_no"></b> <b class="pull-right" ng-bind="outward.delivery_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero">
+                                                    <div class="name process">Process: <b class="txt_blue" order-directive process-name="{{outward.process}}"></b> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="text-center" ng-if="!customerdata.delivery || customerdata.delivery.length==0"><h3>No outwards available.</h3></div>
+                    </div>
+                </div>
+
+                <div class="customer-returnorder-container height_scroll hide" id="returnorder">
+                    <div class="inward-tab-container">
+                        <ul ng-if="customerdata.deliveryReturn && customerdata.deliveryReturn.length > 0">                                            
+                            <li ng-repeat="outward in customerdata.deliveryReturn">
+                                <div class="dash_body">
+                                    <div class="dashboard_card_list" ng-click="viewJob(outward, 'OUTWARDRETURN')">
+                                        <div class="left_strip"></div>
+                                        <div class="right_sec">
+                                            <!--<div class="card_img"> </div>-->
+                                            <div class="card_txt_cnt">
+                                                <div class="col-xs-12 padding_zero customer-name"> 
+                                                    <b class="pull-left" ng-bind="outward.customer_name">Customer Name </b> <span class="on-time pull-right">On Time</span> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name"> 
+                                                    Job No: <b ng-bind="outward.order_no"></b> <b class="pull-right" ng-bind="outward.order_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Return No: <b ng-bind="outward.delivery_no"></b> <b class="pull-right" ng-bind="outward.delivery_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero">
+                                                    <!--<div class="name process">Process: <b class="txt_blue" order-directive process-name="{{outward.process}}"></b> </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="text-center" ng-if="!customerdata.deliveryReturn || customerdata.deliveryReturn.length==0"><h3>No returns available.</h3></div>
+                    </div>
+                </div>
+
+                <div class="customer-statement-container height_scroll hide" id="statement">
+                    <div class="col-lg-12 margin-top-30">
+                        <div class="heading_3" style="margin: 0 auto;width: 400px;display: block;text-transform: uppercase;letter-spacing: 1px;">page under construction</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>							
+
+<script>
+    //Card Height Set
+    WinHeight();
+    splite_screen();
+    $(window).resize(function () {
+        WinHeight();
+    });
+    $(document).ready(function () {
+
+        $('.collapse').on('show.bs.collapse', function () {
+            var id = $(this).attr('id');
+            $('a[ng-href="#' + id + '"]').closest('.panel-heading').addClass('active-faq');
+            $('a[ng-href="#' + id + '"] .panel-title span').html('<i class="glyphicon glyphicon-minus"></i>');
+        });
+        $('.collapse').on('hide.bs.collapse', function () {
+            var id = $(this).attr('id');
+            $('a[ng-href="#' + id + '"]').closest('.panel-heading').removeClass('active-faq');
+            $('a[ng-href="#' + id + '"] .panel-title span').html('<i class="glyphicon glyphicon-plus"></i>');
+        });
+        $(".cus_card_c").on("click", function () {
+            var parentDashCard = $(this).closest('.cus_card_c');
+            parentDashCard.find('.cus_expand_c').slideToggle();
+        });
+        $('#slide-toggle').on("click", function () {
+            var parentClass = $(this).closest('.open_div');
+        });
+    });
+    //Window Resize Div Set Auto Height
+    function container_height_auto() {
+        var WindowHeight = $(window).height(); //Set Window Height
+        var HeaderHeight = $('.header').height() + 75; //Header Height and Content Header Height
+        var windows_height = WindowHeight - HeaderHeight; // SET DEFAULT HEIGHT IN CONTAINER 
+        $('.filter_scroll').css({'height': windows_height}); // SET DEFAULT HEIGHT IN CONTAINER
+        $('.cus_view_cnt').css({'height': windows_height}); // SET DEFAULT HEIGHT IN CONTAINER
+        //$('.customer_page').css('height', WindowHeight - (HeaderHeight - 70));// SET DEFAULT HEIGHT IN WINDOW
+        $('.height_scroll').css('max-height', WindowHeight - HeaderHeight); //Full Screen Common Div
+        $('.customer-returnorder-container').css('height', WindowHeight - HeaderHeight - 65);
+        $('.customer-outward-container').css('height', WindowHeight - HeaderHeight - 65);
+        $('.height_scroll_discount').css('max-height', WindowHeight - HeaderHeight); //Full Screen Common Div
+        $('.height_scroll_discount_row').css('max-height', WindowHeight - (HeaderHeight + 100)); //Full Screen Common Div
+        $('.height_scroll_discount_row').css('height', WindowHeight - (HeaderHeight + 130)); //Full Screen Common Div
+        $('.addcustomer_profile').css('height', WindowHeight - (HeaderHeight + 60));
+        $('.graph').css('height', WindowHeight - (HeaderHeight - 15)); //Grap view Set Height 
+        
+        if (parseInt($(window).width()) > 1200 && parseInt($(window).width()) < 1600) {
+            $('.customer-card-container').css('height', 'auto'); //customer-card-container view Set Height Auto	
+            $('.cus_view_float').css('height', WindowHeight - (HeaderHeight - 15));
+            $('.cus_view_float').addClass('graph_payment');
+        }else{
+            $('.customer-card-container').css('height', WindowHeight - (HeaderHeight - 15)); //customer-card-container view Set Height        
+            $('.cus_view_float').css('height', 'auto');
+            $('.cus_view_float').removeClass('graph_payment');
+        }
+        
+        $('.customer_paymant_col').css('height', WindowHeight - (HeaderHeight - 15));
+        $('.viewcustomer_profile').css('height', WindowHeight - (HeaderHeight - 15));
+    }
+
+    //Full view button click show
+    function full_view_show() {
+        var WindowHeight = $(window).height(); //Set Window Height
+        var HeaderHeight = $('.header').height() + 90; //Header Height and Content Header Height  
+        //Heigth Set
+        $('.graph').css('height', WindowHeight - (HeaderHeight - 15)); //Grap view Set Height
+        
+        if (parseInt($(window).width()) > 1200 && parseInt($(window).width()) < 1600) {
+            $('.customer-card-container').css('height', 'auto'); //customer-card-container view Set Height Auto
+            $('.cus_view_float').css('height', WindowHeight - (HeaderHeight - 15));
+            $('.cus_view_float').addClass('graph_payment');
+        }else{
+            $('.customer-card-container').css('height', WindowHeight - (HeaderHeight - 15)); //customer-card-container view Set Height        
+            $('.cus_view_float').css('height', 'auto');
+            $('.cus_view_float').removeClass('graph_payment');
+        }
+        
+        $('.customer_paymant_col').css('height', WindowHeight - (HeaderHeight - 15));
+        $('.viewcustomer_profile').css('height', WindowHeight - (HeaderHeight - 15));
+    }
+
+    //Purchase Click
+    function purchase() {
+        $('#profile').addClass('hide');
+        $('#discount').addClass('hide');
+        $('#outward').addClass('hide');
+        $('#returnorder').addClass('hide');
+        $('#statement').addClass('hide');
+        $('.cus_view_float').removeClass('hide');
+        $('#payment').removeClass('hide');
+        $('.click').removeClass('active');
+        $(this).addClass('active');
+    }
+
+    //Payment Click
+    function payment() {
+        $('#profile').addClass('hide');
+        $('#discount').addClass('hide');
+        $('#outward').addClass('hide');
+        $('#returnorder').addClass('hide');
+        $('#statement').addClass('hide');
+        $('.cus_view_float').removeClass('hide');
+        $('#payment').removeClass('hide');
+        $('.click').removeClass('active');
+        $(this).addClass('active');
+    }
+
+    //Profile Click
+    function profile() {
+        $('.cus_view_float').addClass('hide');
+        $('#payment').addClass('hide');
+        $('#outward').addClass('hide');
+        $('#returnorder').addClass('hide');
+        $('#statement').addClass('hide');
+        $('#profile').removeClass('hide');
+        $('#discount').removeClass('hide');
+        $('.click').removeClass('active');
+        $(this).addClass('active');
+    }
+
+    //Outward Click
+    function outward() {
+        $('.cus_view_float').addClass('hide');
+        $('#payment').addClass('hide');
+        $('#profile').addClass('hide');
+        $('#discount').addClass('hide');
+        $('#statement').addClass('hide');
+        $('#returnorder').addClass('hide');
+        $('#outward').removeClass('hide');
+        $('.click').removeClass('active');
+        $(this).addClass('active');
+    }
+
+    //Return Click
+    function returnorder() {
+        $('.cus_view_float').addClass('hide');
+        $('#payment').addClass('hide');
+        $('#profile').addClass('hide');
+        $('#discount').addClass('hide');
+        $('#outward').addClass('hide');
+        $('#statement').addClass('hide');
+        $('#returnorder').removeClass('hide');
+        $('.click').removeClass('active');
+        $(this).addClass('active');
+    }
+
+    $(document).ready(function () {
+        left_sidebar();
+        if (parseInt($(window).width()) >= 700) {
+            container_height_auto();
+        }
+
+        var WindowHeight = $(window).height(); //Set Window Height
+        var HeaderHeight = $('.header').height() + 90; //Header Height and Content Header Height 
+
+        if (parseInt($(window).width()) < 1600) {
+            $('.split-pane-component').removeClass('.s_dashboard_section');
+        }
+
+        //Purchase Click
+        $(document).on('click', '#purchase_click', function () {
+            if (parseInt($(window).width()) > 1200) {
+                purchase();
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+                purchase();
+                $('.cus_view_float').removeClass('hide');
+                $('#payment').addClass('hide');
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+                purchase();
+                $('.cus_view_float').removeClass('hide');
+                $('#payment').addClass('hide');
+                $('#profile').addClass('hide');
+                $('#discount').addClass('hide');
+                $('.graph').addClass('hide');
+                $(this).addClass('active');
+                $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+                $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+            }
+        });
+        
+        //Payment Click
+        $(document).on('click', '#payment_click', function () {
+            if (parseInt($(window).width()) > 1200) {
+                payment();
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+                $('#profile').addClass('hide');
+                $('#discount').addClass('hide');
+                $('.cus_view_float').addClass('hide');
+                $('#payment').removeClass('hide');
+                $('.click').removeClass('active');
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+                $('.cus_view_float').addClass('hide');
+                $('#discount').addClass('hide');
+                $('#payment').removeClass('hide');
+                $('#profile').addClass('hide');
+                $('.click').removeClass('active');
+                $(this).addClass('active');
+                $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+                $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+            }
+        });
+        
+        //Profile Click
+        $(document).on('click', '#profile_click', function () {
+            if (parseInt($(window).width()) > 1200) {
+                profile();
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+                profile();
+                $('.cus_view_float').addClass('hide');
+                $('#payment').addClass('hide');
+                $('#discount').removeClass('hide');
+                $('#profile').removeClass('hide');
+                $(this).addClass('active');
+            } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+                profile();
+                $('.cus_view_float').addClass('hide');
+                $('#payment').addClass('hide');
+                $('#discount').removeClass('hide');
+                $('#profile').removeClass('hide');
+                $(this).addClass('active');
+                $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+                $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+            }
+        });
+                
+        //Outward Click
+        $(document).on('click', '#outward_click', function () {
+            outward();
+            $('.cus_view_float').addClass('hide');
+            $('#payment').addClass('hide');
+            $('#profile').addClass('hide');
+            $('#discount').addClass('hide');
+            $('#outward').removeClass('hide');
+            $('#return').addClass('hide');
+            $('#statement').addClass('hide');
+            $(this).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+        });
+        
+        //Return Click
+        $(document).on('click', '#return_click', function () {
+            returnorder();
+            $('.cus_view_float').addClass('hide');
+            $('#payment').addClass('hide');
+            $('#profile').addClass('hide');
+            $('#discount').addClass('hide');
+            $('#outward').addClass('hide');
+            $('#return').removeClass('hide');
+            $('#statement').addClass('hide');
+            $(this).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide
+        });        
+        
+        //Store card expand
+        $('.cus_card').click(function () {
+            $('.expand-div').addClass('hide');
+            $(this).closest('.cus_card').find('.expand-div').removeClass('hide');
+        });        
+    }); //DocumenT ClosE        
+
+    function purchase_click(e, th) {
+        if (parseInt($(window).width()) > 1200) {
+            purchase();
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+            purchase();
+            $('.cus_view_float').removeClass('hide');
+            $('#payment').addClass('hide');
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+            purchase();
+            $('.cus_view_float').removeClass('hide');
+            $('#payment').addClass('hide');
+            $('#profile').addClass('hide');
+            $('#discount').addClass('hide');
+            $('.graph').addClass('hide');
+            $(th).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+        }
+    }
+
+    function profile_click(e, th) {
+        if (parseInt($(window).width()) > 1200) {
+            profile();
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+            profile();
+            $('.cus_view_float').addClass('hide');            
+            $('#payment').addClass('hide');
+            $('#discount').removeClass('hide');
+            $('#profile').removeClass('hide');
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+            profile();
+            $('.cus_view_float').addClass('hide');
+            $('#payment').addClass('hide');
+            $('#discount').removeClass('hide');
+            $('#profile').removeClass('hide');
+            $(th).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+        }
+    }
+
+    function payments_click(e, th) {
+        if (parseInt($(window).width()) > 1200) {
+            payment();
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+            $('#profile').addClass('hide');
+            $('#discount').addClass('hide');
+            $('#payment').removeClass('hide');
+            $('.cus_view_float').addClass('hide');
+            $('.click').removeClass('active');
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+            $('.cus_view_float').addClass('hide');
+            $('#discount').addClass('hide');
+            $('#payment').removeClass('hide');
+            $('#profile').addClass('hide');
+            $('.click').removeClass('active');
+            $(th).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+        }
+    }
+
+    function discount_click(e, th) {
+        if (parseInt($(window).width()) > 1200) {
+            discount();
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+            discount();
+            $('#profile').addClass('hide');
+            $(th).addClass('active');
+        } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+            discount();
+            $('.cus_view_float').addClass('hide');
+            $('#payment').addClass('hide');
+            $('#profile').addClass('hide');
+            $('#discount').removeClass('hide');
+            $(th).addClass('active');
+            $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+            $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+        }
+    }
+
+    function customer_page_height() {
+        var header_height_c = $('.header').height(); //window height
+        var windowHeight_c = $(window).height();
+        var total_height_c = windowHeight_c - header_height_c;
+        $('.c_window_height').css('height', total_height_c - 10);
+    }
+
+    //Window Resize Div Set Auto Height
+    $(window).resize(function () {
+        if (parseInt($(window).height()) >= 750) {
+            container_height_auto();
+        }
+
+        if (parseInt($(window).width()) > 1200) {
+            $('.sec_3').removeClass('width_hide');
+            $('.customer_header').removeClass('hide');
+        }
+
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1;
+        $('.c_window_height').css('height', total_height_c1 - 10); //window height
+        customer_page_height();
+        container_height_auto();
+    });
+    
+    setTimeout(function(){
+        container_height_auto();
+        customer_page_height();
+        var I = document.getElementById('profile_click');
+        I.click();
+        full_view_show();
+    }, 500);
+</script>

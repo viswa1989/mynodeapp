@@ -1,0 +1,44 @@
+{
+  "name": "mynodeapp",
+  "version": "1.0.0",
+  "description": "mean app developing",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viswa1989/mynodeapp.git"
+  },
+  "author": "goutham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/viswa1989/mynodeapp/issues"
+  },
+  "homepage": "https://github.com/viswa1989/mynodeapp#readme",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "bcrypt": "^1.0.3",
+    "compression": "^1.7.3",
+    "cookie-parser": "^1.4.3",
+    "cron": "^1.6.0",
+    "ejs": "^2.6.1",
+    "email-templates": "^5.0.2",
+    "exceljs": "^1.6.3",
+    "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
+    "helmet": "^3.15.0",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.1",
+    "mongoose-float": "^1.0.3",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "nodemailer": "^4.7.0",
+    "rimraf": "^2.6.2",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.2.0",
+    "string-template": "^1.0.0"
+  }
+}

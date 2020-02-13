@@ -1,0 +1,50 @@
+<div class="common_wrapper sms" ng-controller="smsController">
+    <div class="col-xs-12 padding_zero margin-bottom-30">
+        <div class="wrapper">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 margin-bottom-40">
+                        <div class="heading_title_3 heading_4">SMS Gateway</div>
+                        <div class="subtitle">Here you find some information about your SMS Gateway.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" >
+                <div class="row">
+                    <div style="width: 300px;text-align: center;margin: auto;">
+                        <div class="col-xs-12 sms_label input-group-lg">Gateway Url</div>
+                        <div class="col-xs-12 input-group-lg">
+                            <input type="text" class="form-control sms_input" placeholder="Gateway Url" ng-model="smsGatewayForm.url">
+                        </div>
+                        <div class="col-xs-12 sms_label input-group-lg">Username</div>
+                        <div class="col-xs-12 input-group-lg">
+                            <input type="text" class="form-control sms_input" placeholder="Username" ng-model="smsGatewayForm.username">
+                        </div>
+                        <div class="col-xs-12 sms_label input-group-lg">Password</div>
+                        <div class="col-xs-12 input-group-lg">
+                            <input type="password" class="form-control sms_input" placeholder="Password" ng-model="smsGatewayForm.password">
+                        </div>
+                        <div class="col-xs-12 sms_label input-group-lg">Sender ID</div>
+                        <div class="col-xs-12 input-group-lg">
+                            <input type="text" class="form-control sms_input" placeholder="Sender ID" ng-model="smsGatewayForm.senderid">
+                        </div>
+                        <div class="col-xs-12 sms_label_button input-group-lg">
+                            <a class="common_button" ng-click="updateGateway(smsGatewayForm)">Update</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!--            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 margin-bottom-40">
+                        <div class="heading_title_1">SMS Master</div>
+                        </div>
+                    </div>
+            </div>-->
+
+        </div>
+    </div> 
+</div>

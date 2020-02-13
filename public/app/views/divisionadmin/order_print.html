@@ -1,0 +1,296 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<head>
+    <style type="text/css">
+        @page {
+            /* dimensions for the whole page */
+            size: A5;
+
+            margin: 0;
+        }
+        html {
+            /* off-white, so body edge is visible in browser */
+            background: #eee;
+        }
+
+        body {
+            /* A5 dimensions */
+            height: 210mm;
+            width: 148.5mm;
+
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        /* fill half the height with each face */
+        .order_details {
+            width: 100%;
+            position: relative;
+            padding: 20px 10px 40px 10px;
+            background: #fff;
+            display: inline-block;
+        }
+        .row{
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+        .order_no{
+            font-weight: bold;
+            line-height: 130%;
+            color: rgb(31,31,31);
+            width: 70%;
+            float: left;
+        }
+        .order_cus_name{
+            min-height:30px;
+            float: left;
+            color: rgb(32,32,32);
+            /*line-height: 30px;*/
+            width: 100%;
+            padding: 0px 15px;
+            font-size: 18px !important;
+            /*margin-top: 20px;*/
+        }
+        .billing_address{
+            float: left;
+            width: 43%;
+            padding-left: 10px;
+            margin-bottom: 40px;
+        }
+        .width_100{
+            width: 100%;
+            padding: 0px 15px;
+            float: left;
+        }
+        .width_50{
+            width: 50%;
+            padding: 0px 15px;
+            float: left;
+        }
+        .addr_text{
+            line-height: 130%;
+            color: rgb(57,57,57);
+            margin: 10px 0px;
+        }
+        .delivery_address{
+            float: left;
+            width: 53%;
+            padding-left: 10px;
+            color: rgb(31,31,31);
+            margin-bottom: 40px;
+        }
+        .delivery_address_adr{
+            width: 66%;
+            float: left;
+        }
+        .delivery_address_qr{
+            width: 34%;
+            float: left;
+            padding: 0px 0px;
+        }
+        .order_qr_code{
+            width: 85px;
+            height: 85px;
+        }
+        .order_item_bg{
+            background-color: rgb(238,238,238);
+            padding: 20px 0px;
+            margin: 0px 0px 10px 0px;
+            width: 100%;
+            float: left;
+        }
+        .margin-bottom-20{
+            margin-bottom: 20px;
+        }
+        .margin-bottom-10{
+            margin-bottom: 10px;
+        }
+        .margin-top-20{
+            margin-top: 20px;
+        }
+        .margin-top-10{
+            margin-top: 10px;
+        }
+        .margin-top-05{
+            margin-top: 5px;
+        }
+        .heading_7{
+            font-size: 13px !important;
+        }
+        .job_type_icon_img{            
+            border: 1px solid #000;
+            width: 52px;
+            height: 52px;
+            line-height: 50px;
+            text-align: center;
+            float: left;
+            font-weight: bold;
+            font-size: 40px;
+            margin-right: 10px;
+        }
+        .ss_no_cont{
+            float: left;
+            margin: 0px !important;
+            width: 60%;
+        }
+        .padding_zero{
+            padding: 0px;
+        }
+        .text-center{
+            text-align: center;
+        }
+        .factory_name{
+            width: 90%;
+            font-weight: bold;
+            color: #1F1F1F;
+            margin: 0px auto;
+        }
+        .counter{
+            width: 90%;
+            margin: 0px auto;
+            font-size: 13px;
+            color: #1F1F1F;
+        }
+        .div_border{
+            border: 1px solid rgba(224, 224, 224, 1);
+            width: 100%;
+            float: left;
+        }
+        .img{max-width:100%;height:auto;}
+    </style>
+
+    <script type="text/javascript" src="../../../js/angular.min.js"></script>
+    <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+
+</head>
+<script>
+    var app = angular.module("OrderPrint", []);
+    app.controller("orderPrintCtrl", function ($scope, $rootScope, $timeout) {
+
+        $scope.orderForm = {};
+        if (window.opener && !window.opener.closed) {
+            $scope.orderForm = window.opener.orderData;
+            $timeout(function () {
+                window.print();
+            }, 3000)
+        }
+    }).directive('combineAddress', function ($parse) {
+        return {
+            restrict: 'A',
+            link: function (scope, elem, attrs) {
+
+                attrs.$observe('combineAddress', function (newValue) {
+                    var address = '';
+                    if (angular.isDefined(newValue)) {
+                        if (angular.isDefined(newValue.billing_address_line) && newValue.billing_address_line != '') {
+                            address = address + ' ' + newValue.billing_address_line;
+                        }
+                        if (angular.isDefined(newValue.billing_area) && newValue.billing_area != '') {
+                            address = address + ', ' + newValue.billing_area;
+                        }
+                        if (angular.isDefined(newValue.billing_city) && newValue.billing_city != '') {
+                            address = address + ', ' + newValue.billing_city;
+                        }
+                        if (angular.isDefined(newValue.billing_state) && newValue.billing_state != '') {
+                            address = address + ', ' + newValue.billing_state;
+                        }
+                        if (angular.isDefined(newValue.billing_pincode) && newValue.billing_pincode != '') {
+                            address = address + ' - ' + newValue.billing_pincode;
+                        }
+                        if (angular.isDefined(newValue.billing_landmark) && newValue.billing_landmark != '') {
+                            address = address + ', ' + newValue.billing_landmark;
+                        }
+                        if (angular.isDefined(newValue.billing_contact_no) && newValue.billing_contact_no != '') {
+                            address = address + ', ' + newValue.billing_contact_no;
+                        }
+                    }
+                    if (address != '') {
+                        address = address + '.';
+                    }
+                    elem.html(address);
+                });
+            }
+        }
+    });
+</script>
+<body ng-app="OrderPrint" ng-controller="orderPrintCtrl">
+    <div class="order_details" ng-if="orderForm._id">
+
+
+        <div class="width_100 padding_zero">
+            <div class="row">          
+                <div class="width_100 padding_zero text-center margin-top-10 margin-bottom-10">
+                    <div class="factory_name">Lotus Knits</div>
+                    <div class="counter">
+                        Near Bustand, Tiruppur - 641687<br>
+                        TIN: 234234234
+                    </div>
+                </div>
+                <div class="div_border"></div>
+            </div>
+
+            <div class="width_100 margin-top-10 margin-bottom-05">
+                <div class="margin-top-10">
+                   
+                    <div class="ss_no_cont">                                                        
+                        <div class="order_no"><b>Job No. {{orderForm.order_no}}</b></div>
+                        <div class="order_no">Job Date: {{orderForm.order_date| date:'dd-MMM-yyyy'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="width_100 margin-top-20 order_no" >
+            <b>+91 {{orderForm.customer_mobile_no}}</b>
+        </div>
+        <div class="width_100 order_cus_name heading_4" style="min-height:30px;">
+            <b>{{orderForm.customer_name}}</b>
+        </div>
+
+        <!--  <div class="billing_address">
+           <div class="width_100">
+              <div class="addr_text">Billing Address</div>
+              <b combine-address="{{jobcardForm}}"></b>
+           </div>
+         </div>
+         
+         <div class="delivery_address">
+           <div class="delivery_address_adr">
+              <div class="addr_text">Delivery Address</div>
+              <b combine-address="{{jobcardForm}}"></b>
+           </div>
+           <div class="delivery_address_qr"><div class="order_qr_code"></div></div>
+         </div> -->
+
+        <div class="clearboth"></div>
+        <div class="order_item_bg margin-top-10">
+            <div class="width_100">
+                <b>
+                    <span>{{jobcardForm.category_name}}</span>
+                    <span> / {{jobcardForm.subcategory_name}}</span>
+                    <span> / {{jobcardForm.brand_name}}</span>
+                    <span> / {{jobcardForm.item_name}}</span>
+                </b>                       
+            </div>
+
+            <div class="width_100">                                         
+                <div class="order_item_content margin-top-20">
+                    <div>Complaints</div>
+                    <div class="heading_7 margin-bottom-20 margin-top-10">
+                        <div class="margin-top-05 ng-scope" ng-repeat="complaints in jobcardForm.complaint">
+                            <b>{{complaints.complaint_description}}</b>
+                        </div>
+                    </div>
+                    <div>Received Items</div>
+                    <div class="heading_7 margin-top-10">
+                        <div class="margin-top-05 ng-scope" ng-repeat="itemgiven in jobcardForm.itemgiven">
+                            <b>{{itemgiven.itemgiven_description}}</b>
+                        </div>
+                    </div>                          
+                </div>                                           
+            </div>
+        </div>
+    </div>
+</body>

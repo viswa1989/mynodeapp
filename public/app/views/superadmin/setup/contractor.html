@@ -1,0 +1,206 @@
+<div class="container contractordetails" id="dyeing-details" ng-controller="ContractorController">    
+    <div class="clearboth"></div>
+    
+    <div class="loader_large" ng-show="contractorData.pageLoad"></div>
+    
+    <div class="row" ng-if="!contractorData.viewContractor" ng-show="!contractorData.pageLoad" ng-init="contractorder = ''">        
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Contractor</div>
+            <div class="subtitle">Click on the contractor to edit or add more details.</div>
+            <div class="sort_list"> Sort by 
+                <a ng-click="contractorder = '+company_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (contractorder == '+company_name') ? 'underline' : 'none' }">0A-Z</a>, 
+                <a ng-click="contractorder = '-company_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (contractorder == '-company_name') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="contractfilter">
+            </div>
+        </div>        
+        
+        <div class="col-xs-12 padding_zero margin-top-20 setup">
+            <div class="center_content center_alg_w95">
+                <div class="branch_card_add dyeing-modal dyeing-detail" ng-click="add(); $event.stopPropagation();" style="width: 218px;">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Contractor</div>
+                </div>
+                <div class="branch_card setup-printing-divsion-card" ng-repeat="contractor in contractorData.contractorList| filter:{company_name:contractfilter} | orderBy:contractorder" 
+                     ng-dblclick="getContractorbyId(contractor._id)" ng-class="{'disabled':!contractor.is_active}">
+                    <span class="disable_small_brand" ng-if="!contractor.is_active"></span>
+                    <div class="branch" ng-bind="contractor.company_name"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row" ng-if="contractorData.viewContractor" ng-show="!contractorData.pageLoad">
+        <div class="col-xs-12 margin-bottom-20" ng-if="contractorData.viewContractor">
+            <div class="heading_title_1">Contractor Details..</div>
+            <div class="text-center margin-top-15">
+                <a class="back_stores" href="javscript:void(0);" ng-click="closeContractorview(); $event.stopPropagation();">Back to contractor list</a>
+            </div>                        
+        </div>        
+        
+        <div class="col-xs-12 margin-top-20 text-center">
+            <div class="tab_inner_menu">
+                <div class="menu_0">Showing:</div>
+                <div class="menu1" ng-class="{'active':contractorData.contractorTabselect == 'Profile'}" ng-click="selectTab('Profile');">Profile</div>
+                <div class="menu2" ng-class="{'active':contractorData.contractorTabselect == 'Process'}" ng-click="selectTab('Process');">Process</div>
+                <div class="menu_0">&nbsp;</div>
+            </div>
+        </div>
+        
+        <div class="add_new_entry" style="overflow-y: auto;" ng-if="contractorData.contractorTabselect == 'Profile'">
+            <div class="container">
+                <div class="row" style="min-width: 900px;margin: 0px;">
+                    <div class="col-xs-12 margin-top-10 margin-bottom-20">
+                        <div class="stores_titles">Profile</div>
+                        <div class="content_subtitle">Manage contractor profile information here.</div>
+                    </div>
+                    
+                    <form name="myForm" novalidate>
+                        <div class="col-xs-12 col-md-12 margin-bottom-10">
+                            <div class="entry_content margin-top-20">
+                                <div class="col-xs-5 col-md-3">
+                                    <div class="uploaed_file" class="button" ngf-select="onFileSelect($files)" ngf-pattern="'.jpg,.jpeg,.png'" ngf-accept="'image/*'" ngf-max-size="2MB">
+                                        <span class="fileinput-button" ng-if="!contractorData.imagesrc && !contractorForm._id"> 
+                                            <span class="add_icon"></span><br>
+                                            <span class="margin-left-10" ng-if="!contractorData.imagesrc">Add Photo</span> 
+                                        </span> 
+                                        <img ng-if="contractorData.imagesrc && !contractorForm._id" ng-src="{{contractorData.loadedfile}}" height="200px" width="100%"/>
+                                        <img ng-if="contractorForm._id" ng-src="{{contractorData.loadedfile}}" fallback-src="profile" height="200px" width="100%"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-xs-7 col-md-9">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.company_name" name="company_name" placeholder="Company Name" 
+                                                   ng-class="{'input_error_class':(!myForm.company_name.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.phone_no" name="phone_no" placeholder="Phone No. xxxx..." 
+                                                   ng-minlength="9" ng-maxlength="12" ng-class="{'input_error_class':(!myForm.phone_no.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="contractorForm.email_id" name="email_address" ng-model-options="{updateOn: 'blur'}" 
+                                                   ng-change="checkemail(contractorForm.email_id)" placeholder="Email ID..." ng-pattern="/\S+@\S+\.\S+/" 
+                                                   ng-class="{'input_error_class':(!myForm.email_address.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.address1" name="address1" placeholder="Address1" 
+                                                   ng-class="{'input_error_class':(!myForm.address1.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.address2" name="address2" placeholder="Address2" 
+                                                   ng-class="{'input_error_class':(!myForm.address2.$valid && contractorData.formsubmission)}">                                            
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="userForm.pin_code" name="pincode" placeholder="Pin Code" 
+                                                   ng-class="{'input_error_class':(!myForm.pincode.$valid && contractorData.formsubmission)}">
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.contact_person" name="contact_person" placeholder="Contact Person" 
+                                                   ng-class="{'input_error_class':(!myForm.contact_person.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control form_address" ng-model="contractorForm.mobile_no" ng-minlength="10" ng-maxlength="12" name="mobile_no" 
+                                                   placeholder="Mobile No. xxxx..." ng-class="{'input_error_class':(!myForm.mobile_no.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="contractorForm.contactemail_id" name="contactemail_id" ng-model-options="{updateOn: 'blur'}" 
+                                                   ng-change="checkemail(contractorForm.contactemail_id)" placeholder="Email ID..." ng-pattern="/\S+@\S+\.\S+/" 
+                                                   ng-class="{'input_error_class':(!myForm.contactemail_id.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="contractorForm.gstin_number" name="gstin_number" placeholder="GSTIN" ng-pattern="/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/" 
+                                                   ng-class="{'input_error_class':(!myForm.gstin_number.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="contractorForm.pan_no" name="pan_no" placeholder="Pan No" 
+                                                   ng-class="{'input_error_class':(!myForm.pan_no.$valid && contractorData.formsubmission)}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 text-center margin-top-50 margin-bottom-30"> 
+                            <a class="common_button" ng-if="!contractorForm._id" ng-click="create(myForm.$valid)" ng-show="!contractorData.eventLoad">Save</a>
+                            <a class="common_button" ng-if="contractorForm._id" ng-click="update(myForm.$valid);" ng-show="!contractorData.eventLoad">Update</a>
+                            <a class="line margin-left-20 close_icons" ng-click="closeForm(); $event.stopPropagation();" ng-show="!contractorData.eventLoad">Cancel</a> 
+                            <div class="loader_small" ng-show="contractorData.eventLoad"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" style="overflow-y: auto;overflow-x: auto;padding: 30px 0px;" ng-if="contractorData.contractorTabselect == 'Process'">
+            <div class="container">
+                <div class="loader_medium" ng-show="contractorData.processLoad"></div>
+                <div class="row" style="min-width: auto;margin: 0px;" ng-show="!contractorData.processLoad">
+                    <div class="col-xs-12 margin-top-10 margin-bottom-20">
+                        <div class="stores_titles">Process</div>
+                        <div class="content_subtitle">Manage contractor process details here.</div>
+                    </div>
+                    
+                    <form name="myprocessForm" novalidate>
+                        <div class="col-lg-12 margin-bottom-30">
+                            <div class="consume_tree">
+                                <table class="table tree-grid">
+                                    <thead>
+                                        <tr>
+                                            <th><a class="tree_title">Process</a></th>
+                                            <th><a class="tree_title">Sub Process</a></th>
+                                            <th class="text-center" style="width: 120px;"><a class="tree_title">Status</a></th>
+                                            <th class="text-center" style="width: 40px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="pro in contractorForm.processList| filter:{is_deleted:false}" ng-form="processForm" ng-dblclick="pro.editable = true;">
+                                            <td class="acc_td_left">
+                                                <input ng-if="pro.editable" type="text" ng-model="pro.process_name" name="process_name" class="tree_input"
+                                                       ng-class="{'input_error_class':(!processForm.process_name.$valid && contractorData.formsubmission)}" required/>
+                                                <span ng-if="!pro.editable" ng-bind="pro.process_name"></span>
+                                            </td>
+                                            <td class="acc_td_left">
+                                                <input ng-if="pro.editable" type="text" ng-model="pro.subprocess_name" name="subprocess_name" class="tree_input" 
+                                                       ng-class="{'input_error_class':(!processForm.subprocess_name.$valid && contractorData.formsubmission)}" required/>
+                                                <span ng-if="!pro.editable" ng-bind="pro.subprocess_name"></span>
+                                            </td>
+                                            <td style="width: 120px;padding-left:22px;">
+                                                <span class="indented_center tree-label">
+                                                    <label class="switch">
+                                                        <input type="checkbox" ng-model="pro.is_active">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </span>
+                                            </td>
+                                            <td style="width: 40px;">
+                                                <span class="delete_small" noty-remove noty-update='deleteProcess(pro)' noty-style="3" 
+                                                      noty-content="Are you sure,You want to delete this process?"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearboth"></div>
+                        </div>
+                        
+                         <div class="col-xs-12 text-center margin-top-20"> 
+
+                            <a class="add_customer accountpage_click_resize" ng-click="addProcess();">
+                                <span class="add_icon_smalls"></span>
+                                <span class="add_customer_text">Add New Account</span>
+                            </a>
+                        </div>
+                        <div class="col-xs-12 text-center margin-top-20">
+                            <button class="common_button" ng-click="updateProcess(myprocessForm.$valid)" ng-show="!contractorData.eventLoad">Update</button>
+                            <div class="loader_small" ng-show="contractorData.eventLoad"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

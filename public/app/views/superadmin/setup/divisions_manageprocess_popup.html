@@ -1,0 +1,205 @@
+<div class="modal-body">
+    <form name="myProcessForm" novalidate class="division-modal-detail">
+        <div class="brand_form_header">
+            
+            <div class="brands_btn_right">
+                <div class="right_side">
+                    <a class="dropdown-toggle">
+                        <span class="dropdown_icon_model" onclick="return popup_dropdown(event, $(this))"></span>
+                    </a>                   
+                </div>
+                <ul class="dropdown-menu dropdown_popup" id="dropdown-menu_process">
+                    <li class="text-center list_store_title">Menu 
+                        <span class="close trans_close"><span class="close_icon_small_dropdown" onclick="return popup_dropdown(event, $(this))"></span></span>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this));" ng-if="processForm.is_active">Disable this Process...</a>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this))" ng-if="!processForm.is_active">Enable this Process...</a>
+
+                        <div class="toggle_disableenable toggle_cnt_1 margin-top-05" style="display: none;">
+                            <p ng-if="processForm.is_active">Disabling this Process will restrict new job of this process immediately. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="processForm.is_active" ng-click="toggleproc(processForm);" onclick="hidealldialg()">Yes, Disable it.</a>
+
+                            <p ng-if="!processForm.is_active">Enabling this Process. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="!processForm.is_active" ng-click="toggleproc(processForm);" onclick="hidealldialg()">Yes, Enable it.</a>
+
+                        </div>
+                    </li>
+
+                    <li class="divider" ng-if="processData.process != 'ADD'"></li>
+
+                    <li ng-if="processData.process != 'ADD'">
+                        <a class="toggle_click_2" onclick="return toggle_click_remove(event, $(this))">Remove this Process...</a>
+                        <div class="toggle_remove toggle_cnt_2 margin-top-05" style="display: none;">
+                            <p>Removing this Process cannot be undone. Do you want to continue removing this process?</p>
+                            <a class="remove_btn" ng-click="delete(processForm);" onclick="hidealldialg()">Yes, Remove it.</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="right_side">
+                    <div class="close_icon_large" ng-click="cancel(); $event.stopPropagation();"></div>
+                </div>
+            </div>
+
+            <div class="row margin-0">
+                <div class="padding_zero col-xs-12 white_color">
+                    <div class="col-xs-4">
+                        <div class="uploaed_file" ngf-select="onFileSelect($files)" ngf-pattern="'.jpg,.jpeg,.png'" ngf-accept="'image/*'" ngf-max-size="2MB">
+                            <span class="fileinput-button" ng-if="!processData.imagesrc"> 
+                                <span class="add_icon"></span><br>
+                                <span class=" margin-left-10" ng-if="!processData.imagesrc">Add Photo</span> 
+                            </span> 
+                            <img ng-if="processData.imagesrc" ng-src="{{processData.loadedfile}}" height="200px" width="100%"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-8 process_head">
+                        <div class="brand_name_cnt brand_name_height">
+                            <div class="brand_name_form heading_4">
+                                <input type="text" name="name" class="input_name_edit" ng-model="processForm.process_name" placeholder="PROCESS NAME" style="min-width: 300px;max-width: 300px;" 
+                                       ng-class="{'input_error_class':(processData.processsubmission && !myProcessForm.name.$valid)}" required>
+                            </div>
+                            <div class="brand_name_form heading_4 margin-top-10">
+                                <input type="text" class="input_name_edit" ng-model="processForm.process_code" placeholder="PROCESS CODE" style="min-width: 300px;max-width: 300px;">
+                            </div>
+                        </div>
+
+                        <div class="brand_status_cnt">
+                            <div class="data_time_update heading_6">
+                                <div ng-if="processForm._id">
+                                    Last Updated: <strong ng-bind="processForm.updated | dateformatFilter:'dmyt'"></strong> <br> 
+                                    Created On: <strong ng-bind="processForm.created | dateformatFilter:'dmyt'"></strong> 
+                                </div>
+                            </div>
+                            <div class="enable_disable heading_4" ng-if="processForm.is_active">
+                                <div class="center">
+                                    <div class="enable_large_white"></div>
+                                </div>
+                                Enabled 
+                            </div>
+                            <div class="enable_disable heading_4" ng-if="!processForm.is_active">
+                                <div class="center">
+                                    <div class="disable_medium_white"></div>
+                                </div>
+                                Disable 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand_form_body" style="padding: 0px;">
+            <div class="brand_form_body_cnt">
+                
+                <div class="row">
+                    <div class="col-xs-12 heading_5 margin-top-20 margin-bottom-20 description_Process">
+                        <div class="col-xs-12 emp-det"> <b class="heading_4">HSN CODE</b><br> <span>Enter a HSN Code for this process : </span> </div>
+                        <div class="col-xs-12 emp-id margin-top-10"> 
+                            <input type="text" class="common_input" name="hsn_code" ng-model="processForm.hsn_code" style="min-width: 140px;max-width: 140px;"
+                                   ng-class="{'input_error_class':(processData.processsubmission && !myProcessForm.hsn_code.$valid)}" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-11 col-xs-12 heading_5 margin-top-10 margin-bottom-10 prize-process">
+                        <div class="col-lg-12 col-xs-12 proze-deatils"> 
+                            <b class="heading_4"> Prices</b><br> 
+                            <span>You can enter the cost for below given measurements. If the measurement is not applicable leave blank.</span> 
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-11 col-xs-12 margin-top-20 margin-bottom-20">
+                        <div class="form_containers print-details">
+                            <div class="col-xs-12 padding_zero">
+                                <div class="col-xs-3">
+                                    <div class="heading_5 margin-bottom-15">Measurements</div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="heading_5 center padding-bottom-20px">Cost (₹)</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 padding_zero" ng-repeat="measure in processForm.measurement">
+                                <div class="col-xs-3">
+                                    <label>{{measure.measurement_name}}</label>
+                                </div>
+                                <div class="col-xs-3">
+                                    <input type="text" class="common_input text-center" valid-number ng-model="measure.cost">
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 margin-bottom-20">
+                        <div class="col-xs-12 heading_4 margin-bottom-15">Invoicing Option</div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="(!processForm.invoice_option || processForm.invoice_option == '') && !processData.show_invoice_option">No Invoicing Option assigned for this process.<br>
+                            <a ng-click="processData.show_invoice_option = true; $event.stopPropagation();">Assign Invoicing Option.</a>
+                        </div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="processForm.invoice_option && processForm.invoice_option !='' && !processData.show_invoice_option">The current Invoicing Option assigned for this process is 
+                            <b ng-bind="processForm.invoice_option"></b>.<br>
+                            <a ng-click="processData.show_invoice_option = true; $event.stopPropagation();">Assign different Invoicing Option.</a>
+                        </div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="processData.show_invoice_option">
+                            Select Invoicing Option<br>
+                            <div class="col-xs-7 padding_10 processinvoice_option margin-top-25">
+                                <div class="col-xs-5 invoiceoptions" ng-class="{'active':processForm.invoice_option == 'Delivery Weight'}" 
+                                     ng-click="processForm.invoice_option = 'Delivery Weight'">
+                                    <div class="optionselectedIcon"></div>Delivery Weight
+                                </div>
+                                <div class="col-xs-5 margin-left-20 invoiceoptions" ng-class="{'active':processForm.invoice_option == 'Received Weight'}" 
+                                     ng-click="processForm.invoice_option = 'Received Weight'">
+                                    <div class="optionselectedIcon"></div>Received Weight
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 margin-bottom-20">
+                        <div class="col-xs-12 heading_4 margin-bottom-15">Tax Class</div>
+                        <div class="col-xs-12 margin-bottom-10"><b>Inter-State Tax</b><span style="font-size:12px;"> (Other States)</span></div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="(!processForm.inter_tax_class || processForm.inter_tax_class.length == 0) && !processData.show_inter_tax_selection">No Tax Classes are assigned to this item.<br>
+                            <a ng-click="processData.show_inter_tax_selection = true; $event.stopPropagation();">Add Tax Classes.</a>
+                        </div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="processForm.inter_tax_class.length > 0 && !processData.show_inter_tax_selection">The current Tax Classes assigned for this process are 
+                            <b ng-bind="processData.current_inter_tax"></b><br>
+                            <a ng-click="processData.show_inter_tax_selection = true; $event.stopPropagation();">Assign different Tax Classes.</a>
+                        </div>
+                        <div class="col-xs-10 heading_5 margin-top-10 margin-bottom-10" ng-if="processData.show_inter_tax_selection">
+                            <tags-input key-property="tax_id" display-property="display_name" class="tax_tags" ng-model="processForm.inter_tax_class"
+                                        placeholder="Select Tax Class" replace-spaces-with-dashes="false">
+                                <auto-complete source="processData.tax_details" load-on-focus="true" load-on-empty="true" min-length="0" max-results="10">
+                                </auto-complete>
+                            </tags-input>
+                            <script type="text/ng-template" id="my-custom-template">
+                                <span>{{data.display_name}}</span>
+                            </script>
+                        </div>
+
+                        <div class="col-xs-12 margin-bottom-10 margin-top-10"><b>Intra-State Tax</b><span style="font-size:12px;"> (Within Your State)</span></div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="(!processForm.tax_class || processForm.tax_class.length == 0) && !processData.show_tax_selection">No Tax Classes are assigned to this item.<br>
+                            <a ng-click="processData.show_tax_selection = true; $event.stopPropagation();">Add Tax Classes.</a>
+                        </div>
+                        <div class="col-xs-12 margin-bottom-15" ng-if="processForm.tax_class.length > 0 && !processData.show_tax_selection">The current Tax Classes assigned for this process are 
+                            <b ng-bind="processData.current_tax"></b><br>
+                            <a ng-click="processData.show_tax_selection = true; $event.stopPropagation();">Assign different Tax Classes.</a>
+                        </div>
+                        <div class="col-xs-10 heading_5 margin-top-10 margin-bottom-10" ng-if="processData.show_tax_selection">
+                            <tags-input key-property="tax_id" display-property="display_name" class="tax_tags" ng-model="processForm.tax_class"
+                                        placeholder="Select Tax Class" replace-spaces-with-dashes="false">
+                                <auto-complete source="processData.tax_details" load-on-focus="true" load-on-empty="true" min-length="0" max-results="10">
+                                </auto-complete>
+                            </tags-input>
+                            <script type="text/ng-template" id="my-custom-template">
+                                <span>{{data.display_name}}</span>
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 text-center margin-top-20 margin-bottom-20">
+                        <button class="common_button" ng-if="processData.process == 'ADD'" ng-click="create(myProcessForm.$valid); $event.stopPropagation();" ng-show="!processData.eventLoad">Save</button>
+                        <button class="common_button" ng-if="processData.process != 'ADD'" ng-click="update(myProcessForm.$valid); $event.stopPropagation();" ng-show="!processData.eventLoad">Update</button>
+                        <div class="loader_small" ng-show="processData.eventLoad"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

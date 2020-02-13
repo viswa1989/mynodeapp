@@ -1,0 +1,134 @@
+<style type="text/css">
+    body{
+        overflow: hidden;
+    }
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 100px;
+        max-width: 270px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a {
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="row margin-0" ng-if="PoData.pageaction == 'View'">
+    <div class="purchase_right_section_header">Available Stock for <b ng-if="PoData.selectedDivisionname == 'ALL'">Lotus Knits</b><b ng-if="PoData.selectedDivisionname != 'ALL'" ng-bind="PoData.selectedDivisionname"></b>.
+        <div class="fullscreen_icon pull-right margin-right-10 c_full_screen_click" id="full_screen" onclick="return full_screen_purchasestock()"></div>
+
+        <div class="mail_icons pull-right margin-right-10" ng-click="clientdata.showdialogDiv = !clientdata.showdialogDiv"></div>
+
+        <div class="pdf_icons pull-right margin-right-10" ng-click="pdf_reporter()"></div>
+
+        <div class="print_icons pull-right margin-right-10" ng-click="printThisPayments();"></div>
+    </div>
+    
+    <div class="purchase_container" style="overflow: hidden;">
+        <div class="purchase_view_container" style="overflow: hidden;">
+            <div class="col-xs-12 padding_10 purchaseheaderresult">
+                <div class="heading_5 margin-bottom-15 margin-top-20">
+                    <b style="font-size: 15px;" ng-if="PoData.selectedDivisionname == 'ALL'" ng-bind="'At Lotus Knits as of '+(PoData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                    <b style="font-size: 15px;" ng-if="PoData.selectedDivisionname != 'ALL'" ng-bind="'At '+(PoData.selectedDivisionname)+' as of '+(PoData.currentDate | date:'EEE, dd-MM-yyyy hh:mm a')+'.'"></b>
+                </div>
+            </div>
+
+            <div class="col-xs-12 padding_10 purchasesearchcnt">
+                <div class="heading_5 margin-bottom-15">
+                    <b class="pull-left margin-top-10" style="font-size: 15px;">{{PoData.availableStock.length}} Available Stock</b>
+                    <div class="right_menu" style="margin-top: 0px;float:right; width:330px;">
+                        <div class="search_right_cnt" style="width:100% !important;">
+                            <input type="text" class="search_box_expand" placeholder="Search for Available stock" ng-model="availablestockfilter">
+                            <div class="search_icons">
+                                <span class="search_letter">Search</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 padding_10 margin-top-15 purchase_view_table" style="overflow: auto;">
+                <div class="table_scroll">
+                    <table class="mt_table tb_scroll_style res-table-scroll margin-bottom-10">
+                        <thead>
+                            <tr>
+                                <th style="min-width:150px;">Division</th>
+                                <th>Category</th>
+                                <th>Item</th>
+                                <th class="text-center" style="min-width: 120px;">Qty</th>
+                                <th class="text-center" style="min-width: 120px;">Min order Qty</th>
+                                <th style="min-width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="scollbody">
+                            <tr ng-repeat="stock in PoData.availableStock | filter:availablestockfilter" class="tr_body" ng-class="{'current_active_row':PoData.currentRow == stock._id}">
+                                <td style="min-width:150px;" ng-bind="stock.division_id.name"></td>
+                                <td ng-bind="stock.category_id.name"></td>
+                                <td ng-bind="stock.product_id.product_name"></td>
+                                <td class="text-center" style="min-width: 120px;" ng-bind="stock.quantity"></td>
+                                <td class="text-center" style="min-width: 120px;" ng-bind="stock.product_id.minimum_stock"></td>
+                                <td style="min-width:40px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function(){
+            purchasestockresize();
+        },200);
+    });
+
+    
+    var $table = $('table.mt_table'),
+        $bodyCells = $table.find('tbody tr:first').children(),
+        colWidth;
+    
+    function pendingpayreport() {
+        colWidth = $bodyCells.map(function () {
+        return $(this).width();
+        }).get();
+        $table.find('thead tr').children().each(function (i, v) {
+        $(v).width(colWidth[i]);
+        });
+        var header_height_c1 = $('.header').height();
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1 - 300;
+        $('.scollbody').css('height', total_height_c1);
+    }
+    $(window).resize(function () {
+        pendingpayreport();
+    });   
+    setTimeout(function () {
+        pendingpayreport();
+    }, 200);
+</script>

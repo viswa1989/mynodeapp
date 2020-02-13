@@ -1,0 +1,214 @@
+<div class="store_view_content" id="store3">
+    <form name="mydivisionaccountform" novalidate>
+        <div class="loader_large" ng-show="divisionData.contentLoad && divisionData.process != 'ADD'"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 margin-bottom-30">
+                    <div class="stores_titles">Opening Balance</div>
+                    <div class="stores_subtitle">Enter the Account Opening Balance and date for this Division.</div>
+                    <div class="branch_account_cnt">
+                        <div class="col-xs-4 branch_account_label_text">Cash Account</div>
+                        <div class="col-xs-4">
+                            <div class="input-group s_input_style">
+                                <span class="input-group-addon">₹</span>
+                                <input type="text" class="form-control branch_amount" ng-model="divisionaccountForm.accounts.opening_balance" name="account_opening_balance" valid-number 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.account_opening_balance.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 datepicker_custom_style datestyleaacounts">
+                            <div class="input-group date">
+                                <date-time-picker ng-model="divisionaccountForm.accounts.opening_date" placeholder="Date" start-view='2' min-view='2' max-view='4' 
+                                                  today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".datestyleaacounts">
+                                </date-time-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" ng-show="!divisionData.contentLoad || divisionData.process != 'ADD'">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="setup_store">
+                        <div class="stores_title">Other Preferences</div>
+                        <div class="subtitle">Set up the prefix and next serial number here.</div>
+                    </div>
+
+                    <div class="branch_account_cnt">
+                        <div class="row padding_zero margin-bottom-10">
+                            <div class="col-xs-4 branch_account_label_text"> &nbsp;</div>
+                            <div class="col-xs-4 text-center">
+                                <b>Prefix</b> 
+                            </div>
+                            <div class="col-xs-4 text-center">
+                                <b>Serial No.</b> 
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Job</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.order.prefix" name="order_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.order_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.order.serial_no" name="order_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.order_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Inward</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.inward.prefix" name="inward_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.inward_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.inward.serial_no" name="inward_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.inward_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Outward</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.outward.prefix" name="outward_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.outward_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.outward.serial_no" name="outward_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.outward_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Return</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.return.prefix" name="return_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.return_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.return.serial_no" name="return_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.return_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Contract Outward</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.contract_outward.prefix" name="contract_outward_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.contract_outward_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.contract_outward.serial_no" name="contract_outward_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.contract_outward_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Contract Inward</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.contract_inward.prefix" name="contract_inward_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.contract_inward_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.contract_inward.serial_no" name="contract_inward_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.contract_inward_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Invoice</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.invoice.prefix" name="invoice_prefix"
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.invoice_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.invoice.serial_no" name="invoice_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.invoice_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">GRN Number</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.grn.prefix" name="grn_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.grn_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.grn.serial_no" name="grn_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.grn_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Purchase</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.purchase.prefix" name="purchase_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.purchase_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.purchase.serial_no" name="purchase_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.purchase_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Purchase Return</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.purchase_return.prefix" name="purchase_return_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.purchase_return_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.purchase_return.serial_no" name="purchase_return_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.purchase_return_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Credit Note</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.credit_note.prefix" name="credit_note_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.credit_note_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.credit_note.serial_no" name="credit_note_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.credit_note_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+
+                        <div class="row padding_zero margin-bottom-05">
+                            <div class="col-xs-4 branch_account_label_text">Debit Note</div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.debit_note.prefix" name="debit_note_prefix" 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.debit_note_prefix.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" class="common_input branch_account_input text-center" ng-model="divisionaccountForm.debit_note.serial_no" name="debit_note_serialno" valid-onlynumber 
+                                       ng-class="{'input_error_class':(!mydivisionaccountform.debit_note_serialno.$valid && divisionaccountData.formsubmission)}" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 text-center margin-top-20">
+                    <button class="common_button" ng-click="updatedivisionAccount(mydivisionaccountform.$valid, divisionaccountForm);" ng-show="!divisionData.eventLoad">Update Accounts</button>
+                    <div class="loader_small" ng-show="divisionData.eventLoad"></div>
+                </div>
+            </div>
+            <div class="clearboth"></div>
+        </div>
+
+        <div class="container" ng-show="!divisionData.contentLoad || divisionData.process != 'ADD'">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="stores_pre_nex">
+                        ← <a class="blod_line" ng-click="changeChildPage('Manageprocess'); $event.stopPropagation();" >Manage Process</a> |
+                        <a class="blod_line" ng-click="changeChildPage('Stocks'); $event.stopPropagation();">Stocks</a> →
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

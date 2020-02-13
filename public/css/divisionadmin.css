@@ -1,0 +1,108 @@
+.ba_bgcolor {background: rgb(109,87,152) !important;}
+.ba_textcolor {color: rgb(109,87,152) !important;}
+.ba_card_bgcolor, .add_edit_div .ba_card_bgcolor {background: rgb(109,87,152) !important;background-color: rgb(109,87,152) !important;}
+.ba_card_bgcolor:hover, .add_edit_div .ba_card_bgcolor:hover {background: rgba(109,87,152,0.8) !important;background-color: rgba(109,87,152,0.8) !important;}
+.ba_customer .common_button, .ba_account .common_button {background: rgb(109,87,152) !important;background-color: rgb(109,87,152) !important;}
+.ba_customer .common_button:hover, .ba_account .common_button:hover {background: rgba(109,87,152,0.8) !important;background-color: rgba(109,87,152,0.8) !important;}
+/** Dashboard **/
+.ba_btn_top_header {background-color: rgb(119,119,119);font-size: 11px;color: rgb(255,255,255);padding: 5px 10px;}
+.ba_btn_top_header:hover, .ba_btn_top_header:visited {background-color: rgba(119,119,119,0.8);color: rgb(255,255,255) !important;}
+.ba_dashboard .dashboard_container, .se_dashboard .dashboard_container {padding: 10px 0px 0px !important;}
+.ba_dashboard .dashboard_card .ba_dash_head, .se_dashboard .dashboard_card .ba_dash_head {height: auto !important;}
+.ba_dashboard .ba_dash_top_cnt, .se_dashboard .ba_dash_top_cnt {margin-bottom: 10px;}
+.ba_dashboard .ba_show_amount, .se_dashboard .ba_show_amount {width: 95%;float: left;margin-left: 0px !important;}
+.ba_dash_card_title {display: inline-block;width: 180px;word-wrap: break-word;white-space: normal;}
+.ba_dash_card_process {display: inline-block;width: 120px;word-wrap: break-word;white-space: normal;font-size: 11px;text-align: center;font-weight: bold;}
+.ontime {color: rgb(0,102,51);}
+.ondelay {color: rgb(0,102,51);}
+.past {color: rgb(0,102,51);}
+.ba_dashboard .dropdown-menu>li>a:hover, .ba_dashboard .dropdown-menu>li>a:focus {background: rgb(109,87,152) !important;}
+.se_dashboard .dropdown-menu>li>a:hover, .se_dashboard .dropdown-menu>li>a:focus {background: rgb(109,87,152) !important;}
+.ba_dash_footer {padding: 5px 10px !important;}
+.ba_dashboard_card .dashboard_card_list .right_sec, .se_dashboard_card .dashboard_card_list .right_sec {width: 98%;float: left;margin-left: 0%;}
+.ba_dashboard_card .dashboard_card_list .card_img, .se_dashboard_card .dashboard_card_list .card_img {background-color: rgb(187,187,187);}
+.da_service_eng {width: 100%;float: left;font-size: 11px;color: rgb(133,133,133);margin: 5px 0px 10px;}
+
+/** Order Page **/
+.ba_product_details {float: left;width: 100%;margin: 10px 0px 20px;}
+.ba_recived_select {padding: 10px;width: 100%;background: rgb(238,238,238);}
+/** End Order Page **/
+
+/** Customer Page **/
+.customer_page.ba_customer .filter_cnt .button.active {background: rgb(109,87,152) !important;}
+.customer_page.ba_customer .customer_btn:hover, .customer_page.ba_customer .customer_btn.active {background-color: rgb(109,87,152) !important;}
+.customer_page.ba_customer .dashboard_card_list .left_strip {background-color: rgb(109,87,152);}
+/** End Customer Page **/
+
+/*** Account ***/
+.ba_account .account .ledgers.active, .ba_account .account .favorite.active {background-color: rgb(109,87,152) !important;color: #fff;}
+.ba_account .account .account_filter_cnt .button_filter.active {background-color: rgb(109,87,152) !important;}
+.ba_account .account .enter {background-color: rgb(109,87,152) !important;}
+.ba_account .account .enter:hover {background-color: rgba(109,87,152,0.8) !important;}
+.ba_account .account .fav_cus_card:hover, .ba_account .account .fav_cus_card.active {background-color: rgb(109,87,152) !important;}
+.ba_account .invoice .cancel_invoice, .ba_account .account .cancel {background: rgba(136,136,136,1) !important;}
+.ba_account .invoice .cancel_invoice:hover, .ba_account .account .cancel:hover {background: rgba(136,136,136,0.7) !important;}
+/** End Account **/
+.ba_menu_container #navbar_innermenu9{border-bottom: none;display: inline-block;float: none !important;text-align: center;margin: 0 auto;margin-bottom: -3px;}
+/** Setup **/
+.ba_setup_topmenu {float: left;width: 100%;padding-top: 50px;background: #ccc !important;}
+.ba_menu_container {width: 400px;margin: 0 auto;color: #fff;}
+.ba_branch_name {font-size: 18px;font-weight: bold;color: rgb(255,255,255);text-align: center;margin-bottom: 10px;}
+.ba_branch_location {font-size: 15px;font-weight: bold;color: rgb(255,255,255);text-align: center;margin-bottom: 40px;}
+.ba_setup_menu {padding: 10px 20px;/*margin-right: 5px;*/font-size: 15px;font-weight: bold;color: rgb(57,57,57);display: inline-block;float: left;margin-bottom: -3px;}
+.ba_setup_menu:hover, .ba_setup_menu:visited, .ba_setup_menu.active {color: rgb(57,57,57);background: #eee;text-decoration: none !important;}
+.ba_container_secondmenu {width: 725px;margin: 0 auto;}
+.ba_container_secondmenu_scrap {width: 600px;margin: 0 auto;}
+.ba_container_secondmenu li a.menu_list {padding: 10px 10px !important;font-weight: 600;color: #393939;cursor: pointer;text-decoration: none;display: inline-block;width: 150px !important;text-align: center !important;/*margin-right: 5px;*/}
+.ba_container_secondmenu .setup_menu_navbar_c {
+    /*padding-left: 75px !important;*/
+}
+.ba_grn_input {width: 160px;background: #fff;border: 0px;padding: 10px 10px;margin-right: 5px;margin-bottom: 10px;}
+.instoct_table .ba_grn_input {width: 100% !important;margin: 0px !important;}
+.instoct_table .select_item_box{min-width: 100px;}
+.instoct_table .input_item_box{min-width: 60px;}
+.ba_container_1 {width: 75%;margin: 0 auto;display: table;}
+/** End Setup **/
+
+/*** Vignesh Css ***/
+
+/*** Scrap Stock Table**/
+/*.scrap_stock_tb{min-width: 520px;border: 0px !important;width: 52%;margin: 0 auto;}*/
+.scrap_stock_row_table {width: 100%;margin: 0 auto;margin-right: -15px;margin-left: -15px;}
+.scrap_tr_header {text-decoration: underline;}
+.scrap_td_header {padding: 13px 10px;font-size: 13px !important;color: #666659;}
+.scrap_th_header {padding: 15px 10px;}
+.qnt {text-align: center;}
+/*** End scrap stock table**/
+
+/*** Add Job Card ******/
+.add_job_container {margin: 0 auto;width: 100%;float: left;padding: 51px 91px;}
+.job_category_container {float: left;}
+.job_mob_input {width: 160px;background: #fff;border: 0px !important;padding: 10px 10px;margin: -34px 177px;float: left;width: 23%;}
+.cus_add_field {float: left;}
+.job_date {padding: 44px 0px;}
+.job_no_input {width: 160px;background: #fff;border: 1px solid #A5A1A1;padding: 10px 10px;margin: -34px 85px;float: left;}
+.date_input {width: 160px;background: #fff;padding: 10px 10px;margin: -34px 85px;float: left;border: 1px solid #A5A1A1;}
+.file_up {padding: 17px 0px;}
+.job_cs_name {font-size: 17px;font-weight: bold;padding-top: 38px;}
+.job_bill_add {float: left;margin: 27px 0px;color: black;}
+.job_shi_add {float: left;margin: 27px 90px;color: black;}
+.job_grp_input {width: 160px;background: #fff;border: 0px !important;padding: 10px 10px;margin-right: 4px;margin-bottom: 10px;color: #cccccc;}
+.job_underline{border-top: 4px solid rgb(221,221,221);float: left;width: 50%;/* padding-top: 2px; */margin-top: 43px;}
+.job_underline1{border-top: 4px solid rgb(221,221,221);float: left;width: 116%;/* padding-top: 2px; */margin: -4px 109%;}	
+.file-uploads {position: relative;overflow: hidden;margin: 10px;padding: 7px 32px;font-weight: bold;}
+.file-upload input.file-input {position: absolute;top: 0;right: 0;margin: 0;padding: 0;font-size: 20px;cursor: pointer;opacity: 0;filter: alpha(opacity=0);}
+.job_file_brow {padding: 7px 29px;font-weight: bold;}
+.job_file_up {padding: 7px 32px;font-weight: bold;}
+.job_no_field{font-size: 18px;font-weight: bold;}
+.job_date_fiels{font-size: 18px;font-weight: bold;padding-top: 42px;margin: 0px 20px;}
+.job_txt {width: 34%;height: 98px;border: 1px solid #cccccc;padding: 8px 8px;}
+.job_all_up {padding: 7px 32px;font-weight: bold;background: rgb(109,87,152);color: white;}
+.job_textarea{margin-bottom: 130px;}
+.job_file_all_up {padding: 7px 0px;font-weight: bold;}
+.job_chk{float: left;width: 100%;padding: 0px 267px;margin-top: -30px;}
+.Job_para{padding: 11px 19px;font-size: 18px;font-weight: bold;}
+.chk_date_input{display:inline-block;width:32px;height:32px;margin:-1px 4px 0 0;border: 1px solid #A5A1A1;cursor:pointer;float:left;}	
+/*** End Add Job Card ******/
+
+/*** End Vignesh Css ***/

@@ -1,0 +1,49 @@
+<div class="container" ng-init="colororder = ''">
+    <div class="row">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Colours</div>
+            <div class="subtitle">Click on the colour to edit or add more details.</div>
+            <div class="sort_list heading_7">
+                Sort by
+                <a ng-click="colororder = '+fabric_color'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (colororder == '+fabric_color') ? 'underline' : 'none' }">0A-Z</a>,
+                <a ng-click="colororder = '-fabric_color'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (colororder == '-fabric_color') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="colorfilter">
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-30 margin-bottom-30">
+            <div class="center_content center_alg">
+                <div class="branch_card_add colours" ng-click="new_color(); $event.stopPropagation();">
+                       
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Colour</div>
+                </div>
+                <div class="branch_card colorcard add-card card_customized" ng-repeat="colorData in (manageData.colors | orderBy:colororder | orderEmpty:'_id':'toTop') | filter:colorfilter" 
+                     ng-class="{'disabled':!colorData.is_active}">
+                    <span class="disable_small_brand activebrand" ng-if="colorData.is_active" noty-disable="" noty-update="toggleColor(colorData)" noty-style="3" 
+                          noty-content="Disabling {{colorData.fabric_color}} Colour will hide the items. You can re-enable the items anytime. Do you want to continue? "></span>
+                    <span class="disable_small_brand" ng-if="!colorData.is_active" noty-enable="" noty-update="toggleColor(colorData)" noty-style="3" 
+                          noty-content="Enabling {{colorData.fabric_color}} Colour will show the items. You can disable the items anytime. Do you want to continue? "></span>
+                    <span>
+                        <input type="text" class="small" placeholder="New Color" ng-model="colorData.fabric_color" ng-model-options="{updateOn: 'blur'}"
+                               ng-change="addColor(colorData, $index);" required>
+                        <input type="color" class="small margin-top-05 ctm-color-pick" placeholder="Code" ng-model="colorData.fabric_color_code" ng-model-options="{updateOn: 'blur'}" 
+                               ng-change="addColorcode(colorData, $index);">
+                    </span>
+                    <span class="delete-add" ng-click="deleteColor(colorData._id, $index); $event.stopPropagation();"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="stores_pre_nex">
+            ← <a class="blod_line" ng-click="managePage('type'); $event.stopPropagation();">Fabric Type </a> | 
+            <a class="blod_line" ng-click="managePage('measure'); $event.stopPropagation();">Measurements</a> → 
+        </div>
+    </div>
+</div>

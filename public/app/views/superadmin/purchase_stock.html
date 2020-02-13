@@ -1,0 +1,101 @@
+<style>
+    .header.superadmin nav{
+        background: rgb(0, 33, 55);
+    }
+</style>
+
+<div class="purchaseStock_page" ng-controller="PurchasestockController">
+    <div id="page_loader" ng-show="PoData.pageLoader"></div>
+    <div class="row margin-0">
+        <div class="purchase_left_section">
+            <div class="purchasestock_header"> 
+                <div class="heading_3">Purchase & Stocks</div>
+            </div>
+            <div class="purchase_filter_cnt"> 
+                <div class="filter_scroll">
+                    <div class="headergroup">
+                        <div class="title_filter_cnt">Purchase</div>
+                        <a class="repofilterbtn button" ng-class="{'active':PoData.mainMenu == 'Purchase Order'}" ng-click="selectPomenu('Purchase Order');">Purchase Order</a>
+                        <a class="repofilterbtn button" ng-class="{'active':PoData.mainMenu == 'GRN'}" ng-click="selectPomenu('GRN');">GRN</a>
+                        <a class="repofilterbtn button" ng-class="{'active':PoData.mainMenu == 'Purchase Return'}" ng-click="selectPomenu('Purchase Return');">Purchase Return</a>
+                    </div>
+                    <div class="headergroup">
+                        <div class="title_filter_cnt">Stocks</div>
+                        <a class="repofilterbtn button" ng-class="{'active':PoData.mainMenu == 'Available Stock'}" ng-click="selectPomenu('Available Stock');">Available Stock</a>
+                        <a class="repofilterbtn button" ng-class="{'active':PoData.mainMenu == 'Utilized Stock'}" ng-click="selectPomenu('Utilized Stock');">Utilized Stock</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="purchase_menu_section">
+            <div class="purchasestock_header"> 
+                <div class="heading_3" ng-bind="PoData.mainMenu"></div>
+            </div>
+            <div class="purchase_filter_cnt"> 
+                <div class="filter_scroll">
+                    <div class="filter_cnt">
+                        <a class="button repofilterbtn" ng-repeat="division in PoData.divisionList" ng-class="{'active':PoData.selectedDivisionid == division._id}" 
+                           ng-click="filterBydivision(division);" ng-bind="division.name"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="purchase_right_section" ng-include="PoData.loadPage"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function purchasestockresize(){
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1;
+        var rightsectionheader = $('.purchase_right_section_header').height();
+        var purchaseheaderresult = $('.purchaseheaderresult').height();
+        var purchasesearchcnt = $('.purchasesearchcnt').height();
+        $('.purchaseStock_page').css('height', total_height_c1); //window height
+        $('.filter_scroll').css('height', total_height_c1 - 82); //window height
+        var rightdiffheight = rightsectionheader + purchaseheaderresult + purchasesearchcnt + 100;
+        $('.purchase_view_container').css('height', total_height_c1-rightsectionheader-50);
+//        $('.purchase_view_table').css('height', total_height_c1 - rightdiffheight); //window height
+//        $('.table_scroll').css('height', total_height_c1 - rightdiffheight - 15); //window height
+        $('.itemadd_section .purchase_container').css('height', total_height_c1 - 70); //window height
+    }
+    $(window).resize(function () {
+        purchasestockresize();
+    });
+
+    function full_screen_purchasestock() {
+        $('.purchase_left_section').toggle();
+        $('.purchase_menu_section').toggle();
+        $('.purchase_right_section').toggleClass('full_width_acc');
+    }
+    splite_screen();
+
+    if($(window).width() <= 840){
+        purchaseFullviewshow();
+    }
+
+    $(window).resize(function () {
+    if($(window).width() <= 840){
+        purchaseFullviewshow();
+    }
+    });
+
+    function purchaseFullviewshow() {
+        $('.purchase_left_section').hide();
+        $('.purchase_menu_section').hide();
+        $('.purchase_right_section').addClass('full_width_acc');
+    }
+
+    $(document).ready(function () {
+        $(document).on('click', '.repofilterbtn', function () {
+            if($(window).width() <= 840){
+                purchaseFullviewshow();
+                purchasestockresize();
+            }
+        });
+    });
+</script>

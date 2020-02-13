@@ -1,0 +1,375 @@
+<style>
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 50px;
+        max-width: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a{
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+    .new-job-card-tab .billappend{
+        width: 150px;
+        float: left;
+    }
+</style>
+<div ng-controller="ReturnController">
+    <div class="bill_container menu" id="common_header_contianer" style="margin-left: 0px;width: 100%">
+        <ul class="nav nav-tabs faq-cat-tabs new-job-card-tab">
+            <div class="billappend" ng-repeat="jobs in orderData.joblist">
+                <div class="bill" ng-click="selectJob(jobs.order_id)">
+                    <div class="bill-name heading_4">Job Card {{jobs.order_id}}</div>
+                    <div class="mobile-no" id="billMenuIndexID1" ng-if="jobs.mobile_no == ''">----</div>
+                    <div class="mobile-no" id="billMenuIndexID1" ng-if="jobs.mobile_no != ''" ng-bind="jobs.mobile_no"></div>
+                </div>
+                <span class="close_job" ng-if="orderData.joblist.length>1" ng-click="closeJob(jobs)"></span>
+            </div>
+            <li class="dash_menu_list" ng-if="orderData.joblist.length < 4">
+                <a href="/divisionadmin/order/newjob">
+                    <div class="bill-name heading_4">+ New Job</div>
+                </a>
+            </li>
+            <li class="dash_menu_list">
+                <a href="/divisionadmin/order/delivery">
+                    <div class="bill-name heading_4">Delivery</div>
+                </a>
+            </li>
+            <li class="dash_menu_list active">
+                <div class="bill-name heading_4">Return</div>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- bill_container -->
+    <div class="billshow_container">
+        <div class="row" style="margin:0px">
+            <div class="col-xs-12 job_card_left padding_zero">
+                <div class="delivery_tabpane">
+                    <div class="bill_section_1 bill_auto_height col-xs-3 col1" ng-if="!deliveryreturnForm._id || deliveryreturnForm._id == ''">
+                        <div class="bill_sec_container margin-bottom-20">
+                            <div class="bill_search">
+                                <input placeholder="Enter Mobile no / Company name" tabindex="1" numbersonly="10" type="text" ng-model="deliveryreturnData.customer_mobile" ng-change="getcustomerDetails()" autofocus>
+                            </div>
+                            <div class="bottom-jobcard customer_page col-lg-12 center-block">
+                                <div ng-if="deliveryreturnData.customerSearch && deliveryreturnData.customers.length > 0">
+                                    <div class="customer_btn" ng-click="selectCustomer(customer); $event.stopPropagation();" ng-repeat="customer in deliveryreturnData.customers"
+                                         ng-class="{'active':customer._id == deliveryreturnForm.customer_id, 'disabled':customer.status_outward}" ng-enter="selectCustomer(customer);" tabindex="2"
+                                         ng-enter="selectCustomer(customer);">
+                                        <div class="favorite" ng-class="{'active':customer.is_favourite}">F</div>
+                                        <div class="profile_img"></div>
+                                        <div class="customer_name">{{customer.name}}</div>
+                                        <div class="customer_phone">{{commonobjectService.getPhonenoprefix()}} {{customer.mobile_no}}</div>
+                                        <div class="customer_phone">
+                                            <span ng-if="customer.alternate_no && customer.alternate_no != ''">{{customer.alternate_no}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 text-center margin-top-20 margin-bottom-10 viewcustomer_placeholder_title" ng-if="!deliveryreturnData.customerSearch && 
+                                            deliveryreturnForm.customer_id && deliveryreturnForm.customer_id != ''">
+                                    <div class="viewcustomer_placeholder">
+                                        <b ng-bind="deliveryreturnForm.customer_name"></b>
+                                    </div>
+                                    <div class="viewcustomer_placeholder">
+                                        <b ng-bind="commonobjectService.getPhonenoprefix() + ' ' + deliveryreturnForm.customer_mobile_no"></b>
+                                    </div>
+                                    <div class="col-xs-12 text-center contact_font_color">
+                                        <div class="margin-bottom-05" ng-if="deliveryreturnForm.customer_alternate_no && deliveryreturnForm.customer_alternate_no != ''">
+                                            <b ng-bind="'Alt. Contact No.: '+deliveryreturnForm.customer_alternate_no"></b>
+                                        </div>
+                                        <div class="margin-bottom-05">
+                                            <b combine-Address="{{deliveryreturnForm}}"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bill_section_1 bill_auto_height col-xs-3 col2 customer-card" ng-if="!deliveryreturnForm._id || deliveryreturnForm._id == ''">
+                        <div class="bill_sec_container margin-bottom-20">
+                            
+                            <div class="bill_title margin-bottom-20">Job Card in Progress</div>
+                            
+                            <div class="bill_search" ng-if="deliveryreturnForm.customer_id && deliveryreturnData.orders.length > 0">
+                                <input id="ordersrch" placeholder="Search order" type="text" ng-model="deliveryreturnData.searchorder" tabindex="3">
+                            </div>
+                            
+                            <div class="neworder_container">
+                                <div class="text-center margin-top-40" ng-if="deliveryreturnForm.customer_id && !deliveryreturnData.customerSearch && deliveryreturnData.orders.length == 0">No Job cards is in progress.</div>
+                                <div class="dashboard_card_list" ng-repeat="orders in deliveryreturnData.orders | filter:deliveryreturnData.searchorder" ng-click="selectOrder(orders); $event.stopPropagation();"
+                                     ng-class="{'active_inward':deliveryreturnForm.order_id && deliveryreturnForm.order_id == orders._id}" ng-enter="selectOrder(orders);" tabindex="4">
+                                    <div class="left_strip" applystatus="{{orders.order_status}}"></div>
+                                    <div class="right_sec">
+                                        <div class="card_txt_cnt">
+                                            <div class="col-xs-12 padding_zero customer-name"> <b class="pull-left" ng-bind="orders.customer_name"></b></div>
+                                            <div class="col-xs-12 padding_zero order-name">Job No: <b ng-bind="orders.order_no"></b> 
+                                                <b class="pull-right" ng-bind="orders.order_date| date:'dd / MM / yyyy'"></b> 
+                                            </div>
+                                            <div class="col-xs-12 padding_zero order-name hide">Inward No: <b ng-bind="orders.inwards[0].inward_no"></b> 
+                                                <b class="pull-right" ng-bind="orders.inwards[0].inward_date| date:'dd / MM / yyyy'"></b> 
+                                            </div>
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="name process">Process: <b class="txt_blue" ng-bind="orders.processes"></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bill-view-section sec3" ng-class="{'job_completed':deliveryreturnForm._id && deliveryreturnForm._id != ''}">
+                        <div class="orders_page">
+                            <div class="order_header">
+                                <div class="col-xs-12 padding_zero order_page_container margin-top-20 margin-bottom-20">
+                                    <div class="col-xs-6">
+                                        <div class="order_no heading_4 title_content pull-left" style="width: 100%">
+                                            <span class="label_title">Job No: </span>
+                                            <span class="heading_4 title_content" ng-if="deliveryreturnForm.order_no && deliveryreturnForm.order_no != null && 
+                                                  deliveryreturnForm.order_no != ''" ng-bind="deliveryreturnForm.order_no"></span>
+                                            <span class="heading_4 title_content" ng-if="!deliveryreturnForm.order_no || deliveryreturnForm.order_no == null || 
+                                                  deliveryreturnForm.order_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="order_cus_name heading_4 title_content pull-left" style="width: 100%"><b ng-bind="deliveryreturnForm.customer_name"></b></div>
+                                        <div class="col-xs-7 padding_zero billing_address title_content" bill-gstin="true" combine-Address="{{deliveryreturnForm}}" style="white-space: normal;"></div>
+                                        <div class="col-xs-12 margin-top-15 padding_zero billing_address_title label_title">Delivery To</div>
+                                        <div class="title_content pull-left margin-top-05" style="width: 100%">
+                                            <span ng-bind="deliveryreturnForm.delivery_company_name" ng-show="!deliveryreturnData.addresschange"></span>
+                                            <input type="text" name="delivery_company_name" class="common_input" placeholder="Company Name" ng-model="deliveryreturnData.delivery_company_name" 
+                                                   ui-autocomplete="companyOption" ng-show="!deliveryreturnForm._id && deliveryreturnData.addresschange" style="width: 200px;" tabindex="6"/>&nbsp;&nbsp;
+                                            <a ng-click="changedeliveryaddress()" ng-show="!deliveryreturnForm._id && !deliveryreturnData.addresschange" tabindex="5" ng-enter="changedeliveryaddress()">Change</a>
+                                            <a ng-click="saveDeliveryaddress()" ng-show="!deliveryreturnForm._id && deliveryreturnData.addresschange" tabindex="7" ng-enter="saveDeliveryaddress()">Update</a>&nbsp;&nbsp;
+                                            <a ng-click="closedeliveryaddress()" ng-show="!deliveryreturnForm._id && deliveryreturnData.addresschange" tabindex="8" ng-enter="closedeliveryaddress()">Cancel</a>
+                                        </div>
+                                        <div class="col-xs-12 margin-top-15 padding_zero billing_address_title label_title">Driver Details</div>
+                                        <div class="col-xs-12 padding_zero driver_details margin-top-05" ng-if="!deliveryreturnForm._id">
+                                            <input type="text" class="common_input" ng-model="deliveryreturnForm.vehicle_no" ui-autocomplete="vehicleOption" placeholder="Vehicle No." tabindex="9"/>
+                                            <input type="text" class="common_input margin-left-05" ng-model="deliveryreturnForm.driver_name" ui-autocomplete="driverOption" placeholder="Driver Name" tabindex="10"/>
+                                            <input type="text" class="common_input margin-left-05" placeholder="Phone No." ng-model="deliveryreturnForm.driver_no" tabindex="11"/>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero driver_details margin-top-05" ng-if="deliveryreturnForm._id && deliveryreturnForm._id!=''">
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Vehicle No:</span>
+                                                <span class="title_content" ng-if="deliveryreturnForm.vehicle_no && deliveryreturnForm.vehicle_no != null && deliveryreturnForm.vehicle_no != ''" 
+                                                      ng-bind="deliveryreturnForm.vehicle_no"></span>
+                                                <span class="title_content" ng-if="!deliveryreturnForm.vehicle_no || deliveryreturnForm.vehicle_no == null || deliveryreturnForm.vehicle_no == ''"><b>---</b></span>
+                                            </div>
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Driver Name:</span>
+                                                <span class="title_content" ng-if="deliveryreturnForm.driver_name && deliveryreturnForm.driver_name != null && deliveryreturnForm.driver_name != ''" 
+                                                      ng-bind="deliveryreturnForm.driver_name"></span>
+                                                <span class="title_content" ng-if="!deliveryreturnForm.driver_name || deliveryreturnForm.driver_name == null || deliveryreturnForm.driver_name == ''" ><b>---</b></span>
+                                            </div>
+                                            <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                                <span class="label_title order_label">Driver Phone No:</span>
+                                                <span class="title_content" ng-if="deliveryreturnForm.driver_no && deliveryreturnForm.driver_no != null && deliveryreturnForm.driver_no != ''" 
+                                                      ng-bind="deliveryreturnForm.driver_no"></span>
+                                                <span class="title_content" ng-if="!deliveryreturnForm.driver_no || deliveryreturnForm.driver_no == null || deliveryreturnForm.driver_no == ''" ><b>---</b></span>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="col-xs-12 margin-bottom-15 padding_zero">
+                                            <span class="label_title order_label">Return No:</span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.delivery_no && deliveryreturnForm.delivery_no != null && deliveryreturnForm.delivery_no != ''" 
+                                                  ng-bind="deliveryreturnForm.delivery_no"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.delivery_no || deliveryreturnForm.delivery_no == null || deliveryreturnForm.delivery_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Order Ref No:</span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.order_reference_no && deliveryreturnForm.order_reference_no != null && deliveryreturnForm.order_reference_no != ''" 
+                                                  ng-bind="deliveryreturnForm.order_reference_no"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.order_reference_no || deliveryreturnForm.order_reference_no == null || deliveryreturnForm.order_reference_no == ''"><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Customer DC No:</span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.customer_dc_no && deliveryreturnForm.customer_dc_no != null && deliveryreturnForm.customer_dc_no != ''" 
+                                                  ng-bind="deliveryreturnForm.customer_dc_no"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.customer_dc_no || deliveryreturnForm.customer_dc_no == null || deliveryreturnForm.customer_dc_no == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Customer DC Date:</span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.customer_dc_date && deliveryreturnForm.customer_dc_date != null && deliveryreturnForm.customer_dc_date != ''" 
+                                                  ng-bind="deliveryreturnForm.customer_dc_date | date:'dd - MM - yyyy'"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.customer_dc_date || deliveryreturnForm.customer_dc_date == null || deliveryreturnForm.customer_dc_date == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing Name:</span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.dyeing && deliveryreturnForm.dyeing != null && deliveryreturnForm.dyeing != '' && deliveryreturnForm.dyeing.dyeing_name &&
+                                                  deliveryreturnForm.dyeing.dyeing_name != null && deliveryreturnForm.dyeing.dyeing_name != ''" ng-bind="deliveryreturnForm.dyeing.dyeing_name"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.dyeing || deliveryreturnForm.dyeing == null || deliveryreturnForm.dyeing == '' || !deliveryreturnForm.dyeing.dyeing_name ||
+                                                  deliveryreturnForm.dyeing.dyeing_name == null || deliveryreturnForm.dyeing.dyeing_name == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing DC No: </span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.dyeing_dc_no && deliveryreturnForm.dyeing_dc_no != null && deliveryreturnForm.dyeing_dc_no != ''" 
+                                                  ng-bind="deliveryreturnForm.dyeing_dc_no"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.dyeing_dc_no || deliveryreturnForm.dyeing_dc_no == null || deliveryreturnForm.dyeing_dc_no == ''" ><b>---</b></span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-05 padding_zero">
+                                            <span class="label_title order_label">Dyeing DC Date: </span>
+                                            <span class="title_content" ng-if="deliveryreturnForm.dyeing_dc_date && deliveryreturnForm.dyeing_dc_date != null && deliveryreturnForm.dyeing_dc_date != ''" 
+                                                  ng-bind="deliveryreturnForm.dyeing_dc_date | date:'dd - MM - yyyy'"></span>
+                                            <span class="title_content" ng-if="!deliveryreturnForm.dyeing_dc_date || deliveryreturnForm.dyeing_dc_date == null || deliveryreturnForm.dyeing_dc_date == ''" ><b>---</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="clearboth"></div>
+                                </div>
+                            </div>
+
+                            <div class="clearboth"></div>
+                            <div class="bill_view_order margin-bottom-20">
+                                <div class="col-xs-12 padding_zero" ng-if="!deliveryreturnForm._id || deliveryreturnForm._id == ''">
+                                    <div class="col-xs-12 margin-top-10 heading_5">
+                                        <b>Job Details</b>
+                                    </div>
+
+                                    <div class="col-xs-12 order_detail_content margin-top-20">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center"></th>
+                                                    <th class="text-left">Fabric Type</th>
+                                                    <th class="text-left">Colour</th>
+                                                    <th class="text-left">Process</th>
+                                                    <th class="text-left">Lot No</th>
+                                                    <th class="text-center">Dia</th>
+                                                    <th class="text-center">No of Rolls</th>
+                                                    <th class="text-center">Weight</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="inward in deliveryreturnForm.inwards" ng-hide="deliveryreturnForm.jobstatus == 'COMPLETED' && !inward.fabric_color">
+                                                    <td>
+                                                        <input ng-if="!inward.deliverycompleted" type="checkbox" ng-model="inward.is_checked" ng-change="selectInward(inward)" ng-enter="selectInward(inward)" tabindex="12"/>
+                                                    </td>
+                                                    <td class="fabric_types" ng-bind="inward.fabric_type"></td>
+                                                    <td class="fabric_color" ng-bind="inward.fabric_color"></td>
+                                                    <td class="fabric_process" combine-process="{{inward.process}}"></td>
+                                                    <td ng-bind="inward.lot_no"></td>
+                                                    <td class="text-center" ng-bind="inward.dia | number:2"></td>
+                                                    <td class="text-center" ng-bind="inward.rolls"></td>
+                                                    <td class="fabric_weight text-right" ng-bind="inward.weight | number:3"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 padding_zero" ng-if="deliveryreturnForm.outwardData && deliveryreturnForm.outwardData.length > 0">
+                                    <div class="col-xs-12 margin-top-10 heading_5">
+                                        <b>Order Return Details</b>
+                                    </div>
+
+                                    <div class="col-xs-12 order_detail_content margin-top-20">
+                                        <table class="table" ng-if="deliveryreturnForm.outwardData && deliveryreturnForm.outwardData.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width: 150px;"></th>
+                                                    <!--<th></th>-->
+                                                    <th style="min-width: 150px;"></th>
+                                                    <th></th>
+                                                    <th colspan="2" class="text-center" style="color: #777;">Delivered</th>
+                                                    <th colspan="2" class="text-center" style="color: #777;">Available</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-left">Fabric Type</th>
+                                                    <th class="text-left">Colour</th>
+                                                    <!--<th class="text-left">Process</th>-->
+                                                    <th class="text-center">Dia</th>
+                                                    <!--<th></th>-->                           
+                                                    <th class="text-center">Rolls</th>
+                                                    <th class="text-right">Weight</th>
+                                                    <!--<th></th>-->
+                                                    <th class="text-center">Rolls</th>
+                                                    <th class="text-right">Weight</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="outward in deliveryreturnForm.outwardData" ng-hide="deliveryreturnForm.jobstatus == 'COMPLETED' && !inward.fabric_color">
+                                                    <td class="fabric_types" ng-bind="outward.fabric_type"></td>
+                                                    <td class="fabric_color" ng-bind="outward.fabric_color"></td>
+<!--                                                    <td class="fabric_process">
+                                                        <span combine-process="{{outward.process}}"></span>
+                                                    </td>-->
+                                                    <td class="text-center" ng-bind="outward.dia | number:2"></td>
+                                                    <!--<td></td>-->
+                                                    <td class="text-center" ng-bind="outward.tempdeliveredrolls"></td>
+                                                    <td class="fabric_weight text-right" ng-bind="outward.tempdeliveredweight | number:3"></td>
+                                                    <!--<td></td>-->
+                                                    <td class="text-center">
+                                                        <span ng-if="deliveryreturnForm._id && deliveryreturnForm._id != ''" ng-bind="outward.delivery_roll"></span>
+                                                        <input ng-if="!deliveryreturnForm._id || deliveryreturnForm._id == ''" type="text" class="delivery_entry_input delivery_rolls" 
+                                                               ng-class="{'input_error_show':outward.isrollError}" valid-onlynumber ng-model="outward.delivery_roll" 
+                                                               tabindex="{{12+$index+1}}">
+                                                    </td>
+                                                    <td class="fabric_weight text-right">
+                                                        <span ng-if="deliveryreturnForm._id && deliveryreturnForm._id != ''" ng-bind="outward.delivery_weight | number:3"></span>
+                                                        <input ng-if="!deliveryreturnForm._id || deliveryreturnForm._id == ''" type="text" class="delivery_entry_input delivery_weight" 
+                                                               ng-class="{'input_error_show':outward.isweightError}" valid-number3 ng-model="outward.delivery_weight" 
+                                                               ng-blur="validateWeight(outward)" tabindex="{{12+$index+2}}">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 margin-top-20" ng-if="deliveryreturnForm._id && deliveryreturnForm._id != ''">
+                                        <a class="print_bill" ng-click="printThisdelivery(); $event.stopPropagation();" style="vertical-align: sub;">Print this delivery</a>
+                                        <button class="common_button red_button margin-right-20 pull-right" ng-click="initializeDeliverydetails(); $event.stopPropagation();">Close</button>
+                                    </div>
+                                    <div class="col-xs-12 text-center margin-top-20" ng-if="deliveryreturnForm.outwardData && deliveryreturnForm.outwardData.length > 0 && (!deliveryreturnForm._id || deliveryreturnForm._id == '')">
+                                        <button class="common_button pull-right" ng-click="saveDelivery('save'); $event.stopPropagation();" tabindex="{{deliveryreturnForm.outwardData.length*2+14}}">Save</button>
+                                        <button class="common_button margin-right-20 pull-right red_button" ng-click="saveDelivery('print'); $event.stopPropagation();" tabindex="{{deliveryreturnForm.outwardData.length*2+13}}">Save &amp; Print</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Card Height Set
+    function delcardHeight() {
+        var headerHeight = $('.header').height();
+        var windowHeight = $(window).height();
+        var totalHeight = windowHeight - (headerHeight + 5);
+        var rightpaneheight = totalHeight - 65;
+        $('.bill_auto_height').css('height', rightpaneheight);
+        $('.bill-view-section').css('height', rightpaneheight);
+    }
+    setTimeout(function(){
+        delcardHeight();
+    },300);
+    
+    $(window).resize(function () {
+        delcardHeight();
+    });
+</script>

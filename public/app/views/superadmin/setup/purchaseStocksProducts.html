@@ -1,0 +1,36 @@
+<div class="container" ng-controller="ProductsController">
+    <div class="row" ng-init="productorder = ''">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Manage Products</div>
+            <div class="subtitle">Click on the product to edit or add more details.</div>
+            <div class="sort_list heading_7">
+                Sort by
+                <a ng-click="productorder = '+product_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (productorder == '+product_name') ? 'underline' : 'none' }">0A-Z</a>,
+                <a ng-click="productorder = '-product_name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (productorder == '-product_name') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="productfilter">
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-30 margin-bottom-30">
+            <div class="center_content center_alg">
+                <div class="branch_card_add" ng-click="addproduct(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Product</div>
+                </div>
+                <div class="branch_card" ng-repeat="product in productData.productlist| orderBy:productorder | filter:productfilter" 
+                     ng-click="getproductbyId(product._id); $event.stopPropagation();" ng-class="{'disabled':!product.is_active}">
+                    <span class="disable_small_brand" ng-if="!product.is_active"></span>
+                    <span class="branch" ng-bind="product.product_name"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="stores_pre_nex"> ← <a class="blod_line" ng-click="purchaseStockChildPage('Managecategory'); $event.stopPropagation();">Manage Category</a></div>
+    </div>
+</div>

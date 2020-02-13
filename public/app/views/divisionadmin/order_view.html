@@ -1,0 +1,1355 @@
+<style type="text/css">
+    .orders_page .selectize-input{
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+        width: 100% !important;
+        overflow: hidden;
+        float: right;
+        max-height: 35px;
+        padding: 0px 5px !important;
+        -webkit-border-radius: 0px !important;
+        -moz-border-radius: 0px !important;
+        border-radius: 0px !important;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        border: 1px solid rgb(187,187,187);
+    }
+    .orders_page .ui-select-match {
+        padding: 5px !important;
+    }
+    #setup_frame{
+        background:#fff !important;
+    }
+    .setup_fixed_postion {
+        display:none;
+    }
+    .heading_4, .heading_5 {
+        font-weight:bold;
+    }
+</style>
+
+<div ng-controller="OrderviewController">
+    <div id="setuppage_loader" ng-show="!clientData.orderView"></div>
+    <div class="orders_page" ng-if="clientData.orderView"> 
+
+        <div class="order_header">
+            <div class="order_details">
+                <div class="order_page_container"> 
+                    <div class="col-xs-12"> 
+                        <div class="close_icon_large pull-right margin-top-10" ng-click="closeJob(); $event.stopPropagation();"></div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="col-xs-12 order_no heading_7" ng-if="orderviewData.card == 'INWARD' && orderviewData.orderDetail.inward_no && orderviewData.orderDetail.inward_no != ''">INWARD NO</div>
+                        <div class="col-xs-12 order_og heading_4" ng-if="orderviewData.card == 'INWARD' && orderviewData.orderDetail.inward_no && orderviewData.orderDetail.inward_no != ''" ng-bind="orderviewData.orderDetail.inward_no"></div>
+                        <div class="col-xs-12 order_no heading_7" ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_no && orderviewData.orderDetail.order_no != ''">JOB NO</div>
+                        <div class="col-xs-12" ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_no && orderviewData.orderDetail.order_no != ''">
+                            <span class="order_og heading_4" ng-bind="orderviewData.orderDetail.order_no"></span>
+                            <span class="order_no heading_7" ng-if="orderviewData.orderDetail.order_date && orderviewData.orderDetail.order_date != ''" ng-bind="', '+(orderviewData.orderDetail.order_date | date:dateformats.long_date_time)"></span>
+                        </div>
+                        
+                        <div class="col-xs-12 order_cus_name heading_4">
+                            <span ng-bind="orderviewData.orderDetail.customer_name"></span>
+                            <span ng-if="orderviewData.orderDetail.customer_mobile_no && orderviewData.orderDetail.customer_mobile_no != ''" ng-bind="', +91 ' + orderviewData.orderDetail.customer_mobile_no"></span>
+                        </div>
+                        <div class="col-xs-12 margin-top-20 heading_4 order_inbatch" ng-if="orderviewData.orderDetail.process_name && orderviewData.orderDetail.process_name != ''" 
+                             ng-bind="'Process: '+ orderviewData.orderDetail.process_name"></div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="order_design_process_div order_white pull-right"> 
+                            <div class="in_order_process">
+                                <div class="dropdown-toggle in_order_process heading_4 main_status" ng-if="orderviewData.card == 'INWARD'">New Order</div>
+                                <div class="dropdown-toggle in_order_process heading_4 main_status" ng-if="orderviewData.card == 'ORDER'" data-toggle="dropdown" 
+                                     ng-bind="orderviewData.orderDetail.order_status"></div>
+
+                                <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu5" ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_status !== 'Invoice and Delivery'">
+                                    <li ng-repeat="status in orderviewData.order_status" ng-click="selectStatus(status); $event.stopPropagation();" 
+                                        ng-if="status.name != orderviewData.orderDetail.order_status && status.name !== 'Invoice and Delivery'"> 
+                                        <div class="dashboard_card_list {{status.color}}">
+                                            <div class="right_sec">
+                                                <div class="card_txt_cnt">
+                                                    <strong ng-bind="status.name"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="order_followup margin-top-05">
+                            <ui-select ng-if="orderviewData.followpUserlist && orderviewData.followpUserlist.length > 0" ng-model="orderviewData.orderDetail.followupPerson" theme="selectize" 
+                                       search-enabled='true' ng-change="updateOrderfollowup(orderviewData.orderDetail)">
+                                <ui-select-match placeholder="Follow-up Person">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="users as users in orderviewData.followpUserlist | filter: $select.search">
+                                    <div ng-bind-html="users.name + ' (' +users.mobile_no+ ')' | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="clearboth"></div>
+                    </div>
+
+                    <!-- Menu Section  -->
+                    <div class="col-xs-12 margin-top-30">
+                        <div class="responsive-tab order_header_menu split-tab-header"> 
+                            <ul class="nav nav-tabs faq-cat-tabs">
+                                <li ng-class="{'active':orderviewData.currentMenu == 'ORDER'}"> <a ng-click="selectOrdermenu('ORDER');" class="order_menu">Job Details </a> </li>
+                                <li ng-if="orderviewData.orderDetail.order_type != 'Reprocess' || (orderviewData.orderDetail.order_type == 'Reprocess' && orderviewData.orderDetail.billable == true)" 
+                                    ng-class="{'active':orderviewData.currentMenu == 'INVOICE'}"> <a ng-click="selectOrdermenu('INVOICE');" class="order_menu">Invoices &amp; Payments</a> </li>
+                                <li ng-class="{'active':orderviewData.currentMenu == 'ACTIVITY'}"> <a ng-click="selectOrdermenu('ACTIVITY');" class="order_menu">Activities</a> </li>
+                                <li ng-if="orderviewData.orderDetail.order_type != 'Reprocess' || (orderviewData.orderDetail.order_type == 'Reprocess' && orderviewData.orderDetail.billable == true)" 
+                                    ng-class="{'active':orderviewData.currentMenu == 'PRICE'}"> <a ng-click="selectOrdermenu('PRICE');" class="order_menu">Special Price</a> </li>
+                                <li ng-class="{'active':orderviewData.currentMenu == 'REPORT'}"> <a ng-click="selectOrdermenu('REPORT');" class="order_menu">Lab Report</a> </li>
+                                <li class="margin-right-10" ng-class="{'active':orderviewData.currentMenu == 'OUTWARD' || orderviewData.currentMenu == 'OUTWARDRETURN'}"> 
+                                    <a ng-click="selectOrdermenu('OUTWARD');" class="order_menu">Delivery
+                                        <span class="outwardcount" ng-bind="'(' + orderviewData.orderDetail.outward_delivery.length + ')'"></span> / Return
+                                        <span class="returncount" ng-bind="'(' + orderviewData.orderDetail.return_delivery.length + ')'"></span>
+                                    </a> 
+                                </li>
+                                <li class="margin-right-10" ng-class="{'active':orderviewData.currentMenu == 'CONTRACTOUTWARD'}">
+                                    <a ng-click="selectOrdermenu('CONTRACTOUTWARD');" class="order_menu">Contract Outward
+                                        <span class="outwardcount" ng-bind="'(' + orderviewData.contract_outward.length + ')'"></span>
+                                    </a> 
+                                </li>
+                                <li class="margin-right-10" ng-class="{'active':orderviewData.currentMenu == 'CONTRACTINWARD'}">
+                                    <a ng-click="selectOrdermenu('CONTRACTINWARD');" class="order_menu">Contract Inward
+                                        <span class="outwardcount" ng-bind="'(' + orderviewData.contract_inward.length + ')'"></span>
+                                    </a> 
+                                </li>
+                                <!--<li class="conversations"> <span class="message_icon"></span> <span class="conv_text">Conversations</span> </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Menu Section --> 
+                </div>
+            </div>
+        </div>
+        <!-- /order_header  -->
+
+        <div class="clearboth"></div>
+
+        <!-- order_body  -->
+        <div class="order_body"> 
+            <div class="order_details inwards_split-tab" ng-if="orderviewData.currentMenu == 'INWARD'">
+                <!-- order_details  -->
+                <div class="billing_address col1">
+                    <div class="col-xs-12">
+                        <div class="heading_5" ng-bind="orderviewData.orderDetail.customer_name"></div>
+                        <div class="addr_text">Billing Address</div>
+                        <b combine-address="{{orderviewData.orderDetail}}"></b>
+                    </div>
+                </div>
+
+                <div class="delivery_address col2">
+                    <div class="col-xs-12"> 
+                        <b ng-if="orderviewData.card == 'INWARD' && orderviewData.orderDetail.inward_no && orderviewData.orderDetail.inward_no != ''" ng-bind="'Inward No. ' + orderviewData.orderDetail.inward_no"></b> 
+                        <b ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_no && orderviewData.orderDetail.order_no != ''" ng-bind="'Job No. ' + orderviewData.orderDetail.order_no"></b> 
+                    </div>
+                    <div class="col-xs-12"> 
+                        <b ng-if="orderviewData.card == 'INWARD' && orderviewData.orderDetail.inward_date && orderviewData.orderDetail.inward_date != ''" ng-bind="'Job Date. '+(orderviewData.orderDetail.inward_date| date:'dd MMM yyyy')"></b> 
+                        <b ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_date && orderviewData.orderDetail.order_date != ''" ng-bind="'Job Date. '+(orderviewData.orderDetail.order_date| date:'dd MMM yyyy')"></b> 
+                    </div>
+                    <div class="col-xs-12 margin-top-15">
+                        <div class="list-view">Party DC No: <span class="text-left" ng-bind="orderviewData.orderDetail.customer_dc_no"></span></div>
+                        <div class="list-view">Dyeing.Name: <span class="text-left" ng-bind="orderviewData.orderDetail.dyeing.dyeing_name"></span></div>
+                        <div class="list-view">Dyeing DC No: <span class="text-left" ng-bind="orderviewData.orderDetail.dyeing_dc_no"></span></div>
+                    </div>
+                </div>
+                <div class="bar_code">
+                    <div class="col-xs-4">
+                        <div class="order_qr_code"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="order_item_container">
+                        <div class="order_item_col"><b>Order Items</b></div>
+                    </div>
+                </div>
+
+                <div class="order_item_container order_item_bg margin-bottom-30">
+                    <div class="col-lg-12 inwards-table padding_zero">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>Fabric</th>
+                                    <th>Color</th>
+                                    <th class="text-center">DIA</th>
+                                    <th class="text-center">Rolls</th>
+                                    <th class="text-right">Weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="inwards in orderviewData.inwardForm[0].inward_data">
+                                    <td order-directive process-name="{{inwards.process}}"></td>
+                                    <td ng-bind="inwards.fabric_type"></td>
+                                    <td ng-bind="inwards.fabric_color"></td>
+                                    <td class="text-center" ng-bind="inwards.dia | number:2"></td>
+                                    <td class="text-center" ng-bind="inwards.rolls"></td>
+                                    <td class="text-right" ng-bind="inwards.weight | number:3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /order_page_container  -->
+            <div class="order_details inwards_split-tab" ng-if="orderviewData.currentMenu == 'ORDER'">
+                <div ng-if="orderviewData.card == 'INWARD'" class="order_not_created margin-top-30">The order is not yet created for this Inward.</div>
+
+                <div class="order_view_tab_content margin-bottom-30" ng-if="orderviewData.card == 'ORDER'">
+                    <!-- order_details  -->
+                    <div class="billing_address col1">
+                        <div class="col-xs-12">
+                            <div class="heading_5" ng-bind="orderviewData.orderDetail.customer_name"></div>
+                            <!--<div class="addr_text">Billing Address</div>-->
+                            <b combine-address="{{orderviewData.orderDetail}}"></b>
+                        </div>
+                        <div class="col-xs-12 margin-top-15">
+                            <div class="list-view">Follow-up Person: <span class="text-left" ng-bind="orderviewData.orderDetail.contactperson.name"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="delivery_address col2">
+                        <div class="col-xs-12"> <b ng-bind="'Job No: ' + orderviewData.orderDetail.order_no"></b> </div>
+                        <div class="col-xs-12"> <b ng-bind="'Job Date: '+(orderviewData.orderDetail.order_date| date:'dd MMM yyyy')"></b> </div>
+                        <div class="col-xs-12 margin-top-15">
+                            <div class="list-view">Party DC No: <span class="text-left" ng-bind="orderviewData.orderDetail.customer_dc_no"></span></div>
+                            <div class="list-view">Dyeing.Name: <span class="text-left" ng-bind="orderviewData.orderDetail.dyeing.dyeing_name"></span></div>
+                            <div class="list-view">Dyeing DC No: <span class="text-left" ng-bind="orderviewData.orderDetail.dyeing_dc_no"></span></div>
+                        </div>
+                    </div>
+                    <div class="bar_code">
+                        <div class="col-xs-4">
+                            <div class="order_qr_code"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Order Items</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-center">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="inwards in orderviewData.inwardForm[0].inward_data">
+                                        <td style="min-width: 150px;max-width: 200px;" order-directive process-name="{{inwards.process}}"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="inwards.fabric_type"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="inwards.fabric_color"></td>
+                                        <td class="text-center" style="min-width: 100px;max-width: 100px;" ng-bind="inwards.lot_no"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="inwards.dia"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="inwards.rolls"></td>
+                                        <td class="text-right" style="min-width: 100px;max-width: 120px;" ng-bind="inwards.weight | number:2"></td>
+                                    </tr>
+                                    <tr><td colspan="7"></td></tr>
+                                    <tr>
+                                        <td class="text-right" colspan="4"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;"><b>Total</b></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="orderviewData.inwardForm[0].inward_data | pendingrolls"></td>
+                                        <td class="text-right" style="min-width: 100px;max-width: 120px;" ng-bind="orderviewData.inwardForm[0].total_weight | number:2"></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 col-xs-12 padding_zero margin-top-10">
+                        <a class="line light margin-left-30 pull-left" ng-click="printThisbill(); $event.stopPropagation();">Print this order</a>
+                        <a class="line light margin-left-30 pull-left" ng-if="editOrderflag()" ng-click="editThisbill(); $event.stopPropagation();">Edit</a>
+                    </div>
+
+                    <div class="col-xs-12 margin-top-30" ng-if="orderviewData.order_delivery && orderviewData.order_delivery.length>0">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Delivery Details</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg" ng-if="orderviewData.order_delivery && orderviewData.order_delivery.length>0">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Dc No</th>
+                                        <th class="text-left">Date</th>
+                                        <th>Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-center">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                        <th class="text-right">Bal.weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="outwardData in orderviewData.order_delivery" ng-class="{'sec_activerow':$index>0 && outwardData.inward_data_id != orderviewData.order_delivery[$index-1].inward_data_id}">
+                                        <td class="text-left" style="min-width: 100px;max-width: 100px;">
+                                            <a ng-if="!outwardData.is_return" ng-click="viewDeliverybylink(outwardData, 'OUTWARD')" ng-bind="outwardData.delivery_no"></a>
+                                            <a ng-if="outwardData.is_return" ng-click="viewDeliverybylink(outwardData, 'OUTWARDRETURN')" ng-bind="outwardData.delivery_no"></a>
+                                        </td>
+                                        <td class="text-left" style="min-width: 100px;max-width: 100px;" ng-bind="outwardData.delivery_date | date:dateformats.short_date_time"></td>
+                                        <td style="min-width: 150px;max-width: 200px;">
+                                            <span ng-if="!outwardData.is_return" order-directive process-name="{{outwardData.process}}"></span>
+                                        </td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outwardData.fabric_type"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outwardData.fabric_color"></td>
+                                        <td class="text-center" style="width: 70px;" ng-bind="outwardData.lot_no"></td>
+                                        <td class="text-center" style="min-width: 50px;max-width: 80px;" ng-bind="outwardData.dia"></td>
+                                        <td class="text-center" style="min-width: 50px;max-width: 80px;" ng-bind="outwardData.delivery_roll"></td>
+                                        <td class="text-right" style="min-width: 50px;max-width: 80px;" ng-bind="outwardData.delivery_weight | number:3"></td>
+                                        <td class="text-right" style="min-width: 50px;max-width: 80px;" ng-bind="outwardData.balance_weight | number:3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 col-xs-12 padding_zero margin-top-10">
+                        <a class="line light margin-left-30 pull-left" ng-click="printThisorder(); $event.stopPropagation();">Print this job</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="invoice-payments" ng-if="orderviewData.currentMenu == 'INVOICE'">
+                <div ng-if="orderviewData.card == 'INWARD'" class="order_not_created margin-top-30">
+                    The order is not yet created for this Inward.
+                </div>
+                <div ng-if="orderviewData.card == 'ORDER'">
+                    <div class="row invoice split_resp_ivoice" >
+                        <div class="col-xs-12" ng-if="orderviewData.orderDetail.order_status == 'New Order' || orderviewData.orderDetail.order_status == 'In Progress'">
+                            <div class="invoice_details_text margin-bottom-40">This Order is not yet completed.<br>You cannot create invoice for this order at this phase</div>
+                        </div>
+                        <div class="col-xs-12" ng-if="!orderviewData.invoiceForm._id && orderviewData.orderDetail.order_status == 'Completed' && !orderviewData.invoiceForm.enableInvoice">
+                            <div class="invoice_details_text margin-bottom-15">No invoice has been created for this order.</div>
+                            <div class="col-xs-12 text-center">
+                                <a class="common_button create_invoice_btn" ng-click="enableInvoice(orderviewData.orderDetail)">Create Invoice</a>
+                            </div>
+                        </div>
+                        <div class="clearboth"></div>
+
+                        <div ng-if="orderviewData.invoiceForm && !orderviewData.invoiceForm._id && orderviewData.invoiceForm.enableInvoice">
+                            <div class="col-xs-12">
+                                <div class="col-xs-12 invoice_id_no">
+                                    <strong ng-if="orderviewData.invoiceForm._id" ng-bind="'Invoice #' + orderviewData.invoiceForm.invoice_no"></strong>        
+                                    <span class="heading_3 blue-color" ng-if="!orderviewData.invoiceForm._id">New Invoice (Invoices)</span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="invoice_cus_title">Customer</div>
+                                    <div class="invoice_cus_details">
+                                        <b class="heading_5" ng-bind="orderviewData.invoiceForm.customer_name"></b>
+                                        <p bill-gstin="true" combine-address="{{orderviewData.invoiceForm.default_address}}"></p>
+                                    </div>
+                                    <div class="invoice_cus_title">Billing Address</div>
+                                    <div class="invoice_cus_details">
+                                        <p bill-gstin="true" bill-companyname="true" combine-address="{{orderviewData.invoiceForm.billing_address}}"></p>
+                                    </div>
+                                </div>                        
+                                <div class="col-xs-6">
+                                    <div class="invoice_right_details"> 
+                                        <div class="custom_date_style acnt_invoice_date_style col-xs-6 padding_zero" style="max-width: 200px;">
+                                            <div class="input-append" name="invoice_date">
+                                                <date-time-picker ng-model="orderviewData.invoiceForm.invoice_date" placeholder="Date" 
+                                                                  start-view='2' min-view='2' max-view='4' today-btn='true' 
+                                                                  minute-step='30' format="dd-MM-yyyy" container=".acnt_invoice_date_style">
+                                                </date-time-picker>
+                                            </div>
+                                        </div>
+                                        <span class="col-xs-4 pull-right">Invoice Date</span>
+                                    </div>
+                                    <div class="invoice_right_details">
+                                        <div class="custom_date_style acnt_invoice_due_style1 col-xs-6 padding_zero" style="max-width: 200px;">
+                                            <div class="input-append" name="invoicedue_date">
+                                                <date-time-picker ng-model="orderviewData.invoiceForm.invoicedue_date" placeholder="Date" 
+                                                                  start-view='2' min-view='2' max-view='4' today-btn='true' 
+                                                                  minute-step='30' format="dd-MM-yyyy" container=".acnt_invoice_due_style1">
+                                                </date-time-picker>
+                                            </div>
+                                        </div>
+                                        <span class="col-xs-4 pull-right">Due Date</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 margin-top-10 margin-bottom-30">
+                                <div class="col-xs-12 margin-bottom-20 margin-top-20" style="min-width: 960px;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Cust.DC.No</th>
+                                                <th>Dye.DC.No</th>
+                                                <th>Del No</th>
+                                                <th>Process</th>
+                                                <th>Fabric</th>
+                                                <th>Colour</th>
+                                                <th class="text-center">Dia</th>
+                                                <th class="text-center">Rolls</th>
+                                                <th class="text-right">Weight</th>
+                                                <th style="min-width: 65px;" class="text-right">Rate (₹)</th>
+                                                <th class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">{{tax.tax_name}}</th>
+                                                <th style="min-width: 100px;" class="text-right">Amount (₹)</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat-start="item in orderviewData.invoiceForm.items"></tr>
+                                            <tr ng-repeat="process in item.process">
+                                                <td>
+                                                    <span ng-bind="item.customer_dc_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="item.dyeing_dc_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="item.delivery_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="process.process_name"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="$index == 0" ng-bind="item.fabric_type"></span>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span ng-if="$index == 0" ng-bind="item.fabric_color"></span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="$index == 0" ng-bind="item.dia | number:2"></span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="$index == 0" ng-bind="item.delivery_roll"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-if="$index == 0" ng-bind="item.delivery_weight | number:3"></span>
+                                                </td>                                                        
+                                                <td class="text-right">
+                                                    <input type="text" class="rate_val" ng-model="process.price" valid-number ng-blur="calculateSumInvoice(process, item)"/>
+                                                    <!--<span ng-bind="process.price | number:2"></span>-->
+                                                </td>
+                                                <td class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                                    <span ng-repeat="tx in process.tax_class" ng-if="tx._id === tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-bind="process.subtotal | number:2"></span>
+                                                </td>
+                                                <td></td>
+                                            <tr/>
+                                            <tr ng-repeat-end></tr>
+                                            <tr ng-repeat="items in orderviewData.invoiceForm.otheritems">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span ng-bind="items.itemname"></span>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="text-right">
+                                                    <span ng-bind="items.qty | number:3"></span>
+                                                </td>                                                        
+                                                <td class="text-right">
+                                                    <span ng-bind="items.price | number:2"></span>
+                                                </td>
+                                                <td class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                                    <span ng-repeat="tx in items.tax_class" ng-if="tx._id===tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-bind="items.pretotal | number:2"></span>
+                                                </td>
+                                                <td></td>
+                                            <tr/>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-12 padding_zero" style="min-width: 960px;">
+                                    <div class="col-xs-8">
+                                        <div class="col-lg-2 col-xs-3 heading_7 padding_zero"><b>Customer Notes</b></div>
+                                        <div class="col-lg-10 col-xs-9 padding_left_zero">
+                                            <textarea class="form-control" rows="5" id="comment" ng-model="orderviewData.invoiceForm.customer_notes"></textarea>
+                                        </div>
+                                        <div class="col-lg-12 col-xs-12 margin-top-25">
+                                            <span class="fav_check_text pull-right margin-top-05" style="font-size: 13px;">Email/Message this invoice to customer when saved.</span>
+                                            <input type="checkbox" class="input_class_checkbox" ng-model="accountdata.invoiceForm.email_status" ng-hide="true">
+                                            <div class="class_checkbox" ng-class="{'checked':orderviewData.invoiceForm.email_status}" ng-if="!orderviewData.invoiceForm._id" 
+                                                 ng-click="orderviewData.invoiceForm.email_status = !orderviewData.invoiceForm.email_status;"></div>
+                                        </div>
+                                        <div class="col-lg-12 col-xs-12 margin-top-30 padding_zero">
+                                            <a class="common_button margin-right-15 margin-left-10 pull-right enter-new accountpage_click_resize" 
+                                               ng-if="!orderviewData.invoiceForm._id" ng-click="saveInvoice();">Save Invoice</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4 text-right heading_7">
+                                        <div><strong>Subtotal:</strong>
+                                            <div class="invoice_total_amount">
+                                                <strong ng-bind="orderviewData.currency+(orderviewData.invoiceForm.subtotal | number:2)"></strong>
+                                            </div>
+                                        </div>
+                                        <div ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                            <strong ng-bind="tax.tax_percentage+'% '+tax.tax_name+':'"></strong>
+                                            <div class="invoice_total_amount margin-top-05">
+                                                <strong ng-bind="orderviewData.currency+(tax.taxamount | number:2)"></strong>
+                                            </div>
+                                        </div>
+                                        <div><strong>Total:</strong>
+                                            <div class="invoice_total_amount margin-top-10">
+                                                <b ng-bind="orderviewData.currency+(orderviewData.invoiceForm.total | number:2)"></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- order_invoice -->
+                        </div>
+
+                        <div ng-if="orderviewData.invoiceForm && orderviewData.invoiceForm._id">
+                            <div class="col-xs-12">
+                                <div class="col-xs-12 invoice_id_no" ng-bind="'Invoice #' + (orderviewData.invoiceForm.invoice_no)"></div>
+                                <div class="col-xs-6">
+                                    <div class="invoice_cus_title">Customer</div>
+                                    <div class="invoice_cus_details">
+                                        <b class="heading_5" ng-bind="orderviewData.invoiceForm.customer_name"></b>
+                                        <p bill-gstin="true" combine-address="{{orderviewData.invoiceForm.default_address}}"></p>
+                                    </div>
+                                    <div class="invoice_cus_title">Billing Address</div>
+                                    <div class="invoice_cus_details">
+                                        <p bill-gstin="true" bill-companyname="true" combine-address="{{orderviewData.invoiceForm.billing_address}}"></p>
+                                    </div>
+                                </div>                        
+                                <div class="col-xs-6 invoice_right_details_col">
+                                    <div class="invoice_right_details">
+                                        <div class="custom_date_style col-xs-6 padding_zero">
+                                            <span ng-bind="orderviewData.invoiceForm.invoice_date | date:'dd-MM-yyyy'"></span>
+                                        </div>
+                                        <span class="col-xs-4 pull-right">Invoice Date</span>
+                                    </div>
+                                    <div class="invoice_right_details">
+                                        <div class="custom_date_style col-xs-6 padding_zero">
+                                            <span ng-bind="orderviewData.invoiceForm.invoicedue_date | date:'dd-MM-yyyy'"></span>
+                                        </div>
+                                        <span class="col-xs-4 pull-right">Due Date</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 margin-top-10 margin-bottom-30">
+                                <div class="col-xs-12 margin-bottom-20 margin-top-20" style="min-width: 960px;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Cust.DC.No</th>
+                                                <th>Dye.DC.No</th>
+                                                <th>Del No</th>
+                                                <th>Process</th>
+                                                <th>Fabric</th>
+                                                <th>Colour</th>
+                                                <th class="text-center">Dia</th>
+                                                <th class="text-center">Rolls</th>
+                                                <th class="text-right">Weight</th>
+                                                <th style="min-width: 65px;" class="text-right">Rate (₹)</th>
+                                                <th class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">{{tax.tax_name}}</th>
+                                                <th style="min-width: 100px;" class="text-right">Amount (₹)</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat-start="item in orderviewData.invoiceForm.items"></tr>
+                                            <tr ng-repeat="process in item.process">
+                                                <td>
+                                                    <span ng-bind="item.customer_dc_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="item.dyeing_dc_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="item.delivery_no"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-bind="process.process_name"></span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="$index == 0" ng-bind="item.fabric_type"></span>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span ng-if="$index == 0" ng-bind="item.fabric_color"></span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="$index == 0" ng-bind="item.dia | number:2"></span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="$index == 0" ng-bind="item.delivery_roll"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-if="$index == 0" ng-bind="item.delivery_weight | number:3"></span>
+                                                </td>                                                        
+                                                <td class="text-right">
+                                                    <span ng-bind="process.price | number:2"></span>
+                                                </td>
+                                                <td class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                                    <span ng-repeat="tx in process.tax_class" ng-if="tx._id === tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-bind="process.subtotal | number:2"></span>
+                                                </td>
+                                                <td></td>
+                                            <tr/>
+                                            <tr ng-repeat-end></tr>
+                                            <tr ng-repeat="items in orderviewData.invoiceForm.otheritems">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span ng-bind="items.itemname"></span>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="text-right">
+                                                    <span ng-bind="items.qty | number:3"></span>
+                                                </td>                                                        
+                                                <td class="text-right">
+                                                    <span ng-bind="items.price | number:2"></span>
+                                                </td>
+                                                <td class="text-right" ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                                    <span ng-repeat="tx in items.tax_class" ng-if="tx._id===tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span ng-bind="items.pretotal | number:2"></span>
+                                                </td>
+                                                <td></td>
+                                            <tr/>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-12 padding_zero" style="min-width: 960px;">
+                                    <div class="col-xs-8">
+                                        <div class="col-lg-2 col-xs-3 heading_7 padding_zero"><b>Customer Notes</b></div>
+                                        <div class="col-lg-10 col-xs-9 heading_7">
+                                            <p id="comment" ng-bind="orderviewData.invoiceForm.customer_notes"></p>
+                                        </div>
+                                        <div class="col-lg-12 col-xs-12 margin-top-25">
+                                            <span class="fav_check_text pull-right margin-top-05" style="font-size: 13px;">Email/Message this invoice to customer when saved.</span>
+                                            <div class="class_checkbox" ng-class="{'checked':orderviewData.invoiceForm.email_status}"></div>
+                                        </div>
+                                        <div class="col-lg-12 col-xs-12 padding_zero margin-top-15">
+                                            <a class="line light margin-left-30 pull-right" style="margin-top: 8px" ng-click="printThisinvoice(orderviewData.invoiceForm); $event.stopPropagation();">Print this Invoice</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4 text-right heading_7">
+                                        <div><strong>Subtotal:</strong>
+                                            <div class="invoice_total_amount">
+                                                <strong ng-bind="orderviewData.currency+(orderviewData.invoiceForm.subtotal | number:2)"></strong>
+                                            </div>
+                                        </div>
+                                        <div ng-repeat="tax in orderviewData.invoiceForm.tax_data">
+                                            <strong ng-bind="tax.tax_percentage+'% '+tax.tax_name+':'"></strong>
+                                            <div class="invoice_total_amount margin-top-05">
+                                                <strong ng-bind="orderviewData.currency+(tax.taxamount | number:2)"></strong>
+                                            </div>
+                                        </div>
+                                        <div><strong>Total:</strong>
+                                            <div class="invoice_total_amount margin-top-10">
+                                                <b ng-bind="orderviewData.currency+(orderviewData.invoiceForm.total | number:2)"></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- order_invoice -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="orderviewData.currentMenu == 'ACTIVITY'">
+                <div class="activities margin-bottom-30"><!-- activities -->
+                    <div class="col-xs-12 heading_4 text-center margin-bottom-30">Activities</div>
+                    <div class="col-xs-12 margin-top-30" ng-if="orderviewData.pageLoad">
+                        <div class="loader_medium"></div>
+                    </div>
+                    <div class="text-center margin-bottom-40" ng-if="!orderviewData.pageLoad && orderviewData.activitylist.length == 0" style="font-size: 18px;color: #1f1f1f;">
+                        No Activities found.<br>
+                    </div>
+
+                    <div class="col-xs-8 col-xs-offset-2 margin-top-20" ng-if="!orderviewData.pageLoad && orderviewData.activitylist.length > 0">
+                        <div class="activities_card" ng-repeat="activity in orderviewData.activitylist">
+                            <div class="activities_title"><span class="activities_date" ng-bind="activity.created | date:'EEE, dd-MM-yyyy h:mm a'"></span> at <b ng-bind="activity.division_name"></b></div>                            
+                            <div class="activities_content"><p ng-bind-html="activity.message"></p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="special-price" ng-if="orderviewData.currentMenu == 'PRICE'">
+                <div ng-if="orderviewData.card == 'INWARD'" class="order_not_created margin-top-30">The order is not yet created for this Inward.</div>
+
+                <div class="pricetable_column margin-bottom-30" ng-if="orderviewData.card == 'ORDER'">
+                    <div class="col-xs-12 heading_5 margin-bottom-30">Special Price for this Customer</div>
+                    <div class="col-xs-12">
+                        <div class="body-container">
+                            <table class="table process-cost" ng-if="orderviewData.inwardForm && orderviewData.inwardForm.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 135px;"></th>
+                                        <th colspan="2" class="text-center" ng-repeat-start="measurement in orderviewData.measurement" ng-bind="measurement.fabric_measure"></th>
+                                        <th ng-repeat-end></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Process</td>
+                                        <td ng-repeat-start="measurement in orderviewData.measurement" class="text-center" width="100">Qty</td>
+                                        <td class="text-center" width="105">Cost (₹)</td>
+                                        <td ng-repeat-end></td>
+                                    </tr>
+                                    <tr ng-repeat="process in orderviewData.specialPrice">
+                                        <td ng-bind="process.process_name" style="line-height: 20px;"></td>
+                                        <td ng-repeat-start="measurement in process.units">
+                                            <span class="text-center" ng-bind="measurement.qty | number:2" ng-if="orderviewData.orderDetail.order_status === 'Invoice and Delivery'"></span>
+                                            <input type="text" class="common_input" ng-model="measurement.qty" valid-number ng-blur="savePrice(process, measurement)" ng-if="orderviewData.orderDetail.order_status !== 'Invoice and Delivery'"></td>
+                                        <td>
+                                            <span class="text-center" ng-bind="measurement.price | number:2" ng-if="orderviewData.orderDetail.order_status === 'Invoice and Delivery'"></span>
+                                            <input type="text" class="common_input" ng-model="measurement.price" valid-number ng-blur="savePrice(process, measurement)" ng-if="orderviewData.orderDetail.order_status !== 'Invoice and Delivery'"></td>
+                                        <td ng-repeat-end></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lab_report" ng-if="orderviewData.currentMenu == 'REPORT'">
+                <div class="col-xs-12 margin-top-30" ng-if="orderviewData.pageLoad">
+                    <div class="loader_medium"></div>
+                </div>
+
+                <div class="pricetable_column margin-bottom-30" ng-if="orderviewData.card == 'ORDER' && !orderviewData.pageLoad">
+                    <div class="col-xs-12 heading_5 margin-bottom-30">Lab Report</div>
+                    <div class="col-xs-12">
+                        <div class="lab_container">
+                            <div class="col-xs-12 padding_zero">
+                                <table class="table lab_report_table" ng-if="orderviewData.inwardForm && orderviewData.inwardForm.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+<!--                                            <th>Colour</th>
+                                            <th>Fabric</th>-->
+                                            <th></th>
+                                            <th class="text-center" colspan="2">Dia</th>
+                                            <th class="text-center" colspan="2">Shrinkage</th>
+                                            <th class="text-center" colspan="2">GSM</th>
+                                            <th style="width: 80px;"></th>
+                                        </tr>
+                                        <tr>
+                                            <th>S.No</th>
+<!--                                            <th>Colour</th>
+                                            <th>Fabric</th>-->
+                                            <th class="text-center">Knitting Dia</th>
+                                            <th class="text-center">Before Wash</th>
+                                            <th class="text-center">After Wash</th>
+                                            <th class="text-center">Length</th>
+                                            <th class="text-center">Width</th>
+                                            <th class="text-center">Before Wash</th>
+                                            <th class="text-center">After Wash</th>
+                                            <th style="width: 80px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="reports in orderviewData.labReportlist" ng-dblclick="editthisreport(reports)" ng-if="!reports.is_deleted">
+                                            <td>{{$index + 1}}</td>
+<!--                                            <td>
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.colour"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="Colour" ng-model="reports.colour">
+                                            </td>
+                                            <td>
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.fabric"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="Fabric" ng-model="reports.fabric">
+                                            </td>-->
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.KDia"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="Dia" ng-model="reports.KDia">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.BW"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="B/W Dia" ng-model="reports.BW">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.AW"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="A/W Dia" ng-model="reports.AW">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.L"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="Length" ng-model="reports.L">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.W"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="Width" ng-model="reports.W">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.BWGSM"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="B/W GSM" ng-model="reports.BWGSM">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editreport" ng-bind="reports.AWGSM"></span>
+                                                <input ng-if="$index == orderviewData.editreport" type="text" class="common_input" placeholder="A/W GSM" ng-model="reports.AWGSM">
+                                            </td>
+                                            <td>
+                                                <span class="enable_large_green" ng-click="updatefabricreport(reports)" ng-if="$index == orderviewData.editreport"
+                                                      style="background: url(../images/icons-w10-sprite.svg) #1E628A -125px -528px;width: 30px;height: 25px;display: inline-block;cursor: pointer;margin-top: 8px;"></span>
+                                                <span class="close_icon_small" ng-if="$index == orderviewData.editreport" ng-click="orderviewData.editreport = - 1;" style="opacity: 0.5;margin-top: 8px;"></span>
+                                                <span ng-if="$index != orderviewData.editreport" class="delete_small" noty-remove="" noty-index="0" noty-update="removefabricreport(reports)" noty-style="3" 
+                                                      noty-content="Removing this lab report data will cannot be undone.Do you want to delete this record?"></span>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="orderviewData.editreport == - 1">
+                                            <td></td>
+<!--                                            <td>
+                                                <input type="text" class="common_input" placeholder="Colour" ng-model="orderviewData.labReport.colour">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Fabric" ng-model="orderviewData.labReport.fabric">
+                                            </td>-->
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Dia" ng-model="orderviewData.labReport.KDia">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="B/W Dia" ng-model="orderviewData.labReport.BW">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="A/W Dia" ng-model="orderviewData.labReport.AW">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Length" ng-model="orderviewData.labReport.L">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Width" ng-model="orderviewData.labReport.W">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="B/W GSM" ng-model="orderviewData.labReport.BWGSM">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="A/W GSM" ng-model="orderviewData.labReport.AWGSM">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-12 margin-top-20 margin-bottom-20 padding_zero">
+                                <div class="add_customer" ng-click="addfabricreport()">
+                                    <span class="add_icon_smalls"></span>
+                                    <span class="add_customer_text">Add New</span>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 margin-top-40 padding_zero">
+                                <table class="table lab_report_table" ng-if="orderviewData.inwardForm && orderviewData.inwardForm.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"></th>
+                                            <th class="text-center"></th>
+                                            <th class="text-center" colspan="2">Shrinkage</th>
+                                            <th class="text-center" colspan="2">GSM</th>
+                                            <th style="width: 80px;"></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">Comp Dia</th>
+                                            <th class="text-center">After Wash</th>
+                                            <th class="text-center">Length</th>
+                                            <th class="text-center">Width</th>
+                                            <th class="text-center">Before Wash</th>
+                                            <th class="text-center">After Wash</th>
+                                            <th style="width: 80px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="reportsummary in orderviewData.labReportsummarylist" ng-dblclick="editthissummary(reportsummary)" ng-if="!reportsummary.is_deleted">
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.compdia"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="Comp Dia" ng-model="reportsummary.compdia">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.afwash"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="After Wash" ng-model="reportsummary.afwash">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.shrinklength"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="Length" ng-model="reportsummary.shrinklength">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.shrinkwidth"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="Width" ng-model="reportsummary.shrinkwidth">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.gsmbw"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="B/W GSM" ng-model="reportsummary.gsmbw">
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-if="$index != orderviewData.editsummary" ng-bind="reportsummary.gsmaw"></span>
+                                                <input ng-if="$index == orderviewData.editsummary" type="text" class="common_input" placeholder="A/W GSM" ng-model="reportsummary.gsmaw">
+                                            </td>
+                                            <td>
+                                                <span class="enable_large_green" ng-click="updatefabricsummary(reportsummary)" ng-if="$index == orderviewData.editsummary"
+                                                      style="background: url(../images/icons-w10-sprite.svg) #1E628A -125px -528px;width: 30px;height: 25px;display: inline-block;cursor: pointer;margin-top: 8px;"></span>
+                                                <span class="close_icon_small" ng-if="$index == orderviewData.editsummary" ng-click="orderviewData.editsummary = - 1;" style="opacity: 0.5;margin-top: 8px;"></span>
+                                                <span ng-if="$index != orderviewData.editsummary" class="delete_small" noty-remove="" noty-index="0" noty-update="removefabricsummary(reportsummary)" noty-style="3" 
+                                                      noty-content="Removing this lab report data will cannot be undone.Do you want to delete this record?"></span>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="orderviewData.editsummary == - 1">
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Comp Dia" ng-model="orderviewData.labReportsummary.compdia">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="After Wash" ng-model="orderviewData.labReportsummary.afwash">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Length" ng-model="orderviewData.labReportsummary.shrinklength">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="Width" ng-model="orderviewData.labReportsummary.shrinkwidth">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="B/W GSM" ng-model="orderviewData.labReportsummary.gsmbw">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="common_input" placeholder="A/W GSM" ng-model="orderviewData.labReportsummary.gsmaw">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-xs-12 margin-top-20 margin-bottom-20 padding_zero">
+                                <div class="add_customer" ng-click="addfabricsummary()">
+                                    <span class="add_icon_smalls"></span>
+                                    <span class="add_customer_text">Add New</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order_details delivery-outwards" ng-if="orderviewData.currentMenu == 'OUTWARD' || orderviewData.currentMenu == 'OUTWARDRETURN'">
+                <div class="col-xs-12 text-right margin-bottom-30 padding_zero">
+                    <ul class="outwardMenu">
+                        <li ng-repeat="outwards in orderviewData.orderDetail.outward_delivery" ng-bind="outwards.delivery_no"
+                            ng-class="{'active':orderviewData.outwardForm._id == outwards._id}" ng-click="viewDelivery(outwards)"></li>
+                        <li ng-repeat="outwards in orderviewData.orderDetail.return_delivery" ng-bind="outwards.delivery_no"
+                            ng-class="{'active':orderviewData.outwardForm._id == outwards._id}" ng-click="viewDeliveryreturn(outwards)"></li>
+                    </ul>
+                </div>
+                <div class="text-center margin-bottom-40" ng-if="!orderviewData.outwardForm || !orderviewData.outwardForm._id || orderviewData.outwardForm._id == ''" 
+                     style="font-size: 18px;color: #1f1f1f;">No Delivery / Return found for this order<br>
+                </div>
+
+                <div class="order_view_tab_content margin-bottom-30" ng-if="orderviewData.outwardForm && orderviewData.outwardForm._id && orderviewData.outwardForm._id != ''">
+                    <div class="header_container">
+                        <div class="order_first-col">
+                            <div class="col-xs-12">
+                                <div class="order_no">Job No. <span ng-bind="orderviewData.orderDetail.order_no"></span></div>
+                                <div class="order_no">Job Date: <span ng-bind="orderviewData.orderDetail.order_date| date:'dd MMM yyyy'"></span></div>
+                                <div class="heading_5 margin-top-20" ng-bind="orderviewData.orderDetail.customer_name"></div>
+                                <div class="order_no margin-bottom-20" combine-address="{{orderviewData.orderDetail}}"></div>
+
+                                <p class="margin-bottom-10" ng-if="orderviewData.outwardForm.delivery_company_name && orderviewData.outwardForm.delivery_company_name != ''">Delivery Address</p>
+                                <div class="order_no" ng-bind="orderviewData.outwardForm.delivery_company_name"></div>
+                                <strong combine-address="{{orderviewData.outwardForm}}" deliveryaddress="true"></strong>
+                                <!--                                <div>
+                                                                    <b ng-bind="'Phone No: '+ orderviewData.outwardForm.customer_mobile_no"></b>
+                                                                </div>-->
+                            </div>
+                        </div>
+
+                        <div class="order_second-col margin-left-30">
+                            <div class="col-xs-12">
+                                <label ng-if="orderviewData.selectedmenu == 'OUTWARD'"><span>Delivery DC No:</span><b ng-bind="orderviewData.outwardForm.delivery_no"></b></label>
+                                <label ng-if="orderviewData.selectedmenu == 'OUTWARD'"><span>Delivery Date:</span><b ng-bind="orderviewData.outwardForm.delivery_date| date:dateformats.short_date_time"></b></label>
+                                <label ng-if="orderviewData.selectedmenu == 'OUTWARDRETURN'"><span>Return DC No:</span><b ng-bind="orderviewData.outwardForm.delivery_no"></b></label>
+                                <label ng-if="orderviewData.selectedmenu == 'OUTWARDRETURN'"><span>Return Date:</span><b ng-bind="orderviewData.outwardForm.delivery_date| date:dateformats.short_date_time"></b></label>
+                                <label><span>Dyeing Name:</span><b ng-bind="orderviewData.orderDetail.dyeing.dyeing_name"></b></label>
+                                <label><span>Dyeing DC No:</span><b ng-bind="orderviewData.orderDetail.dyeing_dc_no"></b></label>
+                                <label><span>Customer Dc No:</span><b ng-bind="orderviewData.orderDetail.customer_dc_no"></b></label>
+                                <label><span>Customer Dc Date:</span><b ng-bind="orderviewData.orderDetail.customer_dc_date| date:'dd MMM yyyy'"></b></label>
+                                <label><span>Vehicle No:</span>
+                                    <b ng-if="orderviewData.outwardForm.vehicle_no && orderviewData.outwardForm.vehicle_no != ''" ng-bind="orderviewData.outwardForm.vehicle_no"></b>
+                                    <b ng-if="!orderviewData.outwardForm.vehicle_no || orderviewData.outwardForm.vehicle_no == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Name:</span>
+                                    <b ng-if="orderviewData.outwardForm.driver_name && orderviewData.outwardForm.driver_name != ''" ng-bind="orderviewData.outwardForm.driver_name"></b>
+                                    <b ng-if="!orderviewData.outwardForm.driver_name || orderviewData.outwardForm.driver_name == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Phone No:</span>
+                                    <b ng-if="orderviewData.outwardForm.driver_no && orderviewData.outwardForm.driver_no != ''" ng-bind="orderviewData.outwardForm.driver_no"></b>
+                                    <b ng-if="!orderviewData.outwardForm.driver_no || orderviewData.outwardForm.driver_no == ''">-N/A-</b>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!--                        <div class="order_third-col">
+                                                    <div class="col-xs-12">
+                                                        <p class=" margin-bottom-20">Delivery Address</p>
+                                                        <div class="heading_5" ng-bind="orderviewData.outwardForm.customer_name"></div>
+                                                        <strong combine-address="{{orderviewData.outwardForm}}"></strong>
+                                                        <div class="margin-top-10">
+                                                            <b ng-bind="'Phone No: '+ orderviewData.outwardForm.customer_mobile_no"></b>
+                                                        </div>                             
+                                                    </div>
+                                                </div>-->
+                        <div class="order_fourth-col">
+                            <span class="bar-code"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 margin-top-40">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Delivered Items</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th ng-if="orderviewData.selectedmenu != 'OUTWARDRETURN'">Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-left">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>                               
+                                    <tr ng-repeat="outward in orderviewData.outwardForm.outward_data">
+                                        <td ng-if="orderviewData.selectedmenu != 'OUTWARDRETURN'" style="min-width: 150px;max-width: 200px;" order-directive process-name="{{outward.process}}"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outward.fabric_type"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outward.fabric_color"></td>
+                                        <td class="text-left" style="min-width: 100px;max-width: 100px;" ng-bind="outward.lot_no"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="outward.dia | number:2"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="outward.delivery_roll"></td>
+                                        <td class="text-right" style="min-width: 100px;max-width: 120px;" ng-bind="outward.delivery_weight | number:3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-xs-12 padding_zero margin-top-10">
+                        <a class="line light margin-left-30 pull-left" ng-click="printThisdelivery(); $event.stopPropagation();">Print this delivery</a>
+                        <a class="line light margin-left-30 pull-left" ng-if="deliveryFlag(orderviewData.outwardForm)" ng-click="editThisdelivery(); $event.stopPropagation();">Edit</a>
+                    </div>
+                </div>
+            </div>	
+            
+            <div class="order_details delivery-outwards" ng-if="orderviewData.currentMenu == 'CONTRACTOUTWARD'">
+                <div class="col-xs-12 text-right margin-bottom-30 padding_zero">
+                    <ul class="outwardMenu">
+                        <li ng-repeat="outwards in orderviewData.contract_outward" ng-bind="outwards.outward_no"
+                            ng-class="{'active':orderviewData.contractoutwardForm._id == outwards._id}" ng-click="viewContractoutward(outwards)"></li>
+                    </ul>
+                </div>
+                <div class="text-center margin-bottom-40" ng-if="!orderviewData.contractoutwardForm || !orderviewData.contractoutwardForm._id || orderviewData.contractoutwardForm._id == ''" 
+                     style="font-size: 18px;color: #1f1f1f;">No Outwards found for this order.<br>
+                </div>
+
+                <div class="order_view_tab_content margin-bottom-30" ng-if="orderviewData.contractoutwardForm && orderviewData.contractoutwardForm._id && orderviewData.contractoutwardForm._id != ''">
+                    <div class="header_container">
+                        <div class="order_first-col">
+                            <div class="col-xs-12">
+                                <div class="order_no">Job No. <span ng-bind="orderviewData.contractoutwardForm.order_no"></span></div>
+                                <div class="order_no">Job Date: <span ng-bind="orderviewData.contractoutwardForm.order_date| date:'dd MMM yyyy'"></span></div>
+                                <div class="heading_5 margin-top-20" ng-bind="orderviewData.contractoutwardForm.contractor_name"></div>
+                                <div class="order_no margin-bottom-20" bill-gstin="true" contract-Address="{{orderviewData.contractoutwardForm}}"></div>
+                            </div>
+                        </div>
+
+                        <div class="order_second-col margin-left-10">
+                            <div class="col-xs-12">
+                                <label><span>Outward No:</span><b ng-bind="orderviewData.contractoutwardForm.outward_no"></b></label>
+                                <label><span>Outward Date:</span><b ng-bind="orderviewData.contractoutwardForm.outward_date| date:dateformats.short_date_time"></b></label>
+                                <label><span>Order ref.No:</span><b ng-bind="orderviewData.contractoutwardForm.order_reference_no"></b></label>
+                                <label><span>Customer Dc No:</span><b ng-bind="orderviewData.contractoutwardForm.customer_dc_no"></b></label>
+                                <label><span>Vehicle No:</span>
+                                    <b ng-if="orderviewData.contractoutwardForm.vehicle_no && orderviewData.contractoutwardForm.vehicle_no != ''" ng-bind="orderviewData.contractoutwardForm.vehicle_no"></b>
+                                    <b ng-if="!orderviewData.contractoutwardForm.vehicle_no || orderviewData.contractoutwardForm.vehicle_no == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Name:</span>
+                                    <b ng-if="orderviewData.contractoutwardForm.driver_name && orderviewData.contractoutwardForm.driver_name != ''" ng-bind="orderviewData.contractoutwardForm.driver_name"></b>
+                                    <b ng-if="!orderviewData.contractoutwardForm.driver_name || orderviewData.contractoutwardForm.driver_name == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Phone No:</span>
+                                    <b ng-if="orderviewData.contractoutwardForm.driver_no && orderviewData.contractoutwardForm.driver_no != ''" ng-bind="orderviewData.contractoutwardForm.driver_no"></b>
+                                    <b ng-if="!orderviewData.contractoutwardForm.driver_no || orderviewData.contractoutwardForm.driver_no == ''">-N/A-</b>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="order_second-col margin-left-10">
+                            <div class="outward_design_process_div order_grey pull-right"> 
+                                <div class="in_order_process">
+                                    <div class="dropdown-toggle in_order_process main_status" ng-if="orderviewData.card == 'ORDER'" data-toggle="dropdown" 
+                                         ng-bind="orderviewData.contractoutwardForm.outward_status"></div>
+
+                                    <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu5" ng-if="orderviewData.card == 'ORDER' && orderviewData.orderDetail.order_status !== 'Invoice and Delivery' && orderviewData.orderDetail.order_status !== 'Completed'">
+                                        <li ng-repeat="status in orderviewData.outward_status" ng-click="selectoutwardStatus(status); $event.stopPropagation();" 
+                                            ng-if="status.name != orderviewData.contractoutwardForm.outward_status && orderviewData.orderDetail.order_status !== 'Invoice and Delivery' && orderviewData.orderDetail.order_status !== 'Completed'"> 
+                                            <div class="dashboard_card_list {{status.color}}">
+                                                <div class="right_sec">
+                                                    <div class="card_txt_cnt">
+                                                        <strong ng-bind="status.name"></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 margin-top-40">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Outward Items</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-left">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="outward in orderviewData.contractoutwardForm.outward_data">
+                                        <td style="min-width: 150px;max-width: 200px;" order-directive process-name="{{outward.process}}"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outward.fabric_type"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="outward.fabric_color"></td>
+                                        <td class="text-left" style="min-width: 100px;max-width: 100px;" ng-bind="outward.lot_no"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="outward.dia | number:2"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="outward.delivery_roll"></td>
+                                        <td class="text-right" style="min-width: 100px;max-width: 120px;" ng-bind="outward.delivery_weight | number:3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-xs-12 padding_zero margin-top-10">
+                        <a class="line light margin-left-30 pull-left" ng-click="printThisoutward(); $event.stopPropagation();">Print this outward</a>
+                        <a class="line light margin-left-30 pull-left" ng-if="outwardFlag(orderviewData.contractoutwardForm)" ng-click="editThisoutward(); $event.stopPropagation();">Edit</a>
+                    </div>
+                    
+                    <div class="col-xs-12 margin-top-40" ng-if="orderviewData.contract_inward.length>0">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Inward Details</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg" ng-if="orderviewData.contract_inward.length > 0">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Inward No</th>
+                                        <th>Date</th>
+                                        <th>Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-left">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat-start="inwards in orderviewData.contract_inward | filter:{outward_id:orderviewData.contractoutwardForm._id}"></tr>
+                                        <tr ng-repeat="inw in inwards.inward_data">
+                                            <td class="text-left" style="min-width: 100px;max-width: 100px;">
+                                                <a ng-click="viewContractinward(inwards)" ng-bind="inwards.inward_no"></a>
+                                            </td>
+                                            <td class="text-left" style="min-width: 100px;max-width: 100px;" ng-bind="inwards.inward_date | date:dateformats.short_date_time"></td>
+                                            <td style="min-width: 150px;max-width: 200px;" order-directive process-name="{{inw.process}}"></td>
+                                            <td style="min-width: 100px;max-width: 120px;" ng-bind="inw.fabric_type"></td>
+                                            <td style="min-width: 100px;max-width: 120px;" ng-bind="inw.fabric_color"></td>
+                                            <td class="text-left" style="width: 70px;" ng-bind="inw.lot_no"></td>
+                                            <td class="text-center" style="min-width: 50px;max-width: 80px;" ng-bind="inw.dia | number:2"></td>
+                                            <td class="text-center" style="min-width: 50px;max-width: 80px;" ng-bind="inw.received_roll"></td>
+                                            <td class="text-right" style="min-width: 50px;max-width: 80px;" ng-bind="inw.received_weight | number:3"></td>
+                                        </tr>
+                                    <tr ng-repeat-end></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="order_details delivery-outwards" ng-if="orderviewData.currentMenu == 'CONTRACTINWARD'">
+                <div class="col-xs-12 text-right margin-bottom-30 padding_zero">
+                    <ul class="outwardMenu">
+                        <li ng-repeat="inwards in orderviewData.contract_inward" ng-bind="inwards.inward_no"
+                            ng-class="{'active':orderviewData.contractinwardForm._id == inwards._id}" ng-click="viewContractinward(inwards)"></li>
+                    </ul>
+                </div>
+                <div class="text-center margin-bottom-40" ng-if="!orderviewData.contractinwardForm || !orderviewData.contractinwardForm._id || orderviewData.contractinwardForm._id == ''" 
+                     style="font-size: 18px;color: #1f1f1f;">No Inwards found for this order.<br>
+                </div>
+
+                <div class="order_view_tab_content margin-bottom-30" ng-if="orderviewData.contractinwardForm && orderviewData.contractinwardForm._id && orderviewData.contractinwardForm._id != ''">
+                    <div class="header_container">
+                        <div class="order_first-col">
+                            <div class="col-xs-12">
+                                <div class="order_no">Job No. <span ng-bind="orderviewData.contractinwardForm.order_no"></span></div>
+                                <div class="order_no">Job Date: <span ng-bind="orderviewData.contractinwardForm.order_date| date:'dd MMM yyyy'"></span></div>
+                                <div class="heading_5 margin-top-20" ng-bind="orderviewData.contractinwardForm.contractor_name"></div>
+                                <div class="order_no margin-bottom-20" bill-gstin="true" contract-Address="{{orderviewData.contractinwardForm}}"></div>
+
+                            </div>
+                        </div>
+
+                        <div class="order_second-col margin-left-30">
+                            <div class="col-xs-12">
+                                <label><span>Inward No:</span><b ng-bind="orderviewData.contractinwardForm.inward_no"></b></label>
+                                <label><span>Inward Date:</span><b ng-bind="orderviewData.contractinwardForm.inward_date| date:dateformats.short_date_time"></b></label>
+                                <label><span>Outward No:</span><b ng-bind="orderviewData.contractinwardForm.outward_no"></b></label>
+                                <label><span>Outward Date:</span><b ng-bind="orderviewData.contractinwardForm.outward_date| date:dateformats.short_date_time"></b></label>
+                                <label><span>Delivery DC No:</span>
+                                    <b ng-if="orderviewData.contractinwardForm.contract_delivery_no && orderviewData.contractinwardForm.contract_delivery_no != ''" ng-bind="orderviewData.contractinwardForm.contract_delivery_no"></b>
+                                    <b ng-if="!orderviewData.contractinwardForm.contract_delivery_no || orderviewData.contractinwardForm.contract_delivery_no == ''">-N/A-</b>
+                                </label>
+                                <label><span>Delivery DC Date:</span>
+                                    <b ng-if="orderviewData.contractinwardForm.contract_dc_date && orderviewData.contractinwardForm.contract_dc_date != ''" ng-bind="orderviewData.contractinwardForm.contract_dc_date| date:'dd MMM yyyy'"></b>
+                                    <b ng-if="!orderviewData.contractinwardForm.contract_dc_date || orderviewData.contractinwardForm.contract_dc_date == ''">-N/A-</b>
+                                </label>
+                                <label><span>Order ref.No:</span><b ng-bind="orderviewData.contractinwardForm.order_reference_no"></b></label>
+                                <label><span>Customer Dc No:</span><b ng-bind="orderviewData.contractinwardForm.customer_dc_no"></b></label>
+                                <label><span>Vehicle No:</span>
+                                    <b ng-if="orderviewData.contractinwardForm.vehicle_no && orderviewData.contractinwardForm.vehicle_no != ''" ng-bind="orderviewData.contractinwardForm.vehicle_no"></b>
+                                    <b ng-if="!orderviewData.contractinwardForm.vehicle_no || orderviewData.contractinwardForm.vehicle_no == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Name:</span>
+                                    <b ng-if="orderviewData.contractinwardForm.driver_name && orderviewData.contractinwardForm.driver_name != ''" ng-bind="orderviewData.contractinwardForm.driver_name"></b>
+                                    <b ng-if="!orderviewData.contractinwardForm.driver_name || orderviewData.contractinwardForm.driver_name == ''">-N/A-</b>
+                                </label>
+                                <label><span>Driver Phone No:</span>
+                                    <b ng-if="orderviewData.contractinwardForm.driver_no && orderviewData.contractinwardForm.driver_no != ''" ng-bind="orderviewData.contractinwardForm.driver_no"></b>
+                                    <b ng-if="!orderviewData.contractinwardForm.driver_no || orderviewData.contractinwardForm.driver_no == ''">-N/A-</b>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="order_fourth-col">
+                            <span class="bar-code"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 margin-top-40">
+                        <div class="order_item_container">
+                            <div class="order_item_col"><b>Inward Items</b></div>
+                        </div>
+                    </div>
+
+                    <div class="order_item_container order_item_bg">
+                        <div class="col-lg-12 inwards-table padding_zero">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>Fabric</th>
+                                        <th>Color</th>
+                                        <th class="text-left">Lot No</th>
+                                        <th class="text-center">DIA</th>
+                                        <th class="text-center">Rolls</th>
+                                        <th class="text-right">Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="inward in orderviewData.contractinwardForm.inward_data">
+                                        <td style="min-width: 150px;max-width: 200px;" order-directive process-name="{{inward.process}}"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="inward.fabric_type"></td>
+                                        <td style="min-width: 100px;max-width: 120px;" ng-bind="inward.fabric_color"></td>
+                                        <td class="text-left" style="min-width: 100px;max-width: 100px;" ng-bind="inward.lot_no"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="inward.dia | number:2"></td>
+                                        <td class="text-center" style="min-width: 80px;max-width: 100px;" ng-bind="inward.received_roll"></td>
+                                        <td class="text-right" style="min-width: 100px;max-width: 120px;" ng-bind="inward.received_weight | number:3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-xs-12 padding_zero margin-top-10">
+                        <a class="line light margin-left-30 pull-left" ng-click="printThisinward(); $event.stopPropagation();">Print this inward</a>
+                        <a class="line light margin-left-30 pull-left" ng-if="inwardFlag(orderviewData.contractinwardForm)" ng-click="editThisinward(); $event.stopPropagation();">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /order_body  --> 
+    </div>
+    <!-- /order_page  -->
+</div>
+
+<script>
+    //Orderview Height Set
+    function orderviewcardHeight() {
+    var headerHeight = $('.header').height();
+    var windowHeight = $(window).height();
+    var totalHeight = windowHeight - (headerHeight);
+    $('.right_component .orders_page').css('height', totalHeight);
+    }
+
+    orderviewcardHeight();
+    $(window).resize(function () {
+    orderviewcardHeight();
+    });
+    $(".checkbox_btn").click(function () { /* Filter class add active */
+    $(this).toggleClass('active');
+    });
+    $(".checkbox_btn").click(function () { /* Filter class  up and down */
+    $(this).children().children('.dowm_dropdown_small').toggleClass('up_dropdown_small');
+    });
+    function conversationAlign(){
+    if (parseInt($('.order_header_menu').width()) >= 1090) {
+    $('.conversations').addClass('pull-right');
+    $('.conversations').removeClass('margin05');
+    } else{
+    $('.conversations').removeClass('pull-right');
+    $('.conversations').addClass('margin05');
+    }
+    }
+    $(window).resize(function () {
+    conversationAlign();
+    });
+    conversationAlign();
+</script> 

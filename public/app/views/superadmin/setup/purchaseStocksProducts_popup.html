@@ -1,0 +1,137 @@
+<div class="modal-body">
+    <form name="myproductForm" novalidate class="division-modal-detail">
+        <div class="brand_form_header">
+            <div class="brands_btn_right">
+                <div class="right_side">
+                    <a class="dropdown-toggle">
+                        <div class="dropdown_icon_model" onclick="return popup_dropdown(event, $(this))"></div>
+                    </a>
+                </div>
+                <ul class="dropdown-menu dropdown_popup" id="dropdown-menu_process">
+                    <li class="text-center list_store_title">Menu 
+                        <span class="close trans_close"><span class="close_icon_small_dropdown" onclick="return popup_dropdown(event, $(this))"></span></span>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this));" ng-if="productForm.is_active">Disable this Product...</a>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this));" ng-if="!productForm.is_active">Enable this Product...</a>
+
+                        <div class="toggle_disableenable toggle_cnt_1 margin-top-05" style="display: none;">
+                            <p ng-if="productForm.is_active">Disabling this Product will restrict purchase order of this product immediately. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="productForm.is_active" ng-click="toggleproduct(productForm);" onclick="hidealldialg()">Yes, Disable it.</a>
+
+                            <p ng-if="!productForm.is_active">Enabling this Product. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="!productForm.is_active" ng-click="toggleproduct(productForm);" onclick="hidealldialg()">Yes, Enable it.</a>
+                        </div>
+                    </li>
+
+                    <li class="divider" ng-if="productData.process != 'ADD'"></li>
+
+                    <li ng-if="productData.process != 'ADD'">
+                        <a class="toggle_click_2" onclick="return toggle_click_remove(event, $(this))">Remove this Product...</a>
+                        <div class="toggle_remove toggle_cnt_2 margin-top-05" style="display: none;">
+                            <p>Removing this Product cannot be undone. Do you want to continue removing this product?</p>
+                            <a class="remove_btn" ng-click="delete(productForm);" onclick="hidealldialg()">Yes, Remove it.</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="right_side">
+                    <div class="close_icon_large" ng-click="cancel(); $event.stopPropagation();"></div>
+                </div>
+            </div>
+
+            <div class="row margin-0">
+                <div class="padding_zero col-xs-12 white_color">
+                    <div class="col-xs-4">
+                        <div class="uploaed_file" ngf-select="onFileSelect($files)" ngf-pattern="'.jpg,.jpeg,.png'" ngf-accept="'image/*'" ngf-max-size="2MB">
+                            <span class="fileinput-button" ng-if="!productData.imagesrc"> 
+                                <span class="add_icon"></span><br>
+                                <span class=" margin-left-10" ng-if="!productData.imagesrc">Add Photo</span> 
+                            </span>
+                            <img ng-if="productData.imagesrc" ng-src="{{productData.loadedfile}}" width="100%"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-8">
+                        <div class="brand_name_cnt" style="margin-bottom:0px;">
+                            <div class="brand_name_form heading_4"> 
+                                <input type="text" name="product_name" class="input_model_edit" ng-model="productForm.product_name" placeholder="Product Name" 
+                                       ng-class="{'input_error_class':(!myproductForm.product_name.$valid && productData.formsubmission)}" required/> 
+                            </div>
+                            <div class="brand_name_form heading_4 margin-top-10">
+                                <input type="text" name="product_code" class="input_model_edit" ng-model="productForm.product_code" placeholder="Product Code" 
+                                       ng-class="{'input_error_class':(!myproductForm.product_code.$valid && productData.formsubmission)}" required/> 
+                            </div>
+                        </div>
+                        <div class="brand_status_cnt margin-top-30">
+                            <div class="data_time_update heading_6">
+                                <div ng-if="productForm._id">
+                                    <span ng-bind="'Last Updated: '+ (productForm.updated | dateformatFilter:'dmyt')+'.'"></span> <br>
+                                    <span ng-bind="'Created On:  '+ (productForm.created | dateformatFilter:'dmyt')+'.'"></span>
+                                </div>
+                            </div>
+                            <div class="enable_disable heading_4" ng-if="productForm.is_active">
+                                <div class="center">
+                                    <div class="enable_large_white"></div>
+                                </div>
+                                Enabled </div>
+                            <div class="enable_disable heading_4" ng-if="!productForm.is_active">
+                                <div class="center">
+                                    <div class="disable_medium_white"></div>
+                                </div>
+                                Disable </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand_form_body">
+            <div class="brand_form_body_cnt">
+                <div class="row margin-0">
+                    <div class="col-xs-12 heading_5 margin-bottom-10"><b>Category</b></div>
+                    <div class="col-xs-12 margin-bottom-30">
+                        <div class="input_container">
+                            <div class="selctize_dropdown" ng-class="{'input_error_class':(!myproductForm.category_id.$valid && productData.formsubmission)}" required>
+                                <ui-select ng-model="productForm.category_id" theme="selectize" search-enabled='true' name="category_id">
+                                    <ui-select-match placeholder="Select Category">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="category._id as category in productData.categorylist | filter: $select.search">
+                                        <div ng-bind-html="category.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 heading_5 margin-bottom-10">
+                        <b>Description</b>
+                    </div>
+                    <div class="col-lg-10 margin-bottom-30">
+                        <textarea class="form-control" rows="5" ng-model="productForm.description" ></textarea>
+                    </div>
+                    <div class="col-xs-3 heading_5 margin-bottom-20 max-min">
+                        <b>Min Stock Level</b>
+                    </div>
+                    <div class="col-xs-2 margin-bottom-20" style="padding-left: 0px;padding-right: 20px;">
+                        <input type="number" ng-model="productForm.minimum_stock" name="minimum_stock" class="form-control product_level form_text_place"
+                               ng-class="{'input_error_class':(!myproductForm.minimum_stock.$valid && productData.formsubmission)}" required>
+                    </div>
+                    <div class="col-xs-3 heading_5 margin-bottom-20 max-min">
+                        <b>Max Stock Level</b>
+                    </div>
+                    <div class="col-xs-2 margin-bottom-20" style="padding-left: 0px;padding-right: 20px;">
+                        <input type="number" class="form-control product_level form_text_place" ng-model="productForm.maximum_stock" name="maximum_stock" 
+                               ng-class="{'input_error_class':(!myproductForm.maximum_stock.$valid && productData.formsubmission)}" required>
+                    </div>
+
+                    <div class="col-xs-12 text-center margin-top-30 margin-bottom-20">
+                        <button class="common_button" ng-if="productData.process == 'ADD'" ng-show="!productData.eventLoad" 
+                                ng-click="productData.formsubmission = true;create(myproductForm.$valid); $event.stopPropagation();">Save</button>
+                        <button class="common_button" ng-if="productData.process != 'ADD'" ng-show="!productData.eventLoad" 
+                                ng-click="productData.formsubmission = true;update(myproductForm.$valid); $event.stopPropagation();">Update</button>
+                        <div class="loader_small" ng-show="productData.eventLoad"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

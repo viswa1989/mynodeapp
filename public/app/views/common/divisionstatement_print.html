@@ -1,0 +1,291 @@
+<!doctype html>
+<html>
+    <head>    
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../../../css/font.css" />
+        <style>
+            body { margin: 0;font-family: 'Open Sans', sans-serif; }
+            .sheet {
+                margin: 0;
+                overflow: hidden;
+                position: relative;
+                box-sizing: border-box;
+                page-break-after: always;
+            }
+
+            /** Paper sizes **/
+body.A3           .sheet { width: 297mm; 
+        /*height: 419mm*/ 
+}
+            body.A3.landscape .sheet { width: 420mm; 
+                                       /*height: 296mm*/ 
+            }
+body.A4           .sheet { width: 210mm; 
+        /*height: 296mm*/ 
+}
+            body.A4.landscape .sheet { width: 297mm; 
+                    /*height: 209mm*/ 
+            }
+body.A5           .sheet { width: 148mm; 
+        /*height: 209mm*/ 
+}
+            body.A5.landscape .sheet { width: 210mm; 
+                    /*height: 147mm*/ 
+            }
+
+            /** Padding area **/
+            .sheet.padding-5mm { padding: 5mm }
+            .sheet.padding-10mm { padding: 10mm }
+            .sheet.padding-15mm { padding: 15mm }
+            .sheet.padding-20mm { padding: 20mm }
+            .sheet.padding-25mm { padding: 25mm }
+
+            /** For screen preview **/
+            @media screen {
+                body { background: #e0e0e0 }
+                .sheet {
+                    background: white;
+                    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+                    margin: 5mm;
+                }
+            }
+            @page { size: A4 landscape }
+            body{
+                color: #393939;font-size: 14px;font-family: 'Open Sans', sans-serif;
+            }
+            .text-right{
+                text-align: right;
+            }
+            .text-left{
+                text-align: left;
+            }
+            .text-center{
+                text-align: center;
+            }
+            .col-xs{
+                float:left;width:100%;
+            }
+            .dc_customer_details{
+                margin-top: 30px;
+            }
+            .dc_address{
+                display:table-cell;vertical-align: bottom;width: 300px;margin-right: 15px;color: rgb(17,17,17);line-height: 17px;font-size: 14px;
+            }
+            .dc_table{
+                font-size: 12px;
+                width:100%;border-collapse: collapse;
+            }
+            .dc_table .header{
+                font-size:12px;
+            }
+            .dc_table .row-top .header{
+                font-size: 13px;
+            }
+            .pull-left{
+                float: left;
+            }
+            .pull-right{
+                float: right;
+            }
+            table tbody tr td{
+                vertical-align: top;
+            }
+            .address_detail{
+                margin-top: 5px;
+                line-height: 1.3;
+            }
+            .detail_payment{
+                line-height: 1.3;
+            } 
+            .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+                padding: 8px;
+                line-height: 1.42857143; 
+            }
+            @media print {
+                table tr.page-break{
+                    page-break-inside: avoid;
+                } 
+            } 
+        </style>
+        <script type="text/javascript" src="../../../js/angular.min.js"></script>
+        <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+
+        <script>
+            var app = angular.module("InvoicePrint", []);
+            app.controller("invoicePrintCtrl", function ($scope, $rootScope, $timeout, $sce) {
+
+                $scope.returnForm = {};
+                if (window.opener && !window.opener.closed) {
+                    $scope.divisionstatement = window.opener.divisionstatement;
+                    $timeout(function () {
+                        window.print();
+                    }, 3000);
+                }
+            }).filter('ledgerBalance', function () {
+                return function (modelval) {
+                    var filtered = '';
+                    if (angular.isDefined(modelval) && modelval !== null) {
+                        var totalinvoice = modelval.total_invoiceamount;
+                        if (modelval.paidinvoice_total) {
+                            totalinvoice += modelval.paidinvoice_total;
+                        }
+                        if (modelval.payment_received > totalinvoice) {
+                            var ledgerbal = modelval.payment_received - totalinvoice;
+                            filtered = '₹ ' + ledgerbal.toFixed(2);
+                        }
+                    }
+                    return filtered;
+                };
+            }).filter('sumByKey', function () {
+                return function(data, key) {
+                    if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                        return '-';
+                    }
+
+                    var sum = 0;
+                    for (var i = data.length - 1; i >= 0; i--) {
+                      if (data[i][key]) {
+                        sum += parseFloat(data[i][key]);
+                      }
+                    }
+                    if (sum>0) {
+                      sum = sum.toFixed(2)
+                    } else {
+                      sum = '-';
+                    }
+                    return sum;
+                };
+            });
+        </script>
+    </head>
+    <body class="A4 landscape" ng-app="InvoicePrint" ng-controller="invoicePrintCtrl">
+        <div class="sheet padding-5mm dc_wapper"> <!-- dc_wapper -->
+            <div class="col-xs" style="display:table;">
+                <div class="dc_address text-center">
+                    <b style="font-size: 16px;" ng-if="divisionstatement.selectedDivision == 'ALL'" ng-bind="'Statement for '+divisionstatement.selectedDivision+' Division'"></b>
+                    <b style="font-size: 16px;" ng-if="divisionstatement.selectedDivision != 'ALL'" ng-bind="'Statement for '+divisionstatement.selectedDivision"></b>
+                </div>
+            </div>
+            <div class="col-xs dc_customer_details">
+                <b style="font-size: 15px;" ng-if="(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date) == (divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)" 
+                   ng-bind="'Account Statement for '+(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date)"></b>
+                <b style="font-size: 15px;" ng-if="(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date) != (divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)" 
+                   ng-bind="'Account Statement from '+(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date)+' to '+(divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)"></b>
+            </div>
+
+            <div class="col-xs dc_customer_details">
+                <table class="dc_table table div_report_table">
+                    <thead>
+                        <tr class="tr_header">
+                            <th style="width: 90px;">Cheque no</th>
+                            <th style="width: 30px;">Day</th>
+                            <th style="width: 140px;">Date</th>
+                            <th>Payee</th>
+                            <th class="text-right">Amount ₹</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="ledger in divisionstatement.ledgerTrans">
+                        <tr>
+                            <th colspan="3"></th>
+                            <th ng-bind="ledger.name+' Ledger'"></th>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td class="text-center"><b>Opening Balance</b></td>
+                            <td class="text-right" ng-bind="divisionstatement.currency+(ledger.opening_balance | number:2)"></td>
+                        </tr>
+                        <tr  class="text-center" ng-if="!ledger.transaction || ledger.transaction.length==0">
+                            <td colspan="5">-No transactions happened-</td>
+                        </tr> 
+                        <tr class="text-center" ng-if="ledger.transaction && ledger.transaction.length>0" ng-repeat="trans in ledger.transaction">
+                            <td ng-bind="trans.cheque_no"></td>
+                            <td ng-bind="trans.transaction_date| date:'EEE'"></td>
+                            <td ng-bind="trans.transaction_date| date:'EEE MMM dd, yyyy'"></td>
+                            <td>
+                                <span ng-if="trans.type != 'TRANSFER'" ng-bind="trans.payee_name+', '"></span>
+                                <span ng-if="trans.type == 'TRANSFER' || !trans.payee_name" ng-bind="trans.memo"></span>
+                                <span ng-bind="trans.category_name+', '"></span>
+                                <span ng-if="trans.bills && trans.bills.length>0">
+                                    ,<span ng-repeat="bill in trans.bills">
+                                        <span ng-bind="bill.bill_no+', '"></span>
+                                        <span ng-if="$index != trans.bills.length-1" ng-bind="', '"></span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td class="text-right" ng-bind="divisionstatement.currency+(trans.transaction_amount | number:2)"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="text-right" style="margin-bottom:10px;"> [
+                                    <b>Total Received:</b>
+                                    <span><b ng-bind="divisionstatement.currency+(ledger.total_received | number:2)"></b></span> &nbsp;&nbsp;
+                                    <b>Total Spent:</b>
+                                    <span><b ng-bind="divisionstatement.currency+(ledger.total_spend | number:2)"></b></span> &nbsp;&nbsp;
+                                    <b>Ending Balance:</b>
+                                    <span><b ng-bind="divisionstatement.currency+(ledger.balance | number:2)"></b></span> ]
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2">
+                                <div class="text-right" style="margin-top: 10px;">
+                                    <b>Net Ending Balance:</b>&nbsp;
+                                    <b ng-bind="divisionstatement.ledgerTrans | sumByKey:'balance' | number:2"></b>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-xs dc_customer_details">
+                <b style="font-size: 15px;" ng-if="(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date) == (divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)" 
+                   ng-bind="'Invoices for '+divisionstatement.FromDate | date:divisionstatement.dateformats.short_date"></b>
+                <b style="font-size: 15px;" ng-if="(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date) != (divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)" 
+                   ng-bind="'Invoices from '+(divisionstatement.FromDate | date:divisionstatement.dateformats.short_date)+' to '+(divisionstatement.ToDate | date:divisionstatement.dateformats.short_date)"></b>                
+            </div>
+            <div class="col-xs dc_customer_details">
+                <table class="dc_table table div_report_table">
+                    <thead>
+                        <tr class="tr_header">
+                            <th style="width: 90px;">Invoice No</th>
+                            <th style="width: 30px;">Day</th>
+                            <th style="width: 140px;">Date</th>
+                            <th>Payee</th>
+                            <th class="text-right">Amount ₹</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center" ng-if="!divisionstatement.InvoiceTrans || divisionstatement.InvoiceTrans.transaction.length == 0">
+                            <td colspan="5">-No invoices found-</td>
+                        </tr> 
+                        <tr class="text-center" ng-if="divisionstatement.InvoiceTrans.transaction && divisionstatement.InvoiceTrans.transaction.length>0" 
+                            ng-repeat="trans in divisionstatement.InvoiceTrans.transaction">
+                            <td ng-bind="trans.invoice_no"></td>
+                            <td ng-bind="trans.invoice_date| date:'EEE'"></td>
+                            <td ng-bind="trans.invoice_date| date:'EEE MMM dd, yyyy'"></td>
+                            <td>
+                                <span ng-bind="trans.customer_name"></span>
+                            </td>
+                            <td class="text-right" ng-bind="divisionstatement.currency+(trans.total | number:2)"></td>
+                        </tr> 
+                    </tbody> 
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2">
+                                <div class="text-right" style="margin-top: 10px;">
+                                    <b>Total:</b>&nbsp;
+                                    <b ng-bind="divisionstatement.currency+(divisionstatement.InvoiceTrans.total_received | number:2)"></b>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<div class="modal-body enter-detail cutomer-modal" id="customerdetail">
+    <form name="myinwardlistForm" novalidate class="division-modal-detail">
+        <div class="brand_form_body">
+            <div class="brand_form_body_cnt">
+                <div class="brands_btn_right">
+                    <button type="button" class="close right_side margin-top-20 close_icon_large" ng-click="cancel(); $event.stopPropagation();"></button>
+                </div>
+                <div class="col-xs-12 padding_zero inwards">
+                    <div class="col-xs-12 heading_5 margin-bottom-10 description_Process ">
+                        <div class="col-lg-12 col-xs-12 emp-det text-center"> <b>{{orderForm.customer_name}}</b><br> 
+                            <span style="float: none; text-align: center;">You have some Pending Inwards <br>
+                                select inwards for this order
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form_containers print-details">
+                            <div class="dashboard_card_list" ng-repeat="inwards in orderData.inwards" ng-click="selectInward(inwards); $event.stopPropagation();">
+                                <div class="left_strip"></div>
+                                <div class="right_sec">
+                                    <!--<div class="card_img"> </div>-->
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name"> 
+                                            <b class="pull-left">{{inwards.customer_name}}</b><span class="on-time pull-right">On Time</span> </div>
+                                        <!--<div class="col-xs-12 padding_zero order-name">Job No: <b>LT-16467</b> <b class="pull-right">DD/MM/YY</b> </div>-->
+                                        <div class="col-xs-12 padding_zero order-name">Inward No: <b>{{inwards.inward_no}}</b> <b class="pull-right">{{inwards.inward_date| date:'dd/MM/y'}}</b> </div>
+                                        <div class="col-xs-12 padding_zero">
+                                            <div class="name process">Process: <b class="txt_blue">{{inwards.process_name}}</b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

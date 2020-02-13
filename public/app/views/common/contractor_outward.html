@@ -1,0 +1,175 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<head>
+        <link rel="stylesheet" href="../../../css/font.css" />
+    <style type="text/css">
+        body {
+            -webkit-print-color-adjust:exact; margin:0px; font-family: 'Open Sans', sans-serif; letter-spacing: 0.2px;
+        }
+
+        /* fill half the height with each face */
+        .order_details {
+            width: 1100px;
+            height: 800px;
+            margin: 5mm;
+            page-break-after: always;
+        }
+        .width_100{
+            width: 100%;
+            padding: 0px 15px;
+            float: left;
+        }
+    </style>
+
+    <script type="text/javascript" src="../../../js/angular.min.js"></script>
+    <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+
+</head>
+<script>
+    var app = angular.module("OrderPrint", []);
+    app.controller("orderPrintCtrl", function ($scope, $rootScope, $timeout) {
+        $scope.outwardForm = {};
+        if (window.opener && !window.opener.closed) {
+            $scope.outwardForm = window.opener.outData;
+            $timeout(function () {
+                window.print();
+            }, 3000);
+        }
+    }).directive("combineAddress", ($compile) => {
+        return {
+            scope: true,
+            restrict: "A",
+            link(scope, elem, attrs) {
+                function checkIfExistingValue(obj, key) {
+                    return obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== "";
+                }
+
+                attrs.$observe("combineAddress", (newValue) => {
+                    let address = "";
+                    if (angular.isDefined(newValue) && newValue !== null && newValue !== "") {
+                        newValue = JSON.parse(newValue);
+                        const nameArray = ["contractor_address1", "contractor_address2", "contractor_pincode", "gstin_number"];
+                        // loop through all possible names
+                        for (let i = 0; i < nameArray.length; i += 1) {
+                            if (checkIfExistingValue(newValue, nameArray[i]) && newValue[nameArray[i]] !== null && newValue[nameArray[i]] !== "") {
+                                if (nameArray[i] === "gstin_number") {
+                                    address = `${address}, <br> GSTIN : ${newValue.gstin_number}`;
+                                } else if (address === "") {
+                                    address = newValue[nameArray[i]];
+                                } else {
+                                    if (nameArray[i] === "contractor_pincode") {
+                                        address = `${address} - ${newValue[nameArray[i]]}`;
+                                    } else {
+                                        address = `${address}, < br > ${newValue[nameArray[i]]}`;
+                                    }
+                                }
+                            }
+                        }
+                        address += ".";
+                    }
+
+                    elem.html(address);
+                });
+              },
+            };
+    }).directive("combineProcess", function () {
+        return {
+            restrict: "A",
+            link: function (scope, elem, attrs) {
+
+                attrs.$observe("combineProcess", function (newValue) {
+                    var process = "";
+                    if (newValue !== "") {
+                        newValue = JSON.parse(newValue);
+                        if (angular.isDefined(newValue)) {
+
+                            //loop through all possible names
+                            for (var i = 0; i < newValue.length; i++) {
+                                if (newValue[i] && angular.isDefined(newValue[i].process_name) && newValue[i].process_name !== null && newValue[i].process_name !== "") {
+                                    if (process === "") {
+                                        process = newValue[i].process_name;
+                                    } else {
+                                        process = process + ", " + newValue[i].process_name;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    elem.html(process);
+                });
+            }
+        };
+    }).filter('sumOfValue', function () {
+        return function (data, key) {
+            if (angular.isUndefined(data) || angular.isUndefined(key))
+                return 0;
+            var sum = 0;
+            angular.forEach(data, function(v, k) {
+                sum = sum + parseInt(v[key]);
+            });
+            return sum;
+        };
+    });
+</script>
+<body ng-app="OrderPrint" ng-controller="orderPrintCtrl">
+    <div class="order_details" ng-if="outwardForm._id">
+        <div class="width_100" style="margin-left:45px;">
+            <div style="width:100%;text-align:center;font-weight:bold;font-size:15px;">
+                CONTRACTOR - DELIVERY NOTE
+            </div>
+            <div style="width:500px;margin-left: 10px;margin-top:10px;float:left;line-height:1.3;height:180px;font-size: 14px;">
+                <b><p ng-bind="outwardForm.contractor_name"></p>
+                    <p ng-if="outwardForm.contractor_name" style="margin-bottom:0px;" combine-address="{{outwardForm}}"></p></b>
+            </div>
+            <div style="width:394px;margin-top:20px;float:left;line-height:1.4;margin-left:1.1in;height:190px;font-size: 14px;">
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Outward No</div>:<span style="margin-left: 10px;" ng-bind="outwardForm.outward_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Outward Date</div>:<span style="margin-left: 10px;" ng-bind="outwardForm.outward_date | date:'dd - MM - yyyy h:mma'"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Vehicle</div>:<span style="margin-left: 10px;" ng-bind="outwardForm.vehicle_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Job NO</div>:<span style="margin-left: 10px;" ng-bind="outwardForm.order_no"></span>
+                </div>
+                <div style="width: 350px;display: inline-block;float: left;">
+                    <div style="width: 90px;display: inline-block;float: left;">Cust Dc No</div>:<span style="margin-left: 10px;" ng-bind="outwardForm.customer_dc_no"></span>
+                </div>
+            </div>
+        </div>
+        <div class="width_100">
+            <div style="width: 100%; margin-top:50px;float: left;height: 3.5in;">
+                <table style="table-layout: fixed;text-transform: uppercase;font-size: 13px;">
+                    <tbody>
+                        <tr ng-repeat="inwards in outwardForm.outwardData" style="vertical-align: top !important;">
+                            <td class="table_print" align="center" width="45px">{{$index + 1}}</td>
+                            <td class="table_print" align="left" width="250px" ng-bind="inwards.fabric_type"></td>
+                            <td class="table_print" align="left" width="260px" ng-bind="inwards.fabric_color"></td>
+                            <td class="table_print" align="left" width="250px" combine-process="{{inwards.process}}"></td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.lot_no"></td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.dia"></td>
+                            <td class="table_print" align="center" width="60px" ng-bind="inwards.delivery_roll" totalroll></td>
+                            <td class="table_print" align="right" width="80px" ng-bind="inwards.delivery_weight | number:3"></td>
+                        </tr>
+                    </tbody> 
+                </table>
+            </div>
+
+            <div style="width: 100%; margin-top:10px;float: left;">
+                <table style="table-layout: fixed;text-transform: uppercase;font-size: 13px;">
+                    <tbody>
+                        <tr style="vertical-align: top !important;">
+                            <td class="table_print" width="895px"></td>
+                            <td class="table_print" align="right" width="60px"></td>
+                            <td class="table_print" align="center" width="60px">{{outwardForm.outwardData| sumOfValue:'delivery_roll'}}</td>
+                            <td class="table_print" align="right" width="80px">{{outwardForm.outwardData| sumOfValue:'delivery_weight' | number:3}}</td>
+                        </tr>
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+    </div>
+</body>

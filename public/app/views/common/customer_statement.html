@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+    <head>    
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../../../css/font.css" />
+        <style>
+            body{
+                color: #393939;font-size: 14px;font-family: 'Open Sans', sans-serif;
+            }
+            .text-right{
+                text-align: right;
+            }
+            .text-left{
+                text-align: left;
+            }
+            .text-center{
+                text-align: center;
+            }
+            .dc_wapper{
+                float:left;width:850px;
+            }
+            .col-xs{
+                width: 100%;float: left;padding: 0px 10px 10px 0px;
+            }
+            .col-xs-left{
+                width: 410px;float: left;
+            }
+            .col-xs-right{
+                width: 420px;float: left;
+            }
+            .customer_title{
+                font-weight: bold;color: #000;font-size: 16px;
+            }
+            .transaction_header{
+                width:100%;font-weight: bold;color: #000;font-size: 14px;
+            }
+            .pull-right{
+                float: right;
+            }
+            .pull-left {
+                float: left;
+            }
+            .sec_title{
+                border-bottom: 3px solid rgb(204,204,204);width: 810px;padding: 10px 10px;margin-bottom: 5px;font-weight: 600;
+            }
+            .dc_table {
+                width: 100%;border-collapse: collapse;border: 1px solid;border-top: 0px;
+            }
+            .dc_table .border-right{
+                border-right: 1px solid;
+            }
+            .dc_table .border-bottom{
+                border-bottom: 1px solid;
+            }
+            .dc_table .border-top{
+                border-top: 1px solid;
+            }
+            .dc_table .header{
+                padding:10px 7px;font-size:12px;
+            }
+            .dc_table .row-top .header, .dc_table .header.font13{
+                font-size: 13px;
+            }
+            .history_track {
+                text-align: center;
+                font-size: 12px;
+                color: rgb(119,119,119);
+            }
+            .ns_left {
+                float: left;
+                color: rgb(31,31,31);
+                font-size: 14px;
+            }
+            .ns_right {
+                float: left;
+                color: rgb(31,31,31);
+                font-size: 14px;
+                text-align: right;
+            }
+            .col-xs-left .ns_left{
+                width: 304px;
+            }
+            .col-xs-left .ns_right{
+                width: 106px;
+            }
+            .col-xs-right .ns_left{
+                width: 310px;
+            }
+            .col-xs-right .ns_right{
+                width: 110px;
+            }
+            .row{
+                margin-bottom: 10px;
+                float: left;
+            }
+        </style>
+        <script type="text/javascript" src="../../../js/angular.min.js"></script>
+        <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+        
+        <script>
+            var app = angular.module("InvoicePrint", []);
+            app.controller("invoicePrintCtrl", function ($scope, $rootScope, $timeout) {
+                if (window.opener && !window.opener.closed) {
+                    $scope.customerstatment = window.opener.customerstatment;
+                    $timeout(function () {
+                        window.print();
+                    }, 3000);
+                }
+            }).filter('sumByKey', function () {
+                return function(data, key) {
+                    if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                        return '-';
+                    }
+
+                    var sum = 0;
+                    for (var i = data.length - 1; i >= 0; i--) {
+                      if (key === 'DEBIT') {
+                        if (data[i]['transaction_type'] === 'DEBIT' || data[i]['invoice_no']) {
+                          if (data[i]['invoice_no']) {
+                            sum += parseFloat(data[i]['total']);
+                          } else {
+                            sum += parseFloat(data[i]['transaction_amount']);
+                          }
+                        }
+                      } else {
+                        if (data[i]['transaction_type'] === 'CREDIT') {
+                          sum += parseFloat(data[i]['transaction_amount']);
+                        }  
+                      }
+                    }
+                    if (sum>0) {
+                      sum = sum.toFixed(2);
+                    } else {
+                      sum = '-';
+                    }
+                    return sum;
+                };
+            });
+        </script>
+    </head>
+    <body ng-app="InvoicePrint" ng-controller="invoicePrintCtrl">
+        <div class="dc_wapper"> <!-- dc_wapper -->
+            <div class="col-xs" style="display:table;">
+                <div class="dc_address text-center">
+                    <b style="font-size: 16px;">Customer Ledger Statement</b>
+                </div>
+            </div>
+            <div class="col-xs" style="margin-top:10px;">
+                <b style="font-size: 15px;" ng-bind="customerstatment.name"></b>
+                <b class="pull-right" ng-bind="'Current Balance : '+customerstatment.currency+(customerstatment.Totalpending | number:2)"></b>
+            </div>
+
+            <div class="col-xs dc_customer_details">
+                <table class="dc_table">
+                    <thead>
+                        <tr class="border-bottom border-top">
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Date</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Number</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="358px;">Particulars</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Debit</th>
+                            <th class="text-center header border-right" style="font-size:14px !important;" width="100px;">Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="trans in customerstatment.Transactiondetails | orderBy:'created'" class="page-break">
+                            <td class="dc_table_list_td text-left header" width="100px;"><span ng-bind="trans.created | date:'dd-MMM-yyyy'"></span></td>
+                            <td class="text-center header" width="100px;">
+                                <span ng-if="trans.invoice_no" ng-bind="trans.invoice_no"></span>
+                                <span ng-if="!trans.invoice_no" ng-bind="trans.cheque_no"></span>
+                            </td>
+                            <td class="text-left header" width="358px;">
+                                <span ng-if="trans.invoice_no" ng-bind="'Invoice No. : '+(trans.invoice_no)"></span>
+                                <span ng-if="!trans.invoice_no" ng-bind="trans.category_name"></span>
+                                <span ng-if="!trans.invoice_no" ng-bind="trans.memo"></span>
+                            </td>
+                            <td class="text-right header" width="100px;">
+                                <span ng-if="trans.invoice_no" ng-bind="(trans.total | number:2)"></span>
+                                <span ng-if="trans.transaction_type =='DEBIT'" ng-bind="(trans.transaction_amount | number:2)"></span>
+                            </td>
+                            <td class="text-right header" width="100px;">
+                                <span ng-if="trans.transaction_type =='CREDIT'" ng-bind="(trans.transaction_amount | number:2)"></span>
+                            </td>
+                        </tr>
+                        <tr style="border-top: 1px solid;">
+                            <td class="text-center header" colspan="3">
+                                Total
+                            </td>
+                            <td class="text-right header" width="100px;">
+                                <b ng-bind="customerstatment.Transactiondetails | sumByKey:'DEBIT'"></b>
+                            </td>
+                            <td class="text-right header  border-right" width="100px;">
+                                <b ng-bind="customerstatment.Transactiondetails | sumByKey:'CREDIT'"></b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>       
+        </div>
+    </body>
+</html>

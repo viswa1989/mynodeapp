@@ -1,0 +1,36 @@
+<div ng-controller="DivisionsController">
+    <div class="container division-setup" id="divsion-tab-setup" ng-init="divisionorder=''">
+        <div class="row" ng-show="!divisionData.divisionView">
+            <div class="col-xs-12">
+                <div class="heading_title_1">Divisions</div>
+                <div class="subtitle">Click on the Divisions to setup and add more details.</div>
+                <div class="sort_list"> Sort by 
+                    <a ng-click="divisionorder = '+name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (divisionorder == '+name') ? 'underline' : 'none' }">0A-Z</a>, 
+                    <a ng-click="divisionorder = '-name'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (divisionorder == '-name') ? 'underline' : 'none' }">Z-A0</a>
+                </div>
+                <div class="sort_filter"> <input type="search" placeholder="Filter" ng-model="divisionfilter"> </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-20 setup" ng-show="!divisionData.divisionView">
+            <div class="center_content">
+                <div class="branch_card_add division-modal" ng-click="addDivision(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Division</div>
+                </div>
+                <div class="branch_card setup-printing-divsion-card add-card" ng-repeat="division in divisionData.divisions| orderBy:divisionorder | filter:divisionfilter" 
+                     ng-click="getdivisionbyId(division._id);changeChildPage('Location'); $event.stopPropagation();">
+                    <div class="branch" ng-bind="division.name"></div>
+                    <div class="place" ng-bind="division.location"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 padding_zero" ng-if="divisionData.divisionView">
+        <div ng-include="divisionData.menuheader"></div>
+        <div ng-include="clientData.divisionchildpage"></div>
+    </div>
+</div>

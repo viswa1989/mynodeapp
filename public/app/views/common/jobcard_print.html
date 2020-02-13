@@ -1,0 +1,331 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<head>
+        <link rel="stylesheet" href="../../../css/font.css" />
+    <style type="text/css">
+        body{
+                color: #393939;font-size: 14px;font-family: 'Open Sans', sans-serif;
+            }
+            .text-right{
+                text-align: right;
+            }
+            .text-left{
+                text-align: left;
+            }
+            .text-center{
+                text-align: center;
+            }
+            .dc_wapper{
+                float:left;width:850px;margin:10px 20px;
+            }
+            .invoice_title{
+                font-size: 24px;color: rgb(0,89,178);/*padding: 10px 0px;*/text-align: center;float: left;width: 100%;font-weight: bold;
+            }
+            .cmpy_logo{
+                float:left;width:250px;
+            }
+            .cmpy_logo img{
+                margin-left:40px;width:150px;
+            }
+            .col-xs{
+                float:left;width:100%;
+            }
+            .col-xs-left{
+                float:left;;
+            }
+            .col-xs-right{
+                float:right;
+            }
+            .dc_customer_details{
+                padding: 20px 0px 5px;border-top:3px solid rgb(204,204,204);border-bottom:3px solid rgb(204,204,204);margin-top: 10px;
+            }
+            .dc_title1{
+                width:28%;float:left;margin-right:2%;margin-bottom:15px;
+            }
+            .dc_title2{
+                float:left;margin-right:2%;margin-bottom:15px;margin-bottom:8px;margin-left:15%;width:38%;
+            }
+            .dc_details1{
+                width:70%;float:left;font-weight:bold;margin-bottom:15px;
+            }
+            .dc_details2{
+                float:left;font-weight:bold;margin-bottom:15px;margin-bottom: 8px;width: 45%;
+            }
+            .dc_footer_total{
+                font-size: 13px;width: 370px;
+            }
+            .dc_footer_total .dc_details {
+                width:70%;float:right;font-weight:bold;margin-bottom:15px;margin-bottom: 10px;width: 30%;font-weight: normal;
+            }
+            .dc_footer_total .dc_title {
+                width:28%;float:left;margin-right:2%;margin-bottom:15px;width:28%;float:left;margin-right:2%;margin-bottom:15px;margin-bottom: 10px;margin-left: 20%;width: 46%;
+            }
+            .dc_address{                    
+                display:table-cell;width: 300px;margin-right: 15px;font-size: 12px;color: rgb(17,17,17);line-height: 17px;/*padding: 10px 0px 5px 0px;*/vertical-align: bottom;
+            }
+            .dc_table{
+                width:100%;border:0px;margin:15px 0px 20px;border-collapse: collapse;
+            }
+            .dc_table .header{
+                border:0px;padding:10px 7px;font-size:12px;
+            }
+            .dc_table .row-top{
+                border-bottom: 1px solid rgb(204,204,204);
+            }
+            .dc_for{
+                font-size:12px;font-weight:bold;padding:15px 0px;text-align:center;
+            }
+            .font_bold{
+                font-weight: bold;
+            }
+            .dc_table .row-top.sec_activerow{
+                border-top: 2px solid #777;
+            }
+    </style>
+
+    <script type="text/javascript" src="../../../js/angular.min.js"></script>
+    <script type="text/javascript" src="../../../js/angular-sanitize.min.js"></script>
+
+</head>
+<script>
+    var app = angular.module("JobcardPrint", []);
+    app.controller("jobcardPrintCtrl", function ($scope, $rootScope, $timeout) {
+        if (window.opener && !window.opener.closed) {
+            $scope.jobForm = window.opener.jobData;
+            $timeout(function () {
+                window.print();
+            }, 3000)
+        }
+    }).directive("combineAddress", ($compile) => {
+        return {
+            scope: true,
+            restrict: "A",
+            link(scope, elem, attrs) {
+                function checkIfExistingValue(obj, key) {
+                  return obj.hasOwnProperty(key) && obj[key] !== null && obj[key] !== "";
+                }
+
+                attrs.$observe("combineAddress", (newValue) => {
+                  let address = "";
+                  if (angular.isDefined(newValue) && newValue !== null && newValue !== "") {
+                    newValue = JSON.parse(newValue);
+
+                      const nameArray = ["billing_address_line", "billing_area", "billing_city", "billing_state", "billing_pincode","billing_gstin"];
+
+                      // loop through all possible names
+                      for (let i = 0; i < nameArray.length; i += 1) {
+                        if (checkIfExistingValue(newValue, nameArray[i]) && newValue[nameArray[i]] !== null && newValue[nameArray[i]] !== "") {
+                          if (nameArray[i] === "billing_gstin") {
+                            address = `${address}, <br>GSTIN : ${newValue.billing_gstin}`;
+                          } else if (address === "") {
+                            address = newValue[nameArray[i]];
+                          } else {
+                            if(nameArray[i] === "billing_pincode") {
+                                address = `${address} - ${newValue[nameArray[i]]}`;
+                            } else {
+                                address = `${address},<br> ${newValue[nameArray[i]]}`;
+                            }
+                          }
+                        }
+                      }
+                      address += ".";
+                  }
+
+                  elem.html(address);
+                });
+            },
+        };
+  }).directive("combineProcess", function(){
+        return { 
+            restrict: "A",
+            link: function (scope, elem, attrs) {
+
+                attrs.$observe("combineProcess", function(newValue){
+                    var process="";
+                    if(newValue!==""){
+                        newValue=JSON.parse(newValue);
+                        if(angular.isDefined(newValue)){
+
+                            //loop through all possible names
+                            for(var i=0;i<newValue.length;i++){
+                                if(newValue[i] && angular.isDefined(newValue[i].process_name) && newValue[i].process_name!==null && newValue[i].process_name!==""){
+                                    if(process===""){
+                                        process = newValue[i].process_name;
+                                    }else{
+                                        process=process+", "+newValue[i].process_name;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    elem.html(process);                        
+                });
+            }
+        };
+    }).filter('pendingrolls', function() {
+        return function (modelval) {
+          let filtered = 0;
+
+          angular.forEach(modelval, (data) => {
+            if (angular.isDefined(data.rolls) && data.rolls !== "" && data.rolls !== null && parseInt(data.rolls) > 0) {
+              filtered += parseInt(data.rolls);
+            }
+          });
+
+          return filtered;
+        };
+      }).filter('sumOfValue', function() {
+        return function(data, key) {
+          if (angular.isUndefined(data) || angular.isUndefined(key))
+            return 0;
+          var sum = 0;
+
+          angular.forEach(data, function(v, k) {
+            sum = sum + parseInt(v[key]);
+          });
+          return sum;
+        };
+      });
+</script>
+<body ng-app="JobcardPrint" ng-controller="jobcardPrintCtrl">
+    <div class="dc_wapper" ng-if="jobForm.orderData && jobForm.orderData._id"> <!-- dc_wapper -->
+        <div class="col-xs" style="display:table;height: 130px;">
+            <div class="cmpy_logo">
+                <img src="../../images/logo_print.png" width="230px">
+            </div>
+            <div class="dc_address" style="vertical-align: bottom;">
+            </div>
+            <div style="width: 290px;display: table-cell;vertical-align: middle;">
+                <div class="invoice_title">JOB CARD</div>
+            </div>
+        </div>
+
+        <div class="col-xs dc_customer_details">
+            <div class="col-xs-left" style="width:440px;margin-right:15px;">           
+                <div class="dc_title1">Customer</div>
+                <div class="dc_details1">
+                    <span ng-bind="jobForm.orderData.customer_name"></span>
+                    <p style="margin-bottom:0px;" combine-address="{{jobForm.orderData}}"></p>
+                </div>
+                <div class="dc_title1">Follow-up Person</div>
+                <div class="dc_details1">
+                    <span ng-bind="jobForm.orderData.contactperson.name"></span>
+                </div>
+            </div>
+
+            <div class="col-xs-left" style="width:390px;">            
+                <div class="dc_title2">Job No</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.order_no"></div>
+
+                <div class="dc_title2">Date</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.order_date | date:'dd-MM-yyyy h:mma'"></div>
+                
+                <div class="dc_title2">Party DC No</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.customer_dc_no"></div>
+                
+                <div class="dc_title2">Party DC Dt</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.customer_dc_date | date:'dd-MM-yyyy'"></div>
+                
+                <div class="dc_title2">Party Ref No</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.order_reference_no"></div>
+                
+                <div class="dc_title2">Dyeing Name</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.dyeing.dyeing_name"></div>
+                
+                <div class="dc_title2">Dyeing Dc No</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.dyeing_dc_no"></div>
+                
+                <div class="dc_title2">Dyeing DC Dt</div>
+                <div class="dc_details2" ng-bind="jobForm.orderData.dyeing_dc_date | date:'dd-MM-yyyy'"></div>
+            </div>
+        </div>
+        
+        <div class="col-xs text-center" style="margin-top: 30px;">
+            <b>Inward Details</b>
+        </div>
+        
+        <div class="col-xs">
+            <table class="dc_table">            
+                <tr class="row-top">
+                    <th class="text-left header" style="font-size:14px !important;">Process</th>
+                    <th class="text-left header" style="font-size:14px !important;">Fabric</th>
+                    <th class="text-left header" style="font-size:14px !important;">Color</th>
+                    <th class="text-center header" style="font-size:14px !important;width: 50px;">Lot No</th>
+                    <th class="text-center header" style="font-size:14px !important;width:40px;">DIA</th>
+                    <th class="text-center header" style="font-size:14px !important;width:50px;">Rolls</th>
+                    <th class="text-right header" style="font-size:14px !important;width: 65px;">Weight</th>
+                </tr>
+                <tr class="row-top" ng-repeat="inwards in jobForm.inwardData.inward_data">
+                    <td class="dc_table_list_td text-left header" combine-process="{{inwards.process}}"></td>
+                    <td class="text-left header" ng-bind="inwards.fabric_type"></td>
+                    <td class="text-left header" ng-bind="inwards.fabric_color"></td>
+                    <td class="text-center header" ng-bind="inwards.lot_no"></td>
+                    <td class="text-center header" ng-bind="inwards.dia"></td>
+                    <td class="text-center header" ng-bind="inwards.rolls"></td>
+                    <td class="text-right header" ng-bind="inwards.weight | number:2"></td>
+                </tr>
+                <tr class="row-top">
+                    <td class="text-right font_bold" colspan="4">Total</td>
+                    <td></td>
+                    <td class="text-center header font_bold" ng-bind="jobForm.inwardData.inward_data | pendingrolls"></td>
+                    <td class="text-right header font_bold" ng-bind="jobForm.inwardData.total_weight | number:3"></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="col-xs text-center" style="margin-top: 20px;" ng-if="jobForm.deliveryData.length>0">
+            <b>Delivery Details</b>
+        </div>
+        
+        <div class="col-xs" ng-if="jobForm.deliveryData.length>0">
+            <table class="dc_table">            
+                <tr class="row-top">
+                    <th class="text-left header" style="font-size:14px !important;">Dc No</th>
+                    <th class="text-left header" style="font-size:14px !important;width: 65px;">Date</th>
+                    <th class="text-left header" style="font-size:14px !important;">Process</th>
+                    <th class="text-left header" style="font-size:14px !important;">Fabric</th>
+                    <th class="text-left header" style="font-size:14px !important;">Color</th>
+                    <th class="text-center header" style="font-size:14px !important;width: 45px;">Lot No</th>
+                    <th class="text-center header" style="font-size:14px !important;">DIA</th>
+                    <th class="text-center header" style="font-size:14px !important;">Rolls</th>
+                    <th class="text-right header" style="font-size:14px !important;">Weight</th>
+                    <th class="text-right header" style="font-size:14px !important;">Bal.weight</th>
+                </tr>
+                <tr class="row-top" ng-repeat="outwardData in jobForm.deliveryData" 
+                    ng-class="{'sec_activerow':$index>0 && outwardData.inward_data_id != jobForm.deliveryData[$index-1].inward_data_id}">
+                    <td class="text-left header">
+                        <span ng-if="!outwardData.is_return" ng-bind="outwardData.delivery_no"></span>
+                        <span ng-if="outwardData.is_return" ng-bind="outwardData.delivery_no"></span>
+                    </td>
+                    <td class="text-left header" ng-bind="outwardData.delivery_date | date:'dd-MM-yyyy'"></td>
+                    <td class="dc_table_list_td text-left header">
+                        <span ng-if="!outwardData.is_return" combine-process="{{outwardData.process}}"></span>
+                    </td>
+                    <td class="text-left header" ng-bind="outwardData.fabric_type"></td>
+                    <td class="text-left header" ng-bind="outwardData.fabric_color"></td>
+                    <td class="text-center header" ng-bind="outwardData.lot_no"></td>
+                    <td class="text-center header" ng-bind="outwardData.dia"></td>
+                    <td class="text-center header" ng-bind="outwardData.delivery_roll"></td>
+                    <td class="text-right header" ng-bind="outwardData.delivery_weight | number:3"></td>
+                    <td class="text-right header" ng-bind="outwardData.balance_weight | number:3"></td>
+                </tr>
+                <tr class="row-top">
+                    <td class="text-right font_bold" colspan="6">Total</td>
+                    <td></td>
+                    <td class="text-center header font_bold" ng-bind="(jobForm.deliveryData | sumOfValue:'delivery_roll')"></td>
+                    <td class="text-right header font_bold" ng-bind="(jobForm.deliveryData | sumOfValue:'delivery_weight' | number:3)"></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="col-xs" style="padding:10px 0px;">
+            <div class="col-xs-right" style="width:190px;">
+                <div class="dc_for">For Lotus Knits</div>
+                <div class="dc_for"></div>
+                <div class="dc_for">Authorised Signatory.</div>
+            </div>
+        </div> 
+    </div>
+</body>

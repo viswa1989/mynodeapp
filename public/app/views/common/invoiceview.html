@@ -1,0 +1,171 @@
+<div id="imageData" style="display: block;"></div>
+<div id="invoicehtml" style="width: 430px;display: none;">
+    <div style="width:430px;float:left;margin-top:10px;margin-bottom: 10px;display: block;">
+        <div style="width:430px;padding:0px 15px;float:left;position: relative;min-height: 1px;margin-bottom:30px;font-size: 16px;line-height: 130%;color: #333;margin-top: 5px;text-align:center;display: block;">
+            <strong ng-bind="'Invoice #' + invoiceData.invoice_no"></strong>        
+        </div>
+        <div style="width:240px;padding:0px;float:left;position: relative;min-height: 1px;font-size: 12px;display: block;">
+            <div style="width:240px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                <div style="width: 55px;text-align: left;margin-bottom: 10px;float: left;display: block;">Customer</div>
+                <div style="width: 175px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;display: block;"> 
+                    <b ng-bind="invoiceData.customer_name"></b>
+                    <div ng-if="invoiceData.default_address && invoiceData.default_address.billing_address_line" style="font-weight: bold;display: block;" 
+                     combine-address="{{invoiceData.billing_address}}"></div>
+                </div>
+            </div>
+            <div style="width:240px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                <div style="width: 55px;text-align: left;float: left;margin-bottom: 10px;display: block;">Billing Address</div>
+                <div style="width: 175px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;display: block;">
+                    <div style="width:120px;padding:0px;float:left;position: relative;min-height: 1px;display: block;"> 
+                        <div style="font-weight: bold;display: block;" combine-address="{{invoiceData.billing_address}}">
+                        </div>
+                    </div>
+                </div>                                       
+            </div>
+            <div style="width:240px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                <div style="width: 55px;text-align: left;float: left;margin-bottom: 10px;display: block;">GSTN</div>
+                <div style="width: 175px;text-align: left;float: left;margin-left: 10px;margin-bottom: 10px;display: block;">
+                    <b ng-bind="invoiceData.gstin"></b>               
+                </div>
+            </div>
+        </div>
+
+        <div style="width:190px;padding:0px;float:left;position: relative;min-height: 1px;font-size: 12px;display: block;">
+            <div style="width:190px;padding:0px 0px 0px 10px;float:left;position: relative;min-height: 1px;margin-bottom: 10px;display: block;">
+                <span style="text-align:left;float:left;width:75px;padding-right:0px">Invoice No.</span>
+                <div style="float: left;width:105px;text-align: left;font-weight: bold;display: block;" ng-bind="invoiceData.invoice_no"></div> 
+            </div>
+
+            <div style="width:190px;padding:0px 0px 0px 10px;float:left;position: relative;min-height: 1px;margin-bottom: 10px;display: block;">
+                <span style="text-align:left;float:left;width:75px;padding-right:0px;">Invoice Date</span>
+                <div style="text-align: left;font-weight: bold;float: left;width:105px;margin-bottom: 10px;display: block;">
+                    <span ng-bind="invoiceData.invoice_date | date:'dd-MM-yyyy'"></span>
+                </div>
+            </div>
+        </div>
+
+        <div style="width:430px;padding:0px;float:left;position: relative;min-height: 1px;display: block;margin-top: 10px;">
+            <div style="width:430px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                <table style="width:430px;background-color: transparent;border-spacing: 0;border-collapse: collapse;display: table;border-color: grey;">
+                    <thead style="font-size: 12px;">
+                        <tr class="" style="border-bottom: 1px solid #ccc;">
+                            <th style="padding: 10px 5px 10px;width: 65px;text-align: left;">Del No</th>
+                            <th style="padding: 10px 5px 10px;width: 90px;text-align: left;">Process</th>
+                            <th style="padding: 10px 5px 10px;width: 75px;text-align: right;">Weight</th>
+                            <th style="padding: 10px 5px 10px;width: 57px;text-align: right;">Rate (₹)</th>
+                            <!--<th class="text-right" style="padding: 10px 5px 10px;" ng-repeat="tax in invoiceData.tax_data">{{tax.tax_name}}</th>-->
+                            <th style="padding: 10px 5px 10px;width: 58px;text-align: right;">Tax (₹)</th>
+                            <th style="padding: 10px 5px 10px;width: 85px;text-align: right;">Amount (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 11px;">
+                        <tr ng-repeat-start="item in invoiceData.items"></tr>
+                        <tr style="border-bottom: 1px solid #ccc;padding: 10px 0;" ng-repeat="process in item.process">
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: left;">
+                                <span ng-bind="item.delivery_no"></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: left;">
+                                <span ng-bind="process.process_name"></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-if="$index == 0" ng-bind="item.delivery_weight | number:3"></span>
+                            </td>                                                        
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-bind="process.price | number:2"></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;text-align: right;">
+                                <!--<span ng-repeat-start="tax in invoiceData.tax_data"></span>-->
+                                <span ng-bind="(process.totaltax | number:2)"></span>
+                                <!--<span ng-repeat="tx in process.tax_class" ng-if="tx._id === tax._id" ng-bind="(tx.taxamount | number:2) + ' (' + (tax.tax_name) + ')'"></span>-->
+                                <!--<span ng-repeat-end></span>-->
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-bind="process.subtotal | number:2"></span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end></tr>
+                        <tr style="border-bottom: 1px solid #ccc;padding: 10px 0;" ng-repeat="items in invoiceData.otheritems">
+                            <td style="padding: 10px 5px;">
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: left;">
+                                <span ng-bind="items.itemname"></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-bind="items.price | number:2"></span>
+                            </td>                                                        
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-bind="process.price | number:2"></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;text-align: right;">
+                                <span ng-repeat-start="tax in invoiceData.tax_data"></span>
+                                <span ng-repeat="tx in items.tax_class" ng-if="tx.tax_id === tax._id" ng-bind="(tx.taxamount | number:2) + ' (' + (tax.tax_name) + ')'"></span>
+                                <span ng-repeat-end></span>
+                            </td>
+                            <td style="padding: 10px 5px;white-space: normal;word-break: break-all;text-align: right;">
+                                <span ng-bind="items.pretotal | number:2"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="width:430px;padding:0px;float:left;position: relative;min-height: 1px;display: block;margin-top: 15px;">
+                <div style="width:430px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                    <div style="width:250px;padding:0px;float:left;position: relative;min-height: 1px;display: block;font-size: 12px;">
+                        <div style="width:100px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                            Customer Notes
+                        </div>
+                        <div style="width:220px;padding:0px 0px 0px 15px;float:left;position: relative;min-height: 1px;display: block;margin-top: 10px;" ng-bind="invoiceData.customer_notes"></div>
+                    </div>
+                    <div style="width:180px;padding:0px;float:left;position: relative;min-height: 1px;display: block;text-align: right;font-size: 13px;">
+                        <div style="width:180px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                            <strong>Subtotal:</strong>
+                            <div style="width: 105px;display: inline-block;">
+                                <strong ng-bind="'₹ '+(invoiceData.subtotal | number:2)"></strong>
+                            </div>
+                        </div>
+                        <div ng-repeat="tax in invoiceData.tax_data" style="width:180px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                            <strong ng-bind="tax.tax_percentage+'% '+tax.tax_name+':'"></strong>
+                            <div style="width: 105px;display: inline-block;margin-top: 5px;">
+                                <strong ng-bind="'₹ '+(tax.taxamount | number:2)"></strong>
+                            </div>
+                        </div>
+                        <div style="width:180px;padding:0px;float:left;position: relative;min-height: 1px;display: block;">
+                            <strong>Total:</strong>
+                            <div style="width: 105px;display: inline-block;margin-top: 10px;">
+                                <b ng-bind="'₹ '+(invoiceData.total | number:2)"></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<canvas id="billcanvas" class="billcanvas" style="border: 0px solid black; display:none;"></canvas>
+
+<script type="text/javascript">
+    setTimeout(function(){
+        var canvasBill = document.getElementById("billcanvas"),
+            context = canvasBill.getContext('2d'),
+            html_container = document.getElementById("invoicehtml"),
+            html = html_container.innerHTML;
+        var billHeight = $('#invoicehtml').height();
+        var billWidth = $('#invoicehtml').width();
+        canvasBill.width = billWidth*1.04;
+        canvasBill.height = billHeight*1.04;
+        rasterizeHTML.drawHTML(html).then(function (renderResult) {
+            context.drawImage(renderResult.image, 0, 25);
+            var dataURL = canvasBill.toDataURL("image/png");
+            var img = "<img src=" + dataURL + " />";
+            var randomId = Math.random();
+            randomId = randomId.toString();
+            randomId = randomId.substring(2, randomId.length);
+            $('#imageData').attr('id', 'img_' + randomId);
+            $('#img_' + randomId).html(img);
+            $('#invoicehtml').remove();
+            return false;
+        });
+    },500);    
+</script>

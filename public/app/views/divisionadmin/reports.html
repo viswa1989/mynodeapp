@@ -1,0 +1,65 @@
+<style type="text/css">
+    body{
+        overflow: hidden;
+    }
+</style>
+
+<div class="report" ng-controller="ReportController">
+    <div class="row margin-0">
+        <div style="min-width: 1400px;overflow-x: scroll;display: inline;">
+            <div class="report_left_section">
+                <div class="report_filter_header">
+                    <div class="heading_3">Reports</div>
+                </div>
+                <div class="report_filter_cnt report_left_menu">
+                    <div class="overflow_scroll margin-top-05" style="height: 100%;">
+                        <div class="filter_cnt">
+                            <a href="/{{$root.currentapp}}/reports/jobcard_statement" ng-class="{'active':$root.reportData.currentpage == 'jobcard_statement'}"><div class="report_menu_list">Jobcard Statements</div></a>
+                            <a href="/{{$root.currentapp}}/reports/delivery_statement" ng-class="{'active':$root.reportData.currentpage == 'delivery_statement'}"><div class="report_menu_list">Delivery Statements</div></a>
+                            <a href="/{{$root.currentapp}}/reports/return_statement" ng-class="{'active':$root.reportData.currentpage == 'return_statement'}"><div class="report_menu_list">Return Statements</div></a>
+                            <a href="/{{$root.currentapp}}/reports/pendingdelivery_statement" ng-class="{'active':$root.reportData.currentpage == 'pendingdelivery_statement'}"><div class="report_menu_list">Pending Deliveries</div></a>
+                            <a href="/{{$root.currentapp}}/reports/division_statement" ng-class="{'active':$root.reportData.currentpage == 'division_statement'}"><div class="report_menu_list">Division Statement</div></a>
+                        </div>
+
+                        <div class="filter_cnt">
+                            <div class="report_menu_list">Accounts</div>
+                            <a href="/{{$root.currentapp}}/reports/pending_payments" ng-class="{'active':$root.reportData.currentpage == 'pending_payments'}"><div class="report_submenu">Pending Payments</div> </a>
+                            <a href="/{{$root.currentapp}}/reports/ageing_analysis" ng-class="{'active':$root.reportData.currentpage == 'ageing_analysis'}"><div class="report_submenu">Ageing Analysis</div> </a>
+                            <div class="report_sub_menu future_menu">Daily Report</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div ng-include="$root.reportData.loadPage">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function purchasestockresize(){
+        var header_height_c1 = $('.header').height(); //window height
+        var windowHeight_c1 = $(window).height();
+        var total_height_c1 = windowHeight_c1 - header_height_c1;
+        $('.report_left_menu .overflow_scroll').css('height', total_height_c1 - 80); //window height
+    }
+    $(window).resize(function () {
+        purchasestockresize();
+    });
+    function reportsFullviewshow() {
+        $('.report_left_section').hide();
+        $('.report_right_section').addClass('full_width_acc');
+    }
+    $(document).ready(function () {
+        $(document).on('click', '.repofilterbtn', function () {
+            if($(window).width() <= 840){
+                reportsFullviewshow();
+                pendingpayreport();
+            }
+        });
+    });
+    purchasestockresize();
+    splite_screen();
+</script>

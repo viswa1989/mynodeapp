@@ -1,0 +1,119 @@
+<div class="notification" ng-if="$root.loginStatus && clientData.showNotification && !$root.layout.loading" ng-include="clientData.notifyPage" ng-controller="NotificationController"></div>
+
+<div class="header header_set_height" ng-controller="NavigationController" ng-if="$root.loginStatus" ng-class="$root.currentapp">
+    <nav class="navbar navbar-inverse header_navbar" role="navigation">
+
+        <div class="navbar-header nav">
+            <a class="navbar-brand logo_header" ng-href="/{{items.homepage}}">
+                <img ng-src="images/logo.png" style="width:100%;" alt="Lotus Knits">
+            </a>
+        </div>
+
+        <div class="navbar-header-container menu-hide-desktop">
+            <div class="navbar-header nav heading_6 ">
+                <ul class="nav navbar-right top-nav">
+                    <li ng-repeat="menus in items.mainMenu" ng-if="UserPrivilege.canAccess(menus.title, 'View')">
+                        <a ng-href="/{{menus.url}}" ng-if="menus.title != 'Setup' && menus.title !== 'Profile'" selected-link='2' ng-bind="menus.title"></a>
+                        <a class="fullview_setup" ng-click="iframeLoadPage();" ng-if="menus.title == 'Setup' && $root.currentapp == 'superadmin'" ng-bind="menus.title"></a>
+                        <a ng-href="/{{menus.url}}" ng-if="menus.title == 'Profile' && $root.currentapp == 'customer'" selected-link='2' ng-bind="menus.title"></a>
+                        <!--&& $root.currentapp == 'superadmin'-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <ul class="nav navbar-right top-nav right_menu_list  margin-right-05">
+            <li class="desktopmenu">
+                <form role="search" name="conversion">
+                    <div>
+                        <input type="text" class="form-control search_header_box" placeholder="Search for Job Nos or Customers.." style="width: 290px;">
+                    </div>
+                    <button type="submit" class="btn btn-default" style="display: none;">Submit</button>
+                </form>
+            </li>
+            <li class="btn-top-split margin-left-15">
+                <div class="splite_icon" id="split-toggle" status="true" onclick="return splitToggleIcon(event, $(this));" ng-click="splitAction()"></div>
+            </li>
+            <li class="btn-top-flash margin-left-15">
+                <a href="javascript:void();" class="dropdown-toggle" data-toggle="dropdown">
+                    <div class="flash-screen" id="flash-toggle" status="true"></div>
+                </a>
+                <ul class="dropdown-menu server_con_menu">
+                    <li class="text-center list_store_title">Instances connected to server <span class="close trans_close"><span class="close_icon_small_dropdown"></span></span>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <div class="col-xs-12">
+                            <div class="server_ccnt_current_user">
+                                <span class="server_con_white_icon icon_current_user"></span>
+                            </div>
+                        </div> 
+                        <a href="#" style="display: inline-block;background: none;"> 
+                            <span class="server_con_text_green current_server_user">
+                                <b>Hurray! Your are connected to server.</b>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="btn-top-flash margin-left-15 hide" ng-if="$root.currentapp != 'customer'">
+                <div class="chat-conversation" id="conversation-toggle" status="true"></div>
+            </li>
+
+            <li class="dropdown margin-left-15">
+                <a class="dropdown-toggle admin_user_name white_color margin-top-10" data-toggle="dropdown">
+                    <img src="images/icon/admin_img.png" class="img-circle" width="35" height="35" ng-bind="' ' + $root.profileData.name + ' '" alt="Profile">
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu header_logout">
+                    <li class="text-center list_store_title" ng-bind="$root.profileData.name">
+                        <span class="close trans_close">
+                            <span class="close_icon_small_dropdown"></span>
+                        </span>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="li_day_close" ng-if="$root.currentapp !== 'customer'"><a ng-href="/{{items.logoutmenu}}">Profile</a></li>
+                    <li><a ng-click="logout(); $event.stopPropagation();">Log Out</a></li>
+                </ul>
+            </li>
+            <li id="notify_click" class="margin-left-15" ng-if="$root.currentapp != 'customer'">
+                <a class="dropdown-toggle white_color" data-toggle="dropdown" ng-click="togglenotificationPanel()">
+                    <img src="images/svg_images/notify_alert_view.svg" alt="Notification">
+                </a>
+            </li>
+
+            <li class="menu-hide margin-left-15">
+                <a class="right_toggle desktop_menu_toggle"> 
+                    <img src="images/svg_images/toggle_btn.svg" alt="Toggle View">
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<div id="desktop-menu" class="navbar-header-container list_menu" ng-controller="NavigationController" ng-if="$root.loginStatus" ng-class="$root.currentapp">
+    <div class="navbar-header nav heading_6">
+        <div class="responsive_menu_logo">
+            <img src="images/logo.png" style="width:100%;" alt="Lotus Knits"><!-- Logo -->
+        </div>
+        <ul class="nav navbar-right top-nav">
+            <li ng-repeat="menus in items.mainMenu" ng-if="UserPrivilege.canAccess(menus.title, 'View')">
+                <a ng-href="/{{menus.url}}" class="dropdown-toggle menu_link_responsive white_color" onclick="s_main_link();"
+                   ng-if="menus.title != 'Setup' && menus.title != 'Profile'" selected-link='2' ng-bind="menus.title"></a>
+                <a ng-href="/{{menus.url}}" class="dropdown-toggle menu_link_responsive white_color" onclick="s_main_link();"
+                   ng-if="menus.title == 'Profile' && $root.currentapp == 'customer'" selected-link='2' ng-bind="menus.title"></a>
+                <a class="dropdown-toggle white_color menu_link_responsive setuplinkhref" onclick="s_setup_link();" ng-click="iframeLoadPage();" 
+                   ng-if="menus.title == 'Setup' && $root.currentapp == 'superadmin'" id="setup_link" ng-bind="menus.title"></a>
+            </li>
+
+            <li>
+                <form class="navbar-form sidebar_search" role="search">
+                    <div class="form-group margin-top-15">
+                        <input type="text" class="form-control wholeSearchTxt"  placeholder="Search for Job Nos or Customers..">
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Generator: Adobe Fireworks 10, Export SVG Extension by Aaron Beall (http://fireworks.abeall.com) . Version: 0.6.1  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="Untitled-Page%201" viewBox="0 0 20 10" style="background-color:#ffffff00" version="1.1"
+	xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+	x="0px" y="0px" width="20px" height="10px"
+>
+	<defs>
+		<!-- Library -->
+		<symbol id="mobilemenusymbol" overflow="visible">
+			<g id="Layer%2012">
+				<path id="Rectangle%205%20copy%203" d="M -10 5 L -10 3 L 10 3 L 10 5 L -10 5 ZM -10 -1 L 10 -1 L 10 1 L -10 1 L -10 -1 ZM -10 -5 L 10 -5 L 10 -3 L -10 -3 L -10 -5 Z" fill="#ffffff"/>
+			</g>
+
+		</symbol>
+		<!-- End Library -->
+
+	</defs>
+	<g id="Layer%201">
+		<use id="mobile-menu-symbol" xlink:href="#mobilemenusymbol" transform="matrix(1, 0, 0, 1, 10, 5)"/>
+	</g>
+</svg>

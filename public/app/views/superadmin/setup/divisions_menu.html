@@ -1,0 +1,48 @@
+<style type="text/css">
+    .heading_4,.heading_5 {
+        font-weight: bold;
+    }
+</style>
+
+<div class="setup-printing-division">
+    <div class="col-xs-12 padding_zero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="setup_store">
+                        <div class="heading_title_2 heading_4">Divisions</div>
+                        <div class="text-center margin-top-15">
+                            <a class="back_stores" href="javscript:void(0);" ng-click="closeDivisionview(); $event.stopPropagation();">Back to Divisions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stores_view_header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="store_name heading_4" ng-bind="divisionForm.name"></div>
+                        <div class="store_place heading_5" ng-bind="divisionForm.location"></div>
+                        <div class="stores_view_header_menu">
+                            <ul class="nav navbar-left top-nav heading_6">
+                                <li><a ng-click="changeChildPage('Location'); $event.stopPropagation();" ng-class="{'active':clientData.divisionchildpageName == 'LOCATION'}"
+                                       class="store1 store_menu factoryLocation" data-toggle="#store1">Location Profile</a></li>
+                                <li><a ng-class="{'active':clientData.divisionchildpageName == 'MANAGE_PROCESS'}" ng-click="changeChildPage('Manageprocess'); $event.stopPropagation();"
+                                       class="store2 store_menu" data-toggle="#store2">Manage Process</a></li>
+                                <li><a ng-class="{'active':clientData.divisionchildpageName == 'ACCOUNTS'}" ng-click="changeChildPage('Accounts'); $event.stopPropagation();" 
+                                       class="store3 store_menu factoryStock" data-toggle="#store3">Accounts</a></li>
+                                <li><a ng-class="{'active':clientData.divisionchildpageName == 'STOCKS'}" ng-click="changeChildPage('Stocks'); $event.stopPropagation();" 
+                                       class="store4 store_menu" data-toggle="#store4">Stocks</a></li>
+                                <li><a ng-class="{'active':clientData.divisionchildpageName == 'USERS'}" ng-click="changeChildPage('Users'); $event.stopPropagation();" 
+                                       class="store6 store_menu" data-toggle="#store6">Staff</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearboth"></div>

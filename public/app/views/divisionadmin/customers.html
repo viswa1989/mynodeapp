@@ -1,0 +1,1782 @@
+<style>
+    body {
+        overflow: hidden;
+        background: #eee;
+    }
+    .header_set_height{
+        background: rgb(35, 137, 159);
+    }
+    .wrapper-div, .left-component{
+        overflow: hidden !important;
+    }
+    .class_checkbox_div{width:120px;float:left;}
+    .customer_page .selectize-input.focus, .customer_page .selectize-input.selectize-focus, .add_card_container li:focus .address_card{
+        outline: -webkit-focus-ring-color auto 5px;
+    }
+    .add_card_container .form-toggle{
+        outline: none;
+    }
+</style>
+
+<div class="container-fluid customer_page" ng-controller="CustomerController">
+    <div id="page_loader" ng-show="customerdata.pageLoader"></div>
+
+    <div class="c_window_height" id="cus-page-full-screen">
+        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4 sec_1" id="sec_1" status="true">
+            <div class="customer_header"> <a class="pull-left customer-toggle menu_icon hide" ng-href="#"></a>
+                <div class="heading_3">Customers</div>
+            </div>
+            <div class="filter_wapper">
+                <div class="customer-filter-cnt ">
+                    <div class="filter_scroll" style="height: 800px;">
+                        <div class="filter_cnt text-center">
+                            <a class="add_customer" ng-click="addnewcustomer(true); $event.stopPropagation();">
+                                <span class="add_icon_smalls"></span>
+                                <span class="add_customer_text">Add New Customer</span>
+                            </a>
+                        </div>
+                        <div class="filter_cnt">
+                            <div class="title_filter_cnt">Favourite Customer</div>
+                            <a class="button" ng-class="{'active':customerdata.filters.favourites}" ng-click="filterBydata('FAVORITE', customerdata.filters); $event.stopPropagation();">Favourite Customers</a>
+                        </div>                        
+
+                        <div class="filter_cnt">
+                            <div class="filter filter_click brand">
+                                <div class="title_filter_cnt">Division</div>
+                                <a class="button" ng-class="{'active':customerdata.filters.divisions == division._id}" ng-click="filterBydata('DIVISIONS', division); $event.stopPropagation();" 
+                                   ng-repeat="division in customerdata.divisionList| limitTo:customerdata.divisionfiltersLimit" ng-bind="division.name"></a>
+                            </div>
+                        </div>
+
+                        <div class="filter_cnt">
+                            <div class="filter filter_click brand">
+                                <div class="title_filter_cnt">Groups</div>
+                                <a class="button" ng-class="{'active':customerdata.filters.groups == 'ALL'}" ng-click="filterBydata('GROUPS', 'ALL'); $event.stopPropagation();">ALL</a> 
+                                <a class="button" ng-class="{'active':customerdata.filters.groups == groups._id}" 
+                                   ng-repeat="groups in customerdata.groupfilters| limitTo:customerdata.groupfiltersLimit" ng-click="filterBydata('GROUPS', groups); $event.stopPropagation();" 
+                                   ng-bind="groups.name"></a>
+                                <div class="read_more text-center" ng-if="customerdata.groupfilters.length > 6" 
+                                     ng-click="customerdata.moregroupfilters = !customerdata.moregroupfilters; customerdata.groupfiltersLimit = (customerdata.groupfiltersLimit == 6) ? customerdata.groupfilters.length : 6; $event.stopPropagation();">                                    
+                                    <div class="more_icon" ng-class="{'more_icon':!customerdata.moregroupfilters,'less_icon':customerdata.moregroupfilters}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter_cnt">
+                            <div class="filter filter_click brand">
+                                <div class="title_filter_cnt">Process</div>                                
+                                <a class="button" ng-class="{'active':customerdata.filters.process == process._id}" 
+                                   ng-repeat="process in customerdata.processfilters| limitTo:customerdata.processfiltersLimit " ng-click="filterBydata('PROCESS', process); $event.stopPropagation();" 
+                                   ng-bind="process.process_name"></a>
+                                <div class="read_more text-center" ng-if="customerdata.processfilters.length > 6" ng-click="customerdata.moreprocessfilters = !customerdata.moreprocessfilters; customerdata.processfiltersLimit = (customerdata.processfiltersLimit == 6) ? customerdata.processfilters.length : 6; $event.stopPropagation();">                                   
+                                    <div class="more_icon" ng-class="{'more_icon':!customerdata.moreprocessfilters,'less_icon':customerdata.moreprocessfilters}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--                        <div class="filter_cnt">
+                                                    <div class="filter filter_click brand">
+                                                        <div class="title_filter_cnt">Location</div>
+                                                        <a class="button active">ALL</a> <a class="button">City 1</a> <a class="button">City 2</a>
+                                                        <div class="read_more text-center">
+                                                            <div class="more_icon"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer ADD -->
+        <div class="col-lg-5 col-xs-7 customer_view" ng-if="customerdata.newCustomer">
+
+            <div class="customer_header flex_header">
+                <a class="pull-left customer-toggle menu_icon hide" ng-href="#"></a>
+                <div class="add_newcustomer">Add New Customer</div>
+            </div>
+            <div class="customer-profile-container addcustomer_profile height_scroll" style="width:100%;border:0px;"><!--Profile -->
+                <div class="row">
+                    <form name="customerform" novalidate>
+
+                        <div class="profile_title heading_4">
+                            <b ng-bind="customerForm.name"></b>
+                        </div>
+
+                        <div class="form_contianer">
+                            <input type="text" ng-model="customerForm.name" name="company_name" placeholder="Company Name" tabindex="1" 
+                                   ng-class="{'input_error_class':(!customerform.company_name.$valid && customerdata.formsubmission)}" required>
+                            <input type="text" ng-model="customerForm.email_id" name="email_address" placeholder="Email ID" ng-pattern='/\S+@\S+\.\S+/' 
+                                   ng-class="{'input_error_class':(!customerform.email_address.$valid && customerdata.formsubmission)}" tabindex="2">
+                            <div class="input-group s_input_style">
+                                <span class="input-group-addon">+91</span>
+                                <input type="text" class="small" ng-model="customerForm.mobile_no" name="mobile_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                       placeholder="Mobile No. xxxx..." ng-class="{'input_error_class':(!customerform.mobile_no.$valid && customerdata.formsubmission)}" 
+                                       tabindex="3" required>
+                            </div>
+                            <div class="input-group s_input_style">
+                                <span class="input-group-addon">+91</span>
+                                <input type="text" class="small" ng-model="customerForm.alternate_no" name="alternate_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                       placeholder="Alt. Contact No. xxxx..." ng-class="{'input_error_class':(!customerform.alternate_no.$valid && customerdata.formsubmission)}"
+                                       tabindex="4">
+                            </div>
+
+                            <!--GSTIN updates begin-->
+                            <div class="col-lg-12 text-center title">
+                                <strong>GST Treatment</strong>
+                            </div>
+                            <div class="col-xs-12 text-center sub_title">Manage customer's GST information here.</div><div style="clear:both"></div>
+
+                            <ui-select ng-model="customerForm.gstTreatmentcopy" class="customer_ui_select" theme="selectize" search-enabled='true'
+                                       on-select="assignCustomergsttreatment(customerForm)" tabindex="5">
+                                <ui-select-match placeholder="GST Treatement">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="gsttreat in customerdata.Gsttreatmentdetails" ng-hide="!$select.open">
+                                    <span ng-bind-html="gsttreat.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                            <input type="text" name="gstin_number" placeholder="GSTIN" ng-model="customerForm.gstin" ng-pattern='/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/'
+                                   ng-class="{'input_error_class':(!customerform.gstin_number.$valid && customerdata.formsubmission)}" tabindex="6"
+                                   ng-if="customerForm.gstTreatmentcopy.name == 'Registered Business - Regular' || customerForm.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                               || customerForm.gstTreatmentcopy.name == 'Special Economic Zone'"/>
+
+                            <ui-select ng-model="customerForm.statecopy" class="customer_ui_select" theme="selectize" search-enabled='true' on-select="assignCustomerplaceofsupply(customerForm)" 
+                                       ng-if="customerForm.gstTreatmentcopy.name == 'Registered Business - Regular' || customerForm.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                                   || customerForm.gstTreatmentcopy.name == 'Special Economic Zone' || customerForm.gstTreatmentcopy.name == 'Unregistered Business' ||
+                                                   customerForm.gstTreatmentcopy.name == 'Consumer'" tabindex="7">
+                                <ui-select-match placeholder="Place Of Supply">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="state in customerdata.Statelistdetails| filter: $select.search"  ng-hide="!$select.open">
+                                    <span ng-bind-html="state.name | highlight: $select.search"></span>
+                                </ui-select-choices> 
+                            </ui-select>
+                            <!--GSTIN updates ends-->
+
+                            <div class="col-lg-12 text-center title"><strong>Portal Credentials</strong></div>
+                            <div class="col-xs-12 text-center sub_title">Enter the password for the customer to use login to the portal.</div>
+                            <input type="password" name="password" placeholder="Password" ng-model="customerForm.password" tabindex="8">
+                            <input type="password" name="retype_password" placeholder="Retype Password" ng-model="customerForm.confirm_password" tabindex="9">
+
+                            <!--Block Module end-->
+                            <div class="col-lg-12 text-center title"><strong>Blocked Modules</strong></div>
+                            <div class="col-xs-12 text-center sub_title">Enable / Disable the below modules for this customer.</div>
+                            <div class="col-lg-12">
+                                <div class="class_checkbox_div">
+                                    <input type="checkbox" class="input_class_checkbox" ng-model="customerForm.status_inward" ng-hide="true">
+                                    <div class="class_checkbox pull-left" ng-click="customerForm.status_inward = !customerForm.status_inward" 
+                                         ng-class="{'checked':customerForm.status_inward == true}" tabindex="10" ng-enter="customerForm.status_inward = !customerForm.status_inward">
+                                    </div>Inward
+                                </div>
+
+                                <div class="class_checkbox_div">
+                                    <input type="checkbox" class="input_class_checkbox" ng-model="customerForm.status_outward" ng-hide="true">
+                                    <div class="class_checkbox pull-left" ng-click="customerForm.status_outward = !customerForm.status_outward" 
+                                         ng-class="{'checked':customerForm.status_outward == true}" tabindex="11" ng-enter="customerForm.status_outward = !customerForm.status_outward">
+                                    </div>Outward
+                                </div>
+                            </div>
+                            <!--Block Module start-->
+
+                            <div class="col-lg-12 text-center title"><strong>Contact Person</strong></div>
+                            <div class="col-xs-12 text-center sub_title">Manage contact person information here.</div>
+                            <input type="text" ng-model="customerForm.contact_person" name="contact_person" placeholder="Contact Person Name" 
+                                   ng-class="{'input_error_class':(!customerform.contact_person.$valid && customerdata.formsubmission)}" tabindex="12" required>
+                            <div class="input-group s_input_style">
+                                <span class="input-group-addon">+91</span>
+                                <input type="text" class="small" ng-model="customerForm.contactperson_mobile_no" name="contactperson_mobile_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                       placeholder="Mobile No. xxxx..." ng-class="{'input_error_class':(!customerform.contactperson_mobile_no.$valid && customerdata.formsubmission)}" 
+                                       tabindex="13" required>
+                            </div>
+
+                            <div class="col-lg-12 text-center title"><strong>Follow Up Person</strong></div>
+                            <div class="col-xs-12 text-center sub_title">Add and manage follow up person details.</div>
+                            <div class="add_card_container" id="grid">
+                                <ul>
+                                    <li class="form-toggle" ng-repeat="followup in customerForm.followup_person" ng-click="viewfollowup(followup); $event.stopPropagation();" tabindex="14" ng-enter="viewfollowup(followup)">
+                                        <div class="address_card">
+                                            <div class="profile_img">
+                                                <img ng-src="{{followup.profile_picture}}" width="65px" fallback-src="profile"/>
+                                            </div>
+                                            <div class="place" ng-if="followup.name" ng-bind="followup.name"></div>
+                                            <div class="phone" ng-if="followup.mobile_no" ng-bind="'+91 ' + followup.mobile_no"></div>
+                                        </div>
+                                    </li>                                   
+                                    <li>
+                                        <div id="address_card_add" class="address_card_add" tabindex="15" ng-click="addnewFollowup(); $event.stopPropagation();" ng-enter="addnewFollowup();">
+                                            <div class="center">
+                                                <div class="add_icon"></div>
+                                            </div>
+                                            <div class="text-center">Add New Followup person</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div id="common-wrapper" ng-if="customerdata.viewfollowup" ng-init="customerdata.followupsubmission = false"><!--Add staff form  -->
+                                <div class="object-admin-form"></div>
+                                <div class="add_address">
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center">
+                                            <ng-form name="followupForm" isolate-form>
+                                                <div class="col-lg-12">
+                                                    <span class="GI_TW_close GI_TW_Controls close_icon_small close_icons pull-right" ng-click="customerdata.viewfollowup = false; $event.stopPropagation();"></span>
+                                                </div>
+                                                <p class="text-center margin-bottom-25">You can enter the Followup Person details here.</p>
+                                                <div class="followup_form">                                                    
+                                                    <div class="margin-top-10 input_frm_fields">
+                                                        <input type="text" ng-model="customerdata.followup.name" name="name" placeholder="Name" class="nrm_input" 
+                                                               ng-class="{'input_error_class':(!followupForm.name.$valid && customerdata.followupformsubmission)}" tabindex="16" required>
+                                                        <div class="input-group s_input_style">
+                                                            <span class="input-group-addon">+91</span>
+                                                            <input type="text" class="mob_input" ng-model="customerdata.followup.mobile_no" name="mobile_no" ng-minlength="10" 
+                                                                   ng-maxlength="10" placeholder="Mobile No. xxxx..." tabindex="17" 
+                                                                   ng-class="{'input_error_class':(!followupForm.mobile_no.$valid && customerdata.followupformsubmission)}" required>
+                                                        </div>
+                                                        <input type="text" ng-model="customerdata.followup.email_id" name="email_id" placeholder="Email Id" class="nrm_input" 
+                                                               ng-class="{'input_error_class':(!followupForm.email_id.$valid && customerdata.followupformsubmission)}" tabindex="18">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 text-center margin-top-30 margin-bottom-30"> 
+                                                    <a class="common_button" ng-if="customerdata.followupIndex < 0" ng-click="pushFollowup(followupForm.$valid); $event.stopPropagation();" 
+                                                       ng-enter="pushFollowup(followupForm.$valid);" tabindex="19">Save</a> 
+                                                    <a class="common_button" ng-if="customerdata.followupIndex > - 1" ng-click="updateFollowup(customerdata.followup, customerdata.followupIndex); $event.stopPropagation();" 
+                                                       ng-enter="updateFollowup(customerdata.followup, customerdata.followupIndex);" tabindex="20">Update</a> 
+                                                    <a class="line margin-left-20 close_icons" ng-if="customerdata.followupIndex > - 1" ng-click="customerdata.viewfollowup = false; $event.stopPropagation();" 
+                                                       ng-enter="customerdata.viewfollowup = false;" tabindex="21">Cancel</a> 
+                                                    <a class="line color_red margin-left-20" ng-click="deletefollowup(); $event.stopPropagation();" tabindex="22" ng-enter="deletefollowup();">Delete</a> 
+                                                </div>
+                                            </ng-form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 text-center title"><strong>Delivery Addresses</strong></div>
+                            <div class="col-xs-12 text-center sub_title">Add and manage delivery addresses.</div>
+                            <div class="add_card_container" id="grid">
+                                <ul>
+                                    <span class="append_cnt">
+                                        <li class="form-toggle" tabindex="23" ng-repeat="address in customerForm.address" ng-click="viewaddress(address); $event.stopPropagation();" 
+                                            ng-enter="viewaddress(address);">
+                                            <div class="address_card"><!--Address Card -->
+                                                <p>
+                                                    <span ng-if="address.address_line" ng-bind="address.address_line"></span>
+                                                    <span ng-if="address.area" ng-bind="address.area"></span>
+                                                    <span ng-if="address.city" ng-bind="address.city"></span>
+                                                    <span ng-if="address.contact_no" ng-bind="address.contact_no"></span>
+                                                    <span ng-if="address.landmark" ng-bind="address.landmark"></span>
+                                                    <span ng-if="address.pincode" ng-bind="address.pincode"></span>
+                                                    <span ng-if="address.state" ng-bind="address.state"></span>
+                                                </p>
+                                                <div class="place" ng-if="address.area" ng-bind="address.area"></div>
+                                                <div class="phone" ng-if="address.contact_no" ng-bind="'+91 ' + address.contact_no"></div>
+                                                <div class="view_map" ng-click="viewaddress(address); $event.stopPropagation();">View in map</div>
+                                            </div>
+                                        </li>                                   
+                                    </span>
+                                    <li>
+                                        <div id="address_card_add" class="address_card_add" tabindex="24" ng-click="addnewAddress(); $event.stopPropagation();" ng-enter="addnewAddress();">
+                                            <div class="center">
+                                                <div class="add_icon"></div>
+                                            </div>
+                                            <div class="text-center">Add New Address</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="common-wrapper" ng-if="customerdata.viewaddress" ng-init="customerdata.addresssubmission = false"><!--Add staff form  -->
+                            <div class="object-admin-form"></div>
+                            <div class="add_address">
+                                <div class="row margin-0">
+                                    <div class="col-xs-12 text-center">
+                                        <div class="col-lg-12">
+                                            <span class="GI_TW_close GI_TW_Controls close_icon_small close_icons pull-right" ng-click="customerdata.viewaddress = false; $event.stopPropagation();"></span>
+                                        </div>
+                                        <p class="text-center margin-bottom-30">You can enter the physical location address of the store here.<br>
+                                            Drag and drop the marker precisely over the map.</p>
+                                        <div class="bil_check_cnt margin-top-10" style="float:left;display:table;margin-left: 14%;width: 72%;">
+                                            <div class="col-lg-6 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                <input ng-model="customerdata.address.is_default" ng-hide="true" type="checkbox"> 
+                                                <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_default}" style="width: 40px;" 
+                                                     ng-click="setDefaultaddress(customerdata.address.is_default); $event.stopPropagation();" tabindex="25" ng-enter="setDefaultaddress(customerdata.address.is_default);">
+                                                </div>
+                                                <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Default Address</b></span>
+                                            </div>
+                                            <!--                                            <div class="col-lg-4 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                                                            <input ng-model="customerdata.address.is_delivery" ng-hide="true" type="checkbox"> 
+                                                                                            <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_delivery}" style="width: 40px;" 
+                                                                                                 ng-click="setDeliveryaddress(customerdata.address.is_delivery); $event.stopPropagation();">
+                                                                                            </div>
+                                                                                            <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Delivery Address</b></span>
+                                                                                        </div>-->
+                                            <div class="col-lg-6 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                <input ng-model="customerdata.address.is_invoice" ng-hide="true" type="checkbox"> 
+                                                <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_invoice}" style="width: 40px;" 
+                                                     ng-click="setInvoiceaddress(customerdata.address.is_invoice); $event.stopPropagation();" tabindex="26" ng-enter="setInvoiceaddress(customerdata.address.is_invoice);">
+                                                </div>
+                                                <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Invoice Address</b></span>
+                                            </div>
+                                        </div>
+                                        <input type="text" ng-model="customerdata.address.company_name" name="addresscompany_name" placeholder="Company Name" tabindex="27">
+                                        <input type="text" ng-model="customerdata.address.gstin" name="addressgstin" placeholder="GSTIN" tabindex="28">
+                                        <input type="text" ng-model="customerdata.address.address_line" name="address" placeholder="Address Line" tabindex="29">
+                                        <input type="text" ng-model="customerdata.address.area" name="area" placeholder="Area" tabindex="30">
+                                        <input type="text" ng-model="customerdata.address.city" name="city" placeholder="City" tabindex="31">
+                                        <input type="text" ng-model="customerdata.address.pincode" name="pincode" placeholder="PIN Code" tabindex="32">
+                                        <input type="text" ng-model="customerdata.address.state" name="state" placeholder="State" tabindex="33">
+                                        <input type="text" ng-model="customerdata.address.landmark" name="landmark" placeholder="Landmark" tabindex="34">
+                                        <input type="text" ng-model="customerdata.address.contact_no" name="contact_no" placeholder="Contact No." tabindex="35">
+
+                                        <div mygeo-maps ng-model="searchLocation" locate="customerdata" class="map_frame"></div>
+
+                                        <div class="col-xs-12 text-center margin-top-30 margin-bottom-30"> 
+                                            <a class="common_button" ng-if="customerdata.addressIndex < 0" ng-click="pushAddress(); $event.stopPropagation();" 
+                                               ng-enter="pushAddress();" tabindex="36">Save</a> 
+                                            <a class="common_button" ng-if="customerdata.addressIndex > - 1" ng-click="updateAddress(customerdata.address, customerdata.addressIndex); $event.stopPropagation();" 
+                                               ng-enter="updateAddress(customerdata.address, customerdata.addressIndex);" tabindex="37">Update</a> 
+                                            <a class="line margin-left-20 close_icons" ng-if="customerdata.addressIndex > - 1" ng-click="customerdata.viewaddress = false; $event.stopPropagation();" 
+                                               ng-enter="customerdata.viewaddress = false;" tabindex="38">Cancel</a> 
+                                            <a class="line color_red margin-left-20" ng-click="deleteaddress(); $event.stopPropagation();" ng-enter="deleteaddress();" tabindex="39">Delete</a> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form_contianer">
+                            <div class="col-lg-12 text-center title">
+                                <strong>Account Balance</strong>
+                            </div>
+                            <div class="col-xs-12 text-center sub_title">Manage customer's opening balance here.</div>
+                            <div class="col-lg-12">
+                                <div class="input-group s_input_style">
+                                    <span class="input-group-addon" ng-bind="commonobjectService.getCurrency()"></span>
+                                    <input type="text" class="small" name="customer_previous_balance" negativedecimal="20" negative-decimalconv="2" placeholder="Opening Balance" 
+                                        ng-model="customerForm.customer_previous_balance">
+                                </div>
+                            </div>
+                        </div>
+                                
+                        <div class="col-xs-12 margin-top-20 margin-bottom-30 text-center">
+                            <a class="common_button" ng-click="customerdata.formsubmission = true; create(customerform.$valid);" tabindex="40" 
+                               ng-enter="customerdata.formsubmission = true; create(customerform.$valid);">Save</a> 
+                            <a class="line margin-left-20 close_icons" ng-click="addnewcustomer(false); $event.stopPropagation();" tabindex="41" 
+                               ng-enter="addnewcustomer(false);">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--End Customer ADD -->
+
+        <div class="col-lg-4 col-md-8 col-sm-8 col-xs-8 sec_2 section_customer_select" id="sec_2" ng-if="!customerdata.newCustomer" status="true">
+            <!-- Div Customer Card -->
+            <div class="customer_header">
+                <div class="margin-top-30" id="margin"></div>
+                <a class="pull-left customer-toggle menu_icon hide" id="customer-toggle" onclick="customer_toggle();"></a>
+                <div class="heading_3 hide" id="cus_hide">Customers</div>
+            </div>
+            <div class="customer-card-cnt">
+                <div class="search">
+                    <i class="close_icon_small margin-top-10" ng-if="customerdata.searchcustomer.length;" ng-click="customerdata.searchcustomer = '';" 
+                       style="float: right;position: absolute;right: 22px;"></i>
+                    <input type="text" class="search_box" placeholder="Search for Customers.." ng-model="customerdata.searchcustomer"> 
+                </div>
+                <div class="col-xs-12 text-center black_color contentWriter">Looked for <b>ALL</b> Customers using 
+                    <span ng-repeat="process in customerdata.processfilters" ng-if='customerdata.filters.process == process._id'><b ng-bind="process.process_name"></b> Process</span>
+                    <span ng-if='customerdata.filters.process == ""'> <b>ALL</b> Process</span>
+                    <span> and <b ng-if="customerdata.filters.groups == 'ALL'">ALL</b><b ng-repeat="groups in customerdata.groupfilters" ng-if="customerdata.filters.groups == groups._id" ng-bind="groups.name"></b> Customer Groups</span>
+                    <span> from <b>ALL</b> Division</span>
+                </div>
+
+                <div class="letter_cnt">
+                    <ul id="navPills" class="nav navbar-right nav-pills nav-stacked">
+                        <li class="letter" ng-repeat="alpha in data.filterbyAlphabets" ng-class="{'active':customerdata.filters.startswith == alpha}" 
+                            ng-click="filterBydata('FIRSTLETTER', alpha); $event.stopPropagation();">
+                            <a ng-href="#Number" prevent-default="" scroll-to="Number" ng-bind="alpha" ng-if="alpha != 'ALL'"></a>
+                            <a ng-href="#Number" prevent-default="" scroll-to="Number" ng-bind="alpha" ng-if="alpha == 'ALL'" style="padding: 11px 6px;height: 36px;text-align: -webkit-auto;width: 30px;font-size: x-small;font-weight: bolder"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="scroller" data-target="#navPills" data-scroll-offset="80" class="scrollspy-example span9 c_section_store">
+                <section>
+                    <div infinite-scroll='loadMoreCustomer()' infinite-scroll-distance='0' infinite-scroll-container="'#scroller'"  infinite-scroll-disabled='customerdata.disablescroll'><!--- SECTION START -->
+                        <div class="customer_prof_cnt" style="width: 100%;display: inline-block;">
+                            <div class="text-center letter_title" ng-repeat-start="customerfilters in customerdata.list" ng-bind="customerfilters.filterAlpha"></div>
+                            <div class="custom_stores" ng-repeat="customers in customerfilters.customers| filter:customerdata.searchcustomer"> 
+                                <!-- Customer card -->
+                                <div class="customer_btn" onclick="customer_view();" ng-click="view(customers);" ng-class="{'active':customers._id == customerdata.selectedCustomer}">
+                                    <div class="favorite" ng-class="{'active':customers.is_favourite}" ng-click="setFavourite(customers); $event.stopPropagation();">F</div>
+                                    <div class="profile_img"></div>
+                                    <div class="customer_name" ng-bind="customers.name"></div>
+                                    <div class="customer_role" ng-bind="'+91 ' + customers.mobile_no"></div>
+                                </div>
+                            </div>
+                            <div ng-repeat-end></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="customer_view sec_3 col-lg-6 col-md-8 col-sm-8 col-xs-8" id="sec_3" status="true">
+
+            <div class="customer_header customer_header_right" ng-if="customerdata.viewableCustomerData._id">
+                <div class="col-xs-12">
+                    <div class="favorite_big" ng-class="{'active':customerdata.viewableCustomerData.is_favourite}" ng-click="setFavourite(customerdata.viewableCustomerData); $event.stopPropagation();">F</div>
+                    <div class="customer_title heading_3" ng-bind="customerdata.viewableCustomerData.mobile_no + ', ' + customerdata.viewableCustomerData.name"></div>
+                    <a ng-href="tel:+91{{customerdata.viewableCustomerData.mobile_no}}" class="voice_call_icon"></a>
+                    <div class="dropdown_icons pull-right margin-left-10 dropdown-toggle" data-toggle="dropdown" style="cursor: default;"></div>
+                    <ul class="dropdown-menu acconut_dropdown_menu pull-right">
+                        <li class="text-center list_store_title acc_sort_list ng-binding">Action
+                            <span class="close trans_close"><span class="close_icon_small_dropdown"></span></span>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="text-center"><a ng-click="customerPaymentReceive(customerdata.viewableCustomerData)">Receive payment for <br> this customer</a></li>
+                        <li class="text-center"><a ng-click="printCustomertransaction(customerdata.viewableCustomerData)">Print this customer <br> transaction</a></li>
+                    </ul>
+                    <div class="fullscreen_icon pull-right" id="full_screen" onclick="return full_screen()"></div>
+                    <!--Customer Store Menu -->
+                    <div>
+                        <ul class="cus_menu pull-right hide">
+                            <li><a class="click purchase_click active" id="purchase_click" ng-click="customerdata.viewmenu = 'Order';">Order History </a></li>
+                            <li><a class="click payment_click" id="payment_click" ng-click="customerdata.viewmenu = 'Payment';">Payments</a></li>
+                            <li><a class="click profile_click" id="profile_click" ng-click="customerdata.viewmenu = 'Profile';">Profile</a></li>
+                            <li><a class="click outward_click" id="outward_click" ng-click="customerdata.viewmenu = 'Outward';">Outwards</a></li>
+                            <li><a class="click return_click" id="return_click" ng-click="customerdata.viewmenu = 'Return';">Return</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customer-name-cnt" ng-if="customerdata.viewableCustomerData._id">
+                <div class="cus_view_float cus_view_cnt">    
+                    <div class="graph" id="page-wrapper" style="display: block;">
+                        <div class="area_chart" style="padding: 10px 0px;">
+                            <canvas id="line" class="chart chart-line" chart-data="areadata" chart-labels="arealabels" chart-series="areaseries" chart-click="onClick"></canvas>
+                        </div>
+                        <!--                        <div class="graph_container">
+                                                    <div class="donut_chart">
+                                <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2"></canvas>
+                            </div>
+                            <div class="pie_chart_cnt">
+                                <canvas id="pie" class="chart chart-pie" chart-data="data2" chart-labels="labels2"></canvas>
+                                                    </div>
+                            </div>-->
+                    </div>
+                    <div class="customer-card-container margin-top-20" id="purchase">
+                        <!--Payments -->
+                        <div class="row margin-0">
+                            <div class="col-lg-12 store_price margin-bottom-20 hide">
+                                <span>Total Bills Amount: &nbsp;</span>
+                                <span class="heading_4"><strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalorder | number:2)"></strong></span>
+                            </div>
+                            <div class="customer_card_col">
+                                <div class="customer_card_col">
+                                    <div class="cus_card card_c cus_card_c" ng-repeat="bills in customerdata.Billdetails" ng-class="{'card_hover_class':bills.hoverClass && !bills.viewInvoice,'highlight_trans': bills.hightlighttrans}"
+                                         ng-mouseenter="bills.hoverClass = 1" ng-mouseleave="bills.hoverClass = 0" ng-init="bills.viewInvoice = false;">
+                                        <div class="col-xs-12 padding_zero" ng-click="viewInvoice(bills);">
+                                            <div class="col-xs-12 date_time" ng-bind="'On '+(bills.invoice_date | date:'EEE, dd-MMM-y hh:mm:ss a')"></div>
+                                            <div class="col-xs-8 invoice_detail" ng-bind="bills.invoice_no"></div>
+                                            <div class="invoice_detail text-right col-xs-4" ng-bind="data.currency+(bills.total | number:2)"></div>
+                                            <div class="col-xs-7 margin-top-15">
+                                                <div ng-if="bills.items && bills.items.length > 0" class="cus_brand_btn" style="background: rgba(255, 201, 38, 0.5);" 
+                                                     ng-bind="getOrderno(bills.items, 'ORDERNO')"></div>
+                                                <span ng-if="bills.items && bills.items.length > 0" class="count" ng-bind="getOrderno(bills.items, 'ORDERCOUNT')"></span>
+                                            </div>
+                                            <div class="heading_6 text-right margin-top-20 col-xs-5">
+                                                <b class="green_color" ng-if="bills.payment_status == 'COMPLETED'">✔ PAID</b>
+                                            </div>
+                                        </div>
+                                        <div class="cus_expand_show cus_expand_c" ng-if="bills.viewInvoice">
+                                            <center>
+                                                <div ng-if="bills.invoiceexist && !bills.invoiceloader" ng-include="'app/views/common/invoiceview.html'" 
+                                                     onload="invoiceData = bills.viewinvoiceData">
+                                                </div>
+                                                <div ng-if="bills.invoiceloader" class="loader_small"></div>
+                                                <div ng-if="!bills.invoiceexist && !bills.invoiceloader" class="text-center">
+                                                    <b>No Invoice found.</b>
+                                                </div>
+                                                <div class="col-lg-12 margin-top-20 text-left" style="padding-left: 15px;">
+                                                    <a class="cutomer_group_link" target="_blank" ng-click="printThisinvoice(bills); $event.stopPropagation();">Print Invoice</a>
+                                                    <a class="cutomer_group_link" ng-click="viewJob(customer, 'INVOICE'); $event.stopPropagation();">Go to Invoice</a>
+                                                </div>
+                                            </center>
+                                            <div class="col-xs-12 margin-top-30">
+                                                <div class="col-xs-12 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;">
+                                                    Payment Track
+                                                </div>
+                                                <hr style="display: block;margin: 0px 15px;border-style: inset;border-width: 2px;">
+                                                <div class="col-xs-12" style=" padding-bottom: 10px; margin-top: 5px;font-size: 12px;overflow: hidden;overflow-x: scroll;">
+                                                    <table style="min-width: 400px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Trans.ID</th>
+                                                                <th>Date</th>
+                                                                <th style="text-align: right;">Trans.Amt</th>
+                                                                <th style="text-align: right;">Prev.Owe</th>
+                                                                <th style="text-align: right;">Allocated Amt</th>
+                                                                <th style="text-align: right;">Bal.Due</th>
+                                                            </tr>
+                                                            <tr ng-repeat="trans in bills.transactions">
+                                                                <td ng-bind="trans.transaction_id | limitTo:10">5887492a41</td>
+                                                                <td ng-bind="trans.transaction_date | date:'dd - MM - yyyy'">24-01-2017</td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.transaction_amount | number:2)"></td>
+                                                                <td class="text-right" ng-if="trans.previous_owe > 0" ng-bind="data.currency+(trans.previous_owe | number:2)"></td>
+                                                                <td class="text-center" ng-if="!trans.previous_owe || trans.previous_owe <= 0">-</td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.allocated_amount | number:2)"></td>
+                                                                <td class="text-right" ng-bind="data.currency+(trans.balance_due | number:2)"></td>
+                                                            </tr>
+                                                            <tr ng-if="!bills.transactions || bills.transactions.length == 0">
+                                                                <td colspan="6" class="text-center">No transactions found.</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-xs-12" style="margin-top: 10px;" ng-if="customerHightlightshow(bills.transactions)">
+                                                    <a class="line" ng-click="highlightTransaction(bills)" ng-if="!bills.showhighlight" style="font-size:12px">Highlight these transactions</a>
+                                                    <a class="line" ng-click="restoreTransaction(bills)" ng-if="bills.showhighlight" style="font-size:12px">Restore Transactions</a>
+                                                </div>
+                                                <div class="col-xs-12" style="margin-top: 10px;" ng-if="!customerHightlightshow(bills.transactions)">
+                                                    <span ng-if="!bills.showhighlight" style="font-size:12px;font-weight: 600;text-decoration: none;">There are no Transactions to highlight.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearboth"></div>
+                                        <div class="col-lg-12 margin-top-20" ng-if="bills.viewInvoice" ng-click="bills.viewInvoice = !bills.viewInvoice">
+                                            <div class="cus_expand_close cus_expand_close_c text-center">
+                                                <div class="up_dropdown_small"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-payment-container hide" id="payment">
+                    <!--Payment -->
+                    <div class="row margin-0">
+                        <div class="customer_paymant_col height_scroll">
+                            <div class="col-lg-12 store_price margin-bottom-30">
+                                <span> Total Received:</span>
+                                <span class="heading_4"> <strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalreceived | number:2)"></strong>
+                                </span> &nbsp; &nbsp; 
+                                <span>Spent:</span><span class="heading_4"> <strong ng-bind="commonobjectService.getCurrency()+(customerdata.Totalspend | number:2)"></strong>
+                                </span> &nbsp; &nbsp; 
+                                <span>Current Balance:</span><span class="heading_4" ng-class="{'red_text':customerdata.Totalpending<0}">
+                                    <strong ng-if="customerdata.Totalpending >= 0" ng-bind="commonobjectService.getCurrency()+(customerdata.Totalpending | number:2)"></strong>
+                                    <strong ng-if="customerdata.Totalpending < 0"ng-bind="'-('+commonobjectService.getCurrency()+(customerdata.Totalpending | number:2)+')'"></strong>
+                                </span>               
+                            </div>
+                            
+                            <div class="col-lg-12 store_price margin-bottom-30" style="color: rgb(102,102,102) !important;font-size: 12px !important;">
+                                    <span>Opening Balance: </span>
+                                    <span ng-if="customerdata.Openingbalance >= 0" 
+                                          ng-bind="commonobjectService.getCurrency()+(customerdata.Openingbalance | number:2)"></span>
+                                    <span class="red_text" ng-if="customerdata.Openingbalance < 0" 
+                                          ng-bind="'-('+commonobjectService.getCurrency()+(-1*customerdata.Openingbalance | number:2)+')'"></span>
+                            </div>
+                            
+                            <div class="cus_card card_c cus_card_c" ng-repeat = "trans in customerdata.Transactiondetails" ng-class="{'card_hover_class':trans.hoverClass && !trans.paymentcardToggle,'highlight_trans':trans.hightlighttrans}" 
+                                 ng-mouseenter="trans.hoverClass = 1" ng-mouseleave="trans.hoverClass = 0">
+                                <div class="col-xs-12 padding_zero" ng-click="paymentcardOpen(trans); $event.stopPropagation();">
+                                    <div class="col-xs-12 date_payment" ng-bind="'On '+(trans.transaction_date | date:'EEE, dd-MMM-y hh:mm:ss a')+' at '+trans.division_id.name"></div>
+                                    <div class="col-xs-8 heading_5 case_payment" ng-bind="trans.category_name"></div>
+                                    <div class="col-xs-4 heading_5 amount_payment" ng-bind="commonobjectService.getCurrency()+(trans.transaction_amount | number:2)"></div>
+                                    <div class="col-xs-12 amount_payment" ng-if="trans.previous_owe > 0">
+                                        <span class="pull-left">Previous owe</span> 
+                                        <span class="heading_5" ng-bind="commonobjectService.getCurrency()+(trans.previous_owe | number:2)"></span>
+                                    </div>
+                                </div>
+                                <div class="cus_expand_show cus_pending_expand cus_expand_c" ng-if="trans.paymentcardToggle">
+                                    <div class="col-lg-10 margin-top-10">
+                                        <p ng-if="trans.category_name == 'Payment for Invoices and Bill' && trans.memo && trans.memo != ''">
+                                            <span ng-bind="'Memo: Invoice Payment '"></span> <span ng-repeat="bill in trans.bills">{{bill.bill_no}}<i ng-if="$index != trans.bills.length - 1">, </i></span>
+                                        </p>
+                                        <p ng-if="trans.category_name != 'Payment for Invoices and Bill' && trans.memo && trans.memo != ''" ng-bind="'Memo: '+ (trans.memo) + '.'"></p>
+                                        Account Entry in <a class="line" ng-bind="trans.ledger_id.name"></a>
+                                    </div>
+
+                                    <div class="col-lg-12 margin-top-30" ng-if="trans.category_name == 'Payment for Invoices and Bill' && (trans.bills.length > 0 || 
+                                                (trans.customer_openingbalance && trans.customer_openingbalance !== null && trans.customer_openingbalance.amount_allocated>0))">
+                                        <div class="col-xs-6 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;padding-left: 0px;">
+                                            Bills Track
+                                        </div>
+                                        <div class="col-xs-6" style="text-align: right;font-size: 12px;padding-right: 0px;">
+                                            <b>Trans.ID - </b>{{trans._id| limitTo:10}}
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <hr style="display: block;border-style: inset;border-width: 2px;">
+                                        <div class="col-xs-12 margin-top-05" style="font-size: 12px;overflow: hidden;overflow-x: scroll;">
+                                            <table style="min-width: 400px;">
+                                                <tr>
+                                                    <th>Invoice No</th>
+                                                    <th class="text-right">Bill Amt</th>
+                                                    <th class="text-right">Pending Due</th>
+                                                    <th class="text-right">Prev.Owe</th>
+                                                    <th class="text-right">Allocated Amt</th>
+                                                    <th class="text-right">Bal.Due</th>
+                                                </tr>
+                                                <tr ng-repeat="bill in trans.bills">
+                                                    <td ng-bind="bill.bill_no"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount_allocated+bill.balance_due | number:2)"></td>
+                                                    <td class="text-right" ng-if="trans.previous_owe > 0" ng-bind="data.currency+(trans.previous_owe | number:2)"></td>
+                                                    <td class="text-center" ng-if="!trans.previous_owe || trans.previous_owe <= 0">-</td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.amount_allocated | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(bill.balance_due | number:2)"></td>
+                                                </tr>
+                                                <tr ng-if="trans.customer_openingbalance && trans.customer_openingbalance !== null && 
+                                                    trans.customer_openingbalance">
+                                                    <td class="text-center" colspan="6"><b>Customer Opening Balance</b></td>
+                                                <tr>
+                                                <tr ng-if="trans.customer_openingbalance && trans.customer_openingbalance !== null && 
+                                                    trans.customer_openingbalance.amount_allocated>0">
+                                                    <td></td>
+                                                    <td class="text-right" ng-bind="data.currency+(trans.customer_openingbalance.total_balance | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(trans.customer_openingbalance.pending_balance | number:2)"></td>
+                                                    <td class="text-right" ng-if="trans.previous_owe > 0" ng-bind="data.currency+(trans.previous_owe | number:2)"></td>
+                                                    <td class="text-center" ng-if="!trans.previous_owe || trans.previous_owe <= 0">-</td>
+                                                    <td class="text-right" ng-bind="data.currency+(trans.customer_openingbalance.amount_allocated | number:2)"></td>
+                                                    <td class="text-right" ng-bind="data.currency+(trans.customer_openingbalance.balance_due | number:2)"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 margin-top-10" ng-if="trans.bills.length > 0">
+                                            <a class="line" ng-click="highlightBills(trans)" ng-if="!trans.showbill" style="font-size:12px">Highlight these bills</a>
+                                            <a class="line" ng-click="restoreBills(trans)" ng-if="trans.showbill" style="font-size:12px">Restore Bills</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 margin-top-30" ng-if="trans.category_name == 'Payment for Invoices and Bills' && ((!trans.bills || trans.bills.length == 0) && 
+                                                (!trans.customer_openingbalance || trans.customer_openingbalance !== null || !trans.customer_openingbalance.amount_allocated || 
+                                                trans.customer_openingbalance.amount_allocated<=0))">
+                                        <div class="col-xs-6 heading_5" style="text-align: left;font-weight: bold;font-size: 16px;padding-left: 0px;">
+                                            Bills Track
+                                        </div>
+                                        <div class="col-xs-6" style="text-align: right;font-size: 12px;padding-right: 0px;">
+                                            <b>Trans.ID: </b>{{trans._id| limitTo:10}}
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <hr style="display: block;border-style: inset;border-width: 2px;">
+                                        <div class="col-xs-12 margin-top-05" style="font-size: 12px;">
+                                            <span class="line" style="font-size:12px;font-weight:600">No bills in this transaction was allocated to track.</span>
+                                        </div>
+                                    </div>
+                                    <div class="clearboth"></div>
+                                    <div class="col-lg-12 margin-top-10" ng-click="paymentcardClose(trans); $event.stopPropagation();">
+                                        <div class="cus_expand_close cus_expand_close_c text-center" ng-click="paymentcardClose(trans); $event.stopPropagation();">
+                                            <div class="up_dropdown_small"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-profile-container viewcustomer_profile height_scroll hide" id="profile">
+                    <!--Profile -->
+                    <div class="row margin-0">
+                        <div class="profile_title heading_4"><b>Profile</b> </div>
+                        <form name="customerform" novalidate>
+
+                            <div class="form_contianer">
+                                <input type="text" ng-model="customerdata.viewableCustomerData.name" name="company_name" placeholder="Company Name" 
+                                       ng-class="{'input_error_class':(!customerform.company_name.$valid && customerdata.formsubmission)}" tabindex="1" required>
+                                <input type="text" ng-model="customerdata.viewableCustomerData.email_id" name="email_address" placeholder="Email ID" ng-pattern='/\S+@\S+\.\S+/' 
+                                       ng-class="{'input_error_class':(!customerform.email_address.$valid && customerdata.formsubmission)}" tabindex="2">
+                                <div class="input-group s_input_style">
+                                    <span class="input-group-addon">+91</span>
+                                    <input type="text" class="small" ng-model="customerdata.viewableCustomerData.mobile_no" name="mobile_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                           placeholder="Mobile No. xxxx..." ng-class="{'input_error_class':(!customerform.mobile_no.$valid && customerdata.formsubmission)}" tabindex="3" required >
+                                </div>
+                                <div class="input-group s_input_style">
+                                    <span class="input-group-addon">+91</span>
+                                    <input type="text" class="small" ng-model="customerdata.viewableCustomerData.alternate_no" name="alternate_no" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" 
+                                           placeholder="Alt. Contact No. xxxx..." ng-class="{'input_error_class':(!customerform.alternate_no.$valid && customerdata.formsubmission)}" tabindex="4">
+                                </div>
+
+
+
+                                <!--GSTIN updates begin-->
+                                <div class="col-lg-12 text-center title">
+                                    <strong>GST Treatment</strong>
+                                </div>
+                                <div class="col-xs-12 text-center sub_title">Manage customer's GST information here.</div><div style="clear:both"></div>
+
+                                <ui-select ng-model="customerdata.viewableCustomerData.gstTreatmentcopy" class="customer_ui_select" theme="selectize" search-enabled='true'
+                                           on-select="assignCustomergsttreatment(customerdata.viewableCustomerData)" tabindex="5">
+                                    <ui-select-match placeholder="GST Treatement">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="gsttreat in customerdata.Gsttreatmentdetails" ng-hide="!$select.open">
+                                        <span ng-bind-html="gsttreat.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <input type="text" name="gstin_number" placeholder="GSTIN" ng-model="customerdata.viewableCustomerData.gstin" ng-pattern='/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/'
+                                       required ng-class="{'input_error_class':(!customerform.gstin_number.$valid && customerdata.formsubmission)}"
+                                       ng-if="customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Registered Business - Regular' || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                                   || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Special Economic Zone'" tabindex="6"/>
+
+                                <ui-select ng-model="customerdata.viewableCustomerData.statecopy" class="customer_ui_select" theme="selectize" search-enabled='true'
+                                           ng-if="customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Registered Business - Regular' || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Registered Business - Composition'
+                                                       || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Special Economic Zone' || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Unregistered Business'
+                                                       || customerdata.viewableCustomerData.gstTreatmentcopy.name == 'Consumer'" on-select="assignCustomerplaceofsupply(customerdata.viewableCustomerData)"
+                                                       tabindex="7">
+                                    <ui-select-match placeholder="Place Of Supply">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="state in customerdata.Statelistdetails | filter: $select.search"  ng-hide="!$select.open">
+                                        <span ng-bind-html="state.name | highlight: $select.search"></span>
+                                    </ui-select-choices> 
+                                </ui-select>
+                                <!--GSTIN updates ends-->
+
+                                <!--Portal credential start-->
+                                <div class="col-lg-12 text-center title"><strong>Portal Credentials</strong></div>
+                                <div class="col-xs-12 text-center sub_title">Enter the password for the customer to use login to the portal.</div>
+                                <input type="password" name="password" placeholder="Password" ng-model="customerdata.viewableCustomerData.password" tabindex="8">
+                                <input type="password" name="retype_password" placeholder="Retype Password" ng-model="customerdata.viewableCustomerData.confirm_password" tabindex="9">
+                                <!--Portal credential end-->
+
+                                <!--Block Module end-->
+                                <div class="col-lg-12 text-center title"><strong>Blocked Modules</strong></div>
+                                <div class="col-xs-12 text-center sub_title">Enable / Disable the below modules for this customer.</div>
+                                <div class="col-lg-12">
+                                    <div class="class_checkbox_div">
+                                        <input type="checkbox" class="input_class_checkbox" ng-model="customerdata.viewableCustomerData.status_inward" ng-hide="true">
+                                        <div class="class_checkbox pull-left" ng-click="customerdata.viewableCustomerData.status_inward = !customerdata.viewableCustomerData.status_inward" 
+                                             ng-class="{'checked':customerdata.viewableCustomerData.status_inward == true}" tabindex="10" 
+                                             ng-enter="customerdata.viewableCustomerData.status_inward = !customerdata.viewableCustomerData.status_inward">
+                                        </div>Inward
+                                    </div>
+
+                                    <div class="class_checkbox_div">
+                                        <input type="checkbox" class="input_class_checkbox" ng-model="customerdata.viewableCustomerData.status_outward" ng-hide="true">
+                                        <div class="class_checkbox pull-left" ng-click="customerdata.viewableCustomerData.status_outward = !customerdata.viewableCustomerData.status_outward" 
+                                             ng-class="{'checked':customerdata.viewableCustomerData.status_outward == true}" tabindex="11" 
+                                             ng-enter="customerdata.viewableCustomerData.status_outward = !customerdata.viewableCustomerData.status_outward">
+                                        </div>Outward
+                                    </div>
+                                </div>
+                                <!--Block Module start-->
+
+                                <!--Contact person start-->
+                                <div class="col-lg-12 text-center title"><strong>Contact Person</strong></div>
+                                <div class="col-xs-12 text-center sub_title">Manage contact person information here.</div>
+                                <input type="text" ng-model="customerdata.viewableCustomerData.contact_person" name="contact_person" placeholder="Contact Person Name" 
+                                       ng-class="{'input_error_class':(!customerform.contact_person.$valid && customerdata.formsubmission)}" tabindex="12" required>
+                                <div class="input-group s_input_style">
+                                    <span class="input-group-addon">+91</span>
+                                    <input type="text" class="small" ng-model="customerdata.viewableCustomerData.contactperson_mobile_no" name="contactperson_mobile_no" ng-minlength="10" 
+                                           ng-maxlength="10" ng-pattern="/^[0-9]{10,12}$/" placeholder="Mobile No. xxxx..." 
+                                           ng-class="{'input_error_class':(!customerform.contactperson_mobile_no.$valid && customerdata.formsubmission)}" tabindex="13" required>
+                                </div>
+                                <!--Contact person end-->
+
+                                <!--Followup person start-->
+                                <div class="col-lg-12 text-center title"><strong>Follow Up Person</strong></div>
+                                <div class="col-xs-12 text-center sub_title">Add and manage follow up person details.</div>
+                                <div class="add_card_container" id="grid">
+                                    <ul>
+                                        <li class="form-toggle" ng-repeat="followup in customerdata.viewableCustomerData.followup_person" ng-click="viewfollowup(followup); $event.stopPropagation();" 
+                                            tabindex="14" ng-enter="viewfollowup(followup);">
+                                            <div class="address_card">
+                                                <div class="profile_img">
+                                                    <img ng-src="{{followup.profile_picture}}" width="75px" fallback-src="profile"/>
+                                                </div>
+                                                <div class="place" ng-if="followup.name" ng-bind="followup.name"></div>
+                                                <div class="phone" ng-if="followup.mobile_no" ng-bind="'+91 ' + followup.mobile_no"></div>
+                                            </div>
+                                        </li>                                   
+                                        <li>
+                                            <div id="address_card_add" class="address_card_add"  ng-click="addnewFollowup(); $event.stopPropagation();" tabindex="15" ng-enter="addnewFollowup();">
+                                                <div class="center">
+                                                    <div class="add_icon"></div>
+                                                </div>
+                                                <div class="text-center">Add New Followup person</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--Followup person end-->
+
+                                <div id="common-wrapper" ng-if="customerdata.viewfollowup" ng-init="customerdata.followupsubmission = false"><!--Add staff form  -->
+                                    <div class="object-admin-form"></div>
+                                    <div class="add_address">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-center">
+                                                <ng-form name="followupForm" isolate-form>
+                                                    <div class="col-lg-12">
+                                                        <span class="GI_TW_close GI_TW_Controls close_icon_small close_icons pull-right" ng-click="customerdata.viewfollowup = false; $event.stopPropagation();"></span>
+                                                    </div>
+                                                    <p class="text-center margin-bottom-25">You can enter the Followup Person details here.</p>
+                                                    <div class="followup_form">
+                                                        <div class="margin-top-10 input_frm_fields">
+                                                            <input type="text" ng-model="customerdata.followup.name" name="name" placeholder="Name" class="nrm_input" 
+                                                                   ng-class="{'input_error_class':(!followupForm.name.$valid && customerdata.followupformsubmission)}" tabindex="16" required>
+                                                            <div class="input-group s_input_style">
+                                                                <span class="input-group-addon">+91</span>
+                                                                <input type="text" class="mob_input" ng-model="customerdata.followup.mobile_no" name="mobile_no" ng-minlength="10" 
+                                                                       ng-maxlength="10" placeholder="Mobile No. xxxx..." 
+                                                                       ng-class="{'input_error_class':(!followupForm.mobile_no.$valid && customerdata.followupformsubmission)}" tabindex="17" required>
+                                                            </div>
+                                                            <input type="text" ng-model="customerdata.followup.email_id" name="email_id" placeholder="Email Id" class="nrm_input"
+                                                                   ng-class="{'input_error_class':(!followupForm.email_id.$valid && customerdata.followupformsubmission)}" tabindex="18">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 text-center margin-top-30 margin-bottom-30"> 
+                                                        <a class="common_button" ng-if="customerdata.followupIndex < 0" ng-click="pushFollowup(followupForm.$valid); $event.stopPropagation();" 
+                                                           tabindex="19" ng-enter="pushFollowup(followupForm.$valid);">Save</a> 
+                                                        <a class="common_button" ng-if="customerdata.followupIndex > - 1" ng-click="updateFollowup(customerdata.followup, customerdata.followupIndex); $event.stopPropagation();" 
+                                                           tabindex="20" ng-enter="updateFollowup(customerdata.followup, customerdata.followupIndex);">Update</a> 
+                                                        <a class="line margin-left-20 close_icons" ng-if="customerdata.followupIndex > - 1" ng-click="customerdata.viewfollowup = false; $event.stopPropagation();" 
+                                                           tabindex="21" ng-enter="customerdata.viewfollowup = false;">Cancel</a> 
+                                                        <a class="line color_red margin-left-20" ng-click="deletefollowup(); $event.stopPropagation();"
+                                                           tabindex="22" ng-enter="deletefollowup();">Delete</a> 
+                                                    </div>
+                                                </ng-form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 text-center title"><strong>Delivery Addresses</strong></div>
+                                <div class="col-xs-12 text-center sub_title">Add and manage delivery addresses.</div>
+                                <div class="add_card_container" id="grid">
+                                    <ul>
+                                        <span class="append_cnt">
+                                            <li class="form-toggle" ng-repeat="address in customerdata.viewableCustomerData.address">
+                                                <div class="address_card" ng-click="viewaddress(address); $event.stopPropagation();" tabindex="23" ng-enter="viewaddress(address);"><!--Address Card -->
+                                                    <p>
+                                                        <span ng-if="address.address_line" ng-bind="address.address_line"></span>
+                                                        <span ng-if="address.area" ng-bind="address.area"></span>
+                                                        <span ng-if="address.city" ng-bind="address.city"></span>
+                                                        <span ng-if="address.contact_no" ng-bind="address.contact_no"></span>
+                                                        <span ng-if="address.landmark" ng-bind="address.landmark"></span>
+                                                        <span ng-if="address.pincode" ng-bind="address.pincode"></span>
+                                                        <span ng-if="address.state" ng-bind="address.state"></span>
+                                                    </p>
+                                                    <div class="place" ng-if="address.area" ng-bind="address.area"></div>
+                                                    <div class="phone" ng-if="address.contact_no" ng-bind="'+91 ' + address.contact_no"></div>
+                                                    <div class="view_map" ng-click="viewaddress(address); $event.stopPropagation();">View in map</div>
+                                                </div>
+                                            </li>														  													
+                                        </span>
+                                        <li>
+                                            <div id="address_card_add" class="address_card_add" ng-click="addnewAddress(); $event.stopPropagation();" tabindex="24" ng-enter="addnewAddress();">
+                                                <div class="center">
+                                                    <div class="add_icon"></div>
+                                                </div>
+                                                <div class="text-center" ng-click="addnewAddress(); $event.stopPropagation();">Add New Address</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="profile-location" ng-if="customerdata.viewaddress" ng-init="customerdata.addresssubmission = false">
+                                    <div class="prof-locatiion-container col-lg-10 center">
+                                        <div class="col-lg-12">
+                                            <span class="GI_TW_close GI_TW_Controls close_icon_small close_icons pull-right" ng-click="customerdata.viewaddress = false; $event.stopPropagation();"></span>
+                                        </div>
+                                        <span>You can enter the Physical location address of the stop here.</span> 
+                                        <span>Drag and drop the marker precisely over the map.</span>
+                                        <div class="bil_check_cnt margin-top-30 margin-bottom-15" style="float:left;display:table;margin-left: 14%;width: 72%;">
+                                            <div class="col-lg-4 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                <input ng-model="customerdata.address.is_default" ng-hide="true" type="checkbox"> 
+                                                <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_default}" style="width: 40px;" 
+                                                     ng-click="setDefaultaddress(customerdata.address.is_default); $event.stopPropagation();" tabindex="25" ng-enter="setDefaultaddress(customerdata.address.is_default);">
+                                                </div>
+                                                <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Default Address</b></span>
+                                            </div>
+                                            <!--                                            <div class="col-lg-4 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                                                            <input ng-model="customerdata.address.is_delivery" ng-hide="true" type="checkbox"> 
+                                                                                            <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_delivery}" style="width: 40px;" 
+                                                                                                 ng-click="setDeliveryaddress(customerdata.address.is_delivery); $event.stopPropagation();">
+                                                                                            </div>
+                                                                                            <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Delivery Address</b></span>
+                                                                                        </div>-->
+                                            <div class="col-lg-4 col-sm-12 col-md-12 col-xs-12 margin-bottom-15 padding_left_zero">
+                                                <input ng-model="customerdata.address.is_invoice" ng-hide="true" type="checkbox"> 
+                                                <div class="class_checkbox pull-left" ng-class="{'checked':customerdata.address.is_invoice}" style="width: 40px;" 
+                                                     ng-click="setInvoiceaddress(customerdata.address.is_invoice); $event.stopPropagation();" tabindex="26" ng-enter="setInvoiceaddress(customerdata.address.is_invoice);">
+                                                </div>
+                                                <span class="bill_check_span" style="font-size: 12px;line-height: 27px;cursor: default;float: left;"><b>Invoice Address</b></span>
+                                            </div>
+                                        </div>
+                                        <input type="text" ng-model="customerdata.address.company_name" name="addresscompany_name" placeholder="Company Name" tabindex="27">
+                                        <input type="text" ng-model="customerdata.address.gstin" name="addressgstin" placeholder="GSTIN" tabindex="28">
+                                        <input type="text" ng-model="customerdata.address.address_line" name="address" placeholder="Address Line" tabindex="29">
+                                        <input type="text" ng-model="customerdata.address.area" name="area" placeholder="Area" tabindex="30">
+                                        <input type="text" ng-model="customerdata.address.city" name="city" placeholder="City" tabindex="31">
+                                        <input type="text" ng-model="customerdata.address.pincode" name="pincode" placeholder="PIN Code" tabindex="32">
+                                        <input type="text" ng-model="customerdata.address.state" name="state" placeholder="State" tabindex="33">
+                                        <input type="text" ng-model="customerdata.address.landmark" name="landmark" placeholder="Landmark" tabindex="34">
+                                        <input type="text" ng-model="customerdata.address.contact_no" name="contact_no" placeholder="Contact No." tabindex="35">
+
+                                        <div mygeo-maps ng-model="searchLocation" locate="customerdata" class="map_frame"></div>
+
+                                        <div class="col-xs-12 text-center margin-top-30 margin-bottom-30"> 
+                                            <a class="common_button" ng-if="customerdata.addressIndex < 0" ng-click="pushAddress(); $event.stopPropagation();" 
+                                               tabindex="36" ng-enter="pushAddress();">Save</a> 
+                                            <a class="common_button" ng-if="customerdata.addressIndex > - 1" ng-click="updateAddress(customerdata.address); $event.stopPropagation();" 
+                                               tabindex="37" ng-enter="updateAddress(customerdata.address);">Update</a> 
+                                            <a class="line margin-left-20 close_icons" ng-if="customerdata.addressIndex > - 1" ng-click="customerdata.viewaddress = false; $event.stopPropagation();" 
+                                                tabindex="38" ng-enter="customerdata.viewaddress = false;">Cancel</a> 
+                                            <a class="line color_red margin-left-20" ng-click="deleteaddress(); $event.stopPropagation();" 
+                                               tabindex="39" ng-enter="deleteaddress();">Delete</a> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 text-center title">
+                                    <strong>Account Balance</strong>
+                                </div>
+                                <div class="col-xs-12 text-center sub_title">Manage customer's opening balance here.</div>
+                                <div class="col-lg-12">
+                                    <div class="input-group s_input_style">
+                                        <span class="input-group-addon" ng-bind="commonobjectService.getCurrency()"></span>
+                                        <input type="text" class="small" name="customer_previous_balance" negativedecimal="20" negative-decimalconv="2" placeholder="Opening Balance" 
+                                               ng-model="customerdata.viewableCustomerData.customer_previous_balance" ng-readonly="customerdata.viewableCustomerData.balance_status">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/Add staff form  -->
+                            <div class="col-xs-12 margin-top-20 margin-bottom-30 text-center" style="margin-top: 30px;"> 
+                                <a class="common_button margin-top-30" ng-click="customerdata.formsubmission = true; update(customerform.$valid); $event.stopPropagation();" 
+                                    tabindex="40" ng-enter="update(customerform.$valid);">Save</a> 
+                            </div>
+                        </form>
+                    </div>                   
+                </div>
+
+                <div class="customer-discount-container hide" id="discount">
+                    <div class="col-lg-12 heading_4">Customer Group & Discounts</div>
+                    <div class="col-xs-12 margin-bottom-30 margin-top-20">
+                        <span class="pull-left">Customer Group:</span>
+
+                        <ui-select ng-if="customerdata.discountCancelBut" class="select_store dropdown_customerdiscountgroup margin-left-10" ng-model="customerdata.currentUserCustomerGroup" 
+                                   theme="selectize" search-enabled='true' 
+                                   on-select="assignCustomerGroupToCurrentUser(customerdata.currentUserCustomerGroup,$select);refreshCustomerGroupScope();">
+                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="group in customerdata.Customergroupdetails | filter: $select.search">
+                                <span ng-bind-html="group.name | highlight: $select.search"></span>
+                            </ui-select-choices> 
+                        </ui-select>
+
+                        <strong class="group_name margin-left-10" ng-if="!customerdata.discountCancelBut && customerdata.group.length"
+                                ng-bind-template="{{customerdata.assignedDiscountGroupName}} "></strong>
+                        <strong class="group_name margin-left-10" ng-if="!customerdata.discountCancelBut && !customerdata.group.length"
+                                ng-bind-template="{{customerdata.assignedDiscountGroupName}}"></strong>
+
+                        <a class="heading_7" ng-click="customerdata.discountCancelBut = true; assignDefaultSelectedLedgertoSelectBox();"
+                           ng-if="!customerdata.discountCancelBut && !accessPermission[currentPageName]['Modify']">Change</a>
+                        <a class="heading_7 change_btn_discount common_button margin-left-10" ng-click="customerdata.discountCancelBut = false; assignDiscountGroupToCurrentCustomer(customerdata.currentUserCustomerGroup)"
+                           ng-if="customerdata.discountCancelBut">Change</a>
+                        <a class="heading_7 margin-left-10" ng-if="customerdata.discountCancelBut"
+                           ng-click="customerdata.discountCancelBut = false; resetCurrentUserDiscountGroup();">Cancel</a>
+                    </div>
+
+                    <div class="clearboth"></div>
+
+                    <div class="discount_group_wrapper">
+                        <div class="height_scroll_discount_row" ng-init="customerdata.discountGroupSort = true; clientdata.discountGroupSortByField = 'itemcode';">
+                            <table align="center">
+                                <tbody>
+                                    <tr>
+                                        <td class="discont_table_header">
+                                            <div style="font-size: 12px;">
+                                                Sort by <a class="sort" ng-click="customerdata.customergroupsortbyfield = '+division_name'"> 0A-Z</a>,
+                                                <a class="sort" ng-click="customerdata.customergroupsortbyfield = '-division_name'">Z-A0</a>
+                                            </div>
+                                        </td>
+                                        <td class="discont_table_header" align="center">
+                                            <a class="sort" style="font-size: 12px;">Clear all Discounts</a>
+                                        </td>
+                                        <td class="discont_table_header" align="center"></td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in customerdata.Measurements">
+                                            <b>Cost per {{measurement.fabric_measure}}</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table_row_discount" ng-repeat="division in customerdata.selectedCustomerGroup.discountview| orderBy:customerdata.customergroupsortbyfield track by $index">
+                                <tbody>
+                                    <tr>
+                                        <td class="discont_table_header">
+                                            <b>{{division.division_name}}</b>
+                                        </td>
+                                        <td class="discont_table_header">
+                                            <b>{{division.process_name}}</b>
+                                        </td>
+                                        <td class="discont_table_header" align="center">Actual Price</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{data.currency}}{{measurement.cost| number:2}}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header" align="center">Discount Price</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{data.currency}}{{measurement.discount_price| number:2}}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">&nbsp;</td>
+                                        <td class="discont_table_header">Percentage</td>
+                                        <td align="center" class="discount_table_body" ng-repeat="measurement in division.measurements">
+                                            <div>{{measurement.percentage| number:2}} %</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-outward-container height_scroll hide" id="outward">
+                    <div ng-if="customerdata.viewableCustomerData && customerdata.viewableCustomerData._id" class="inward-tab-container">
+                        <ul ng-if="customerdata.delivery && customerdata.delivery.length > 0">                                            
+                            <li ng-repeat="outward in customerdata.delivery">
+                                <div class="dash_body">
+                                    <div class="dashboard_card_list" ng-click="viewJob(outward, 'OUTWARD')">
+                                        <div class="left_strip"></div>
+                                        <div class="right_sec">
+                                            <div class="card_txt_cnt">
+                                                <div class="col-xs-12 padding_zero customer-name"> 
+                                                    <b class="pull-left" ng-bind="outward.customer_name"></b> 
+                                                    <span class="on-time pull-right">On Time</span> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Job No: <b ng-bind="outward.order_no"></b> <b class="pull-right" ng-bind="outward.order_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Outward No: <b ng-bind="outward.delivery_no"></b> <b class="pull-right" ng-bind="outward.delivery_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero">
+                                                    <div class="name process">Process: <b class="txt_blue" order-directive process-name="{{outward.process}}"></b> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="text-center" ng-if="!customerdata.delivery || customerdata.delivery.length == 0"><h3>No outwards available.</h3></div>
+                    </div>
+                </div>
+
+                <div class="customer-returnorder-container height_scroll hide" id="returnorder">
+                    <div class="inward-tab-container">
+                        <ul ng-if="customerdata.deliveryReturn && customerdata.deliveryReturn.length > 0">                                            
+                            <li ng-repeat="outward in customerdata.deliveryReturn">
+                                <div class="dash_body">
+                                    <div class="dashboard_card_list" ng-click="viewJob(outward, 'OUTWARDRETURN')">
+                                        <div class="left_strip"></div>
+                                        <div class="right_sec">
+                                            <div class="card_txt_cnt">
+                                                <div class="col-xs-12 padding_zero customer-name"> 
+                                                    <b class="pull-left" ng-bind="outward.customer_name">Customer Name </b> <span class="on-time pull-right">On Time</span> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name"> 
+                                                    Job No: <b ng-bind="outward.order_no"></b> <b class="pull-right" ng-bind="outward.order_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero order-name">
+                                                    Return No: <b ng-bind="outward.delivery_no"></b> <b class="pull-right" ng-bind="outward.delivery_date | date:'dd MMM yyyy'"></b> 
+                                                </div>
+                                                <div class="col-xs-12 padding_zero">
+                                                    <!--<div class="name process">Process: <b class="txt_blue" order-directive process-name="{{outward.process}}"></b> </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="text-center" ng-if="!customerdata.deliveryReturn || customerdata.deliveryReturn.length == 0"><h3>No returns available.</h3></div>
+                    </div>
+                </div>
+
+                <div class="customer-statement-container height_scroll hide" id="statement">
+                    <div class="col-lg-12 margin-top-30">
+                        <div class="heading_3" style="margin: 0 auto;width: 400px;display: block;text-transform: uppercase;letter-spacing: 1px;">page under construction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>							
+
+<script>
+    //Card Height Set
+    WinHeight();
+    splite_screen();
+    $(window).resize(function () {
+    WinHeight();
+    });
+    $(document).ready(function () {
+
+    $('.customer_btn').click(function () {
+    $('.customer_view.sec_3').addClass('show')
+    });
+    $('.collapse').on('show.bs.collapse', function () {
+    var id = $(this).attr('id');
+    $('a[ng-href="#' + id + '"]').closest('.panel-heading').addClass('active-faq');
+    $('a[ng-href="#' + id + '"] .panel-title span').html('<i class="glyphicon glyphicon-minus"></i>');
+    });
+    $('.collapse').on('hide.bs.collapse', function () {
+    var id = $(this).attr('id');
+    $('a[ng-href="#' + id + '"]').closest('.panel-heading').removeClass('active-faq');
+    $('a[ng-href="#' + id + '"] .panel-title span').html('<i class="glyphicon glyphicon-plus"></i>');
+    });
+    $(".cus_card_c").on("click", function () {
+    var parentDashCard = $(this).closest('.cus_card_c');
+    parentDashCard.find('.cus_expand_c').slideToggle();
+    });
+    $('#slide-toggle').on("click", function () {
+    var parentClass = $(this).closest('.open_div');
+    });
+    $('.customer_btn').on("click", function () {
+    $(this).toggleClass('active');
+    });
+    });
+    //Window Resize Div Set Auto Height
+    function container_height_auto() {
+    var WindowHeight = $(window).height(); //Set Window Height
+    var HeaderHeight = $('.header').height() + 75; //Header Height and Content Header Height
+    var windows_height = WindowHeight - HeaderHeight; // SET DEFAULT HEIGHT IN CONTAINER 
+    $('.filter_scroll').css({'height': windows_height}); // SET DEFAULT HEIGHT IN CONTAINER
+    $('.cus_view_cnt').css({'height': windows_height}); // SET DEFAULT HEIGHT IN CONTAINER
+    //$('.customer_page').css('height', WindowHeight - (HeaderHeight - 70));// SET DEFAULT HEIGHT IN WINDOW
+    $('.height_scroll').css('max-height', WindowHeight - HeaderHeight); //Full Screen Common Div
+    $('.customer-returnorder-container').css('height', WindowHeight - HeaderHeight - 10);
+    $('.customer-outward-container').css('height', WindowHeight - HeaderHeight - 10);
+    $('.height_scroll_discount').css('max-height', WindowHeight - HeaderHeight); //Full Screen Common Div
+    $('.height_scroll_discount_row').css('max-height', WindowHeight - (HeaderHeight + 130)); //Full Screen Common Div
+    $('.height_scroll_discount_row').css('height', WindowHeight - (HeaderHeight + 130)); //Full Screen Common Div
+    $('.addcustomer_profile').css('height', WindowHeight - HeaderHeight);
+    $('.customer-card-container').css('height', WindowHeight - (HeaderHeight - 15));
+    }
+
+    //Window Resize Div Set Auto Height in store
+    function store_height_auto() {
+    var WindowHeight_1 = $(window).height(); //Set Window Height
+    var HeaderHeight_1 = $('.header').height() + 75; //Header Height and Content Header Height
+    var Store_header_height = $('.letter_cnt').height() + 160;
+    var windows_height_1 = WindowHeight_1 - (HeaderHeight_1 + Store_header_height); // SET DEFAULT HEIGHT IN CONTAINER For Store Scroll container 
+    $('.section_store').css({'height': windows_height_1}); // SET DEFAULT HEIGHT IN CONTAINER
+    }
+
+    //Full view button click show
+    function full_view_show() {
+    var WindowHeight = $(window).height(); //Set Window Height
+    var HeaderHeight = $('.header').height() + 90; //Header Height and Content Header Height
+    $('.customer_view').removeClass('col-lg-6');
+    $('.customer_view').removeClass('col-lg-8');
+    $('.customer_view').addClass('col-lg-12');
+    $('.customer_view').removeClass('col-md-8');
+    $('.customer_view').addClass('col-md-12');
+    $('.customer_view').removeClass('col-sm-8');
+    $('.customer_view').addClass('col-sm-12');
+    $('.customer_view').removeClass('col-xs-8');
+    $('.customer_view').addClass('col-xs-12');
+    $('.sec_1').attr('status', 'false');
+    $('.sec_2').attr('status', 'false');
+    $('.sec_3').attr('status', 'true');
+    $('.store_price').removeClass('hide'); //store price remove hide
+    //Full Vieww Grap and store different div add
+    $('#cus-page-full-screen').addClass('full-view ');
+    $('.cus_view_float').removeClass('cus_view_cnt');
+    $('.cus_menu').removeClass('hide');
+    //Heigth Set
+    $('.graph').css('height', WindowHeight - (HeaderHeight - 15)); //Grap view Set Height 
+    $('.customer-card-container').css('height', WindowHeight - (HeaderHeight - 15)); //customer-card-container view Set Height        
+    $('.customer_paymant_col').css('height', WindowHeight - (HeaderHeight - 15));
+    $('.viewcustomer_profile').css('height', WindowHeight - (HeaderHeight - 15));
+    }
+
+    //Full view button click hide
+    function full_view_hide() {
+    $('#sec_1').removeClass('hide');
+    $('#sec_2').removeClass('hide');
+    $('.customer_view').removeClass('col-lg-12');
+    $('.customer_view').addClass('col-lg-6');
+    $('.customer_view').removeClass('col-md-12');
+    $('.customer_view').addClass('col-md-8');
+    $('.customer_view').removeClass('col-sm-12');
+    $('.customer_view').addClass('col-sm-8');
+    $('.customer_view').removeClass('col-xs-12');
+    $('.customer_view').addClass('col-xs-8');
+    $('.sec_1').attr('status', 'true');
+    $('.sec_2').attr('status', 'true');
+    $('.sec_3').attr('status', 'true');
+    $('.store_price').addClass('hide'); //store price add hide
+
+    //Full Vieww Grap and store different div remove
+    $('#cus-page-full-screen').removeClass('full-view ');
+    $('.cus_view_float').addClass('cus_view_cnt');
+    $('.cus_menu').addClass('hide');
+    //Payment Hide
+    $('#payment').addClass('hide');
+    //Payment Hide
+    $('#profile').addClass('hide');
+    //Discount Hide                             
+    $('#discount').addClass('hide');
+    //Outward Hide
+    $('#outward').addClass('hide');
+    //Return Hide
+    $('#returnorder').addClass('hide');
+    //Statement Hide                             
+    $('#statement').addClass('hide');
+    //Grap Show
+    $('.cus_view_float').removeClass('hide');
+    //Link Active Remove
+    $('.click').removeClass('active');
+    $('#purchase_click').addClass('active');
+    //Heigth Set
+    $('.graph').css('height', 'auto'); //Grap view Set Height Auto
+    $('.customer-card-container').css('height', 'auto'); //customer-card-container view Set Height Auto	
+    }
+
+    //Purchase Click
+    function purchase() {
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#statement').addClass('hide');
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Payment Click
+    function payment() {
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#statement').addClass('hide');
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Profile Click
+    function profile() {
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#statement').addClass('hide');
+    $('#profile').removeClass('hide');
+    $('#discount').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Discount Click
+    function discount() {
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#statement').addClass('hide');
+    $('#profile').removeClass('hide');
+    $('#discount').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Discount Click
+    function outward() {
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#statement').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#outward').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Return Click
+    function returnorder() {
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#statement').addClass('hide');
+    $('#returnorder').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    //Statement Click
+    function statement() {
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#returnorder').addClass('hide');
+    $('#statement').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    }
+
+    function full_screen() {
+    var StatusValue = $('#sec_1').attr('status') == 'true' && $('#sec_2').attr('status') == 'true' && $('#sec_3').attr('status') == 'true'
+
+            if (parseInt($(window).width()) > 1600) { // Click Function for 1200px to 2000px
+    if ($('#sec_1').attr('status') == 'true' && $('#sec_2').attr('status') == 'true' && $('#sec_3').attr('status') == 'true') {
+    $('#sec_1').addClass('hide');
+    $('#sec_2').addClass('hide');
+    //Payment Show
+    $('#payment').removeClass('hide');
+    full_view_show();
+    $('#page-wrapper').show();
+    } else {
+    full_view_hide();
+    }
+    }
+
+    if (parseInt($(window).width()) <= 1600 && parseInt($(window).width()) >= 1200) { // Click Function for 1200px to 2000px
+
+    if ($('#sec_1').attr('status') == 'true' && $('#sec_2').attr('status') == 'true' && $('#sec_3').attr('status') == 'true') {
+    $('#sec_1').addClass('hide');
+    $('#sec_2').addClass('hide');
+    //Payment Show
+    $('#payment').removeClass('hide');
+    $('.graph').addClass('hide');
+    full_view_show();
+    } else {
+    full_view_hide();
+    $('.graph').removeClass('hide');
+    }
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) { // Click Function for 900px to 1200px
+    if (StatusValue) {
+    $('#payment').addClass('hide');
+    $('#sec_1').addClass('hide');
+    $('#sec_2').addClass('hide');
+    full_view_show();
+    } else {
+    full_view_hide();
+    }
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    if (StatusValue) {
+    $('#payment').addClass('hide');
+    $('#purchase').removeClass('hide');
+    $('.graph').addClass('hide');
+    $('#sec_1').addClass('hide');
+    $('#sec_2').addClass('hide');
+    $('#menu_id').removeClass('hide'); //Mobile Menu Bar Click Hide 
+    full_view_show();
+    } else {
+    full_view_hide();
+    $('.graph').removeClass('hide');
+    $('#purchase').removeClass('hide');
+    $('#menu_id').addClass('hide'); //Mobile Menu Bar Click Hide 
+    }
+    }
+    }
+
+    $(document).ready(function () {
+    left_sidebar();
+    if (parseInt($(window).width()) >= 700) {
+    container_height_auto();
+    }
+
+    if (parseInt($(window).height()) >= 750) {
+    store_height_auto()
+    }
+
+    var WindowHeight = $(window).height(); //Set Window Height
+    var HeaderHeight = $('.header').height() + 90; //Header Height and Content Header Height 
+
+    if (parseInt($(window).width()) < 1600) {
+    $('.split-pane-component').removeClass('.s_dashboard_section');
+    }
+
+    //Purchase Click
+    $(document).on('click', '#purchase_click', function () {
+    if (parseInt($(window).width()) > 1200) {
+    purchase();
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    purchase();
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').addClass('hide');
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    purchase();
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('.graph').addClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    });
+    //Payment Click
+    $(document).on('click', '#payment_click', function () {
+    if (parseInt($(window).width()) > 1200) {
+    payment();
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').removeClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').addClass('hide');
+    $('.click').removeClass('active');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    });
+    //Add favorite
+    $('.favorite').click(function () {
+    $(this).toggleClass('active');
+    });
+    $('.favorite_big').click(function () {
+    $(this).toggleClass('active');
+    });
+    //Profile Click
+    $(document).on('click', '#profile_click', function () {
+    if (parseInt($(window).width()) > 1200) {
+    profile();
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    profile();
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').removeClass('hide');
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    profile();
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').removeClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    });
+    //Discount Click
+    $(document).on('click', '#discount_click', function () {
+    if (parseInt($(window).width()) > 1200) {
+    discount();
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    discount();
+    $('#profile').addClass('hide');
+    $(this).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    discount();
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').removeClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    });
+    //Outward Click
+    $(document).on('click', '#outward_click', function () {
+    outward();
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').removeClass('hide');
+    $('#return').addClass('hide');
+    $('#statement').addClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    });
+    //Return Click
+    $(document).on('click', '#return_click', function () {
+    returnorder();
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#return').removeClass('hide');
+    $('#statement').addClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide
+    });
+    //Statement Click
+    $(document).on('click', '#statement_click', function () {
+    statement();
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#outward').addClass('hide');
+    $('#return').addClass('hide');
+    $('#statement').removeClass('hide');
+    $(this).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    });
+    // Less Than 1200px Customer View Button Click Option
+    $(document).on('click', '.customer_view_btn', function () {
+    $('.customer-toggle').removeClass('hide');
+    $('#cus_hide').removeClass('hide');
+    $('#margin').addClass('hide');
+    $('.sec_3').removeClass('hide');
+    $('.sec_3').css('display', 'block');
+    $('.sec_1').css('display', 'none');
+    $('.sec_2').removeClass('col-md-8');
+    $('.sec_2').addClass('col-md-4');
+    $('.sec_2').removeClass('col-sm-8');
+    $('.sec_2').addClass('col-sm-4');
+    $('.sec_2').removeClass('col-xs-8');
+    $('.sec_2').addClass('col-xs-4');
+    $('#menu_id').addClass('hide'); //Mobile Menu Bar Click Hide 
+
+    $('.customer_btn').attr('status', false);
+    });
+    // Less Than 1200px Customer Toggle Hide Div 
+    $(document).on('click', '.customer-toggle', function () {
+    $('.customer-toggle').addClass('hide');
+    $('#cus_hide').addClass('hide');
+    $('#margin').removeClass('hide');
+    $('.sec_1').css('display', 'block');
+    $('.sec_3').addClass('hide');
+    $('.sec_2').removeClass('col-md-4');
+    $('.sec_2').addClass('col-md-8');
+    $('.sec_2').removeClass('col-sm-4');
+    $('.sec_2').addClass('col-sm-8');
+    $('.sec_2').removeClass('col-xs-4');
+    $('.sec_2').addClass('col-xs-8');
+    $('#menu_id').addClass('hide'); //Mobile Menu Bar Click Hide 
+    });
+    //Jquery Responsive 
+    if (parseInt($(window).width()) > 1200) {
+    $('.sec_3').removeClass('width_hide');
+    $('.sec_1').css('display', 'block');
+    $('.customer_btn').removeClass('customer_view_btn');
+    $('.customer-toggle').addClass('hide');
+    $('#cus_hide').addClass('hide');
+    $('#margin').removeClass('hide');
+//            grap_data();
+    } else {
+    $('.customer_btn').addClass('customer_view_btn');
+    $('.sec_3').addClass('hide');
+    }
+
+    //Store card expand
+    $('.cus_card').click(function () {
+    $('.expand-div').addClass('hide');
+    $(this).closest('.cus_card').find('.expand-div').removeClass('hide');
+    });
+    //Store Change 
+    $('#change').click(function () {
+    $('.select_store').toggleClass('hide');
+    $('.group_name').toggleClass('hide');
+    });
+    }); //DocumenT ClosE        
+
+    function purchase_click(e, th) {
+
+    if (parseInt($(window).width()) > 1200) {
+    purchase();
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    purchase();
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').addClass('hide');
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    purchase();
+    $('.cus_view_float').removeClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').addClass('hide');
+    $('.graph').addClass('hide');
+    $(th).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    }
+
+    function profile_click(e, th) {
+
+    if (parseInt($(window).width()) > 1200) {
+    profile();
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    profile();
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').removeClass('hide');
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    profile();
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').removeClass('hide');
+    $(th).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    }
+
+    function payments_click(e, th) {
+
+    if (parseInt($(window).width()) > 1200) {
+    payment();
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').removeClass('hide');
+    $('.click').removeClass('active');
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    $('.cus_view_float').addClass('hide');
+    $('#discount').addClass('hide');
+    $('#payment').removeClass('hide');
+    $('#profile').addClass('hide');
+    $('.click').removeClass('active');
+    $(th).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    }
+
+    function discount_click(e, th) {
+
+    if (parseInt($(window).width()) > 1200) {
+    discount();
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 1200 && parseInt($(window).width()) >= 900) {
+    discount();
+    $('#profile').addClass('hide');
+    $(th).addClass('active');
+    } else if (parseInt($(window).width()) <= 899 && parseInt($(window).width()) >= 100) { // Click Function for 100px to 900px
+    discount();
+    $('.cus_view_float').addClass('hide');
+    $('#payment').addClass('hide');
+    $('#profile').addClass('hide');
+    $('#discount').removeClass('hide');
+    $(th).addClass('active');
+    $('.navbar-collapse').attr('aria-expanded', 'false'); //Mobile Menu Bar Click Hide
+    $('.navbar-collapse').removeClass('in'); //Mobile Menu Bar Click Hide 
+    }
+    }
+
+    function customer_view() {
+
+    if (parseInt($(window).width()) < 1200) {
+    $('.customer-toggle').removeClass('hide');
+    $('#cus_hide').removeClass('hide');
+    $('#margin').addClass('hide');
+    $('.sec_3').removeClass('hide');
+    $('.sec_3').css('display', 'block');
+    $('.sec_1').css('display', 'none');
+    $('.sec_2').removeClass('col-md-8');
+    $('.sec_2').addClass('col-md-4');
+    $('.sec_2').removeClass('col-sm-8');
+    $('.sec_2').addClass('col-sm-4');
+    $('.sec_2').removeClass('col-xs-8');
+    $('.sec_2').addClass('col-xs-4');
+    $('#menu_id').addClass('hide'); //Mobile Menu Bar Click Hide 
+
+    $('.customer_btn').attr('status', false);
+    }
+    }
+
+    function customer_toggle() {
+
+    if (parseInt($(window).width()) < 1200) {
+    $('.customer-toggle').addClass('hide');
+    $('#cus_hide').addClass('hide');
+    $('#margin').removeClass('hide');
+    $('.sec_1').css('display', 'block');
+    $('.sec_3').addClass('hide');
+    $('.sec_2').removeClass('col-md-4');
+    $('.sec_2').addClass('col-md-8');
+    $('.sec_2').removeClass('col-sm-4');
+    $('.sec_2').addClass('col-sm-8');
+    $('.sec_2').removeClass('col-xs-4');
+    $('.sec_2').addClass('col-xs-8');
+    $('#menu_id').addClass('hide'); //Mobile Menu Bar Click Hide 
+    }
+    }
+
+    function customer_page_height() {
+    var header_height_c = $('.header').height(); //window height
+    var windowHeight_c = $(window).height();
+    var total_height_c = windowHeight_c - header_height_c;
+    $('.c_window_height').css('height', total_height_c - 10);
+    }
+
+    //Window Resize Div Set Auto Height
+    $(window).resize(function () {
+    if (parseInt($(window).height()) >= 750) {
+    container_height_auto();
+    }
+
+    if (parseInt($(window).height()) >= 750) {
+    store_height_auto();
+    }
+
+    if (parseInt($(window).width()) > 1200) {
+    $('.sec_3').removeClass('width_hide');
+    $('.customer_header').removeClass('hide');
+    $('.sec_1').css('display', 'block');
+    $('.customer_btn').removeClass('customer_view_btn');
+    $('.customer-toggle').addClass('hide');
+    $('#cus_hide').addClass('hide');
+    $('#margin').removeClass('hide');
+    }
+
+    if ($(window).width() < 1199) {
+    $('.customer_btn').addClass('customer_view_btn');
+    $('.sec_3').trigger('hide');
+    }
+
+    var header_height_c1 = $('.header').height(); //window height
+    var windowHeight_c1 = $(window).height();
+    var total_height_c1 = windowHeight_c1 - header_height_c1;
+    $('.c_window_height').css('height', total_height_c1 - 10); //window height
+    customer_page_height();
+    container_height_auto();
+    store_height_auto();
+    });
+    setTimeout(function(){
+    container_height_auto();
+    store_height_auto();
+    customer_page_height();
+    }, 500);
+</script>

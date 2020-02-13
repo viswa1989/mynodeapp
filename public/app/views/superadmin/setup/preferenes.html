@@ -1,0 +1,74 @@
+<div class="common_wrapper sms" ng-controller="PreferenesController">
+    <div class="col-xs-12 padding_zero margin-bottom-30">
+        <div class="loader_large" ng-show="preferenceData.pageLoad"></div>
+        
+        <div class="wrapper" ng-show="!preferenceData.pageLoad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="content_title"></div>
+                        <div class="content_subtitle color_red_warning"><b>Warning!</b> Modifying the preferences will change the way the application behaves. So be careful and <br>
+                            do know what you are doing here.</div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class=" heading_title_2 margin-bottom-10">General Preferences</div>
+                        <div class="content_subtitle">Add and manage custom preference values.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container margin-bottom-35">
+                <div class="row common-input-edit">
+                    <div class="preference_container" id="preference_container">
+                        <div class="col-xs-12 margin-bottom-10" ng-repeat="preferences in preferenceForm.preferences">
+                            <div class="col-xs-4">
+                                <input type="text" ng-model="preferences.module" class="form-control" placeholder="Module Name" />
+                            </div>                            
+                            <div class="col-xs-4">
+                                <input type="text" ng-model="preferences.preference" class="form-control" placeholder="Preference Name" />
+                            </div>
+                            <div class="col-xs-4">
+                                <input type="text" ng-model="preferences.value" class="form-control" placeholder="value" />
+                            </div>        
+                        </div>
+                    </div>
+                    
+                    <div class="preference_container">
+                        <div class="col-xs-12 preference">
+                            <div class="col-xs-4">
+                                <a class="add_customer accountpage_click_resize" ng-click="addPreference(); $event.stopPropagation();">
+                                    <span class="add_icon_smalls"></span>
+                                    <span class="add_customer_text">Add New</span>
+										  
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container margin-bottom-35">
+                <div class="row">
+                    <div class="col-xs-12 margin-bottom-35">
+                        <div class="content_title heading_4"></div>
+                        <div class="content_subtitle">Enter Developer Password to update the preferences. </div>
+                        <div class="preference_container" id="preference_container">
+                            <div class="col-xs-5 col-md-4 col-xs-offset-4 common-input-edit">
+                                <div class="input-group-lg" style="position:relative;">
+                                    <input type="{{preferenceForm.inputType}}" class="form-control" placeholder="Password" id="inputPassword" name="userPassword" 
+                                           ng-model="preferenceForm.userPassword" ng-class="{'error':preferenceForm.userPasswordvalid && clientdata.preferenceSubmission}" required>                                  
+                                    <span class="eye-icon" ng-class="{'icon-eye-close':preferenceForm.inputType == 'text'}" ng-mousedown="showpassword('text');" 
+                                          ng-mouseup="showpassword('password')"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xs-12 margin-top-30 text-center">
+                        <a class="common_button" ng-click="clientdata.preferenceSubmission = true;updatePreferences(preferenceForm.preferences)"><b>Update Preferences</b></a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="store_view_content" id="store2" ng-init="processorder = ''">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 margin-bottom-30">
+                <div class="stores_titles">Manage Process</div>
+                <div class="stores_subtitle">Click on the process to edit or add more details.</div>
+                <div class="brand_sort text-center margin-bottom-10">Sort by
+                    <a class="sort" ng-click="processorder = '+process_name';" ng-style="{ 'text-decoration' : (processorder == '+process_name') ? 'underline' : 'none' }">0A-Z</a>,
+                    <a class="sort" ng-click="processorder = '-process_name';" ng-style="{ 'text-decoration' : (processorder == '-process_name') ? 'underline' : 'none' }">Z-A0</a>
+                </div>
+                <div class="sort_filter"><input type="search" placeholder="Filter" ng-model="processfilter"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 padding_zero margin-top-20 setup-divison-manage-process">
+                <div class="center_content">
+                    <div class="branch_card_add manage-process" ng-click="add_process(); $event.stopPropagation();">
+                        <div class="center">
+                            <div class="add_icon"></div>
+                        </div>
+                        <div>Add New Process</div>
+                    </div>
+                    <div class="branch_card setup-printing-divsion-card add-card" ng-repeat="proc in processData.process_list| filter:processfilter | orderBy:processorder"
+                         ng-click="updateProcess(proc); $event.stopPropagation();" ng-class="{'disabled':!proc.is_active}">
+                        <span class="disable_small_brand" ng-if="!proc.is_active"></span>
+                        <div class="branch" ng-bind="proc.process_name"></div>
+                        <div class="place" ng-bind="proc.process_code"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="stores_pre_nex"> ← <a class="blod_line" ng-click="changeChildPage('Location'); $event.stopPropagation();">Location</a> | <a class="blod_line" ng-click="changeChildPage('Accounts'); $event.stopPropagation();">  Accounts  </a> → </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openManagProcessModal() {
+        $("#myModal").modal();
+    }
+</script>

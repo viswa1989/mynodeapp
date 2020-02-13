@@ -1,0 +1,7 @@
+/*@charset "utf-8";
+ CSS Document 
+
+@media only screen and (max-width: 1600px) and (min-width: 1200px){#login-dashboard {background: #eee url(../images/login-tile.jpg) -348px center no-repeat; }}
+@media only screen and (max-width: 990px){.login-pannel{ width:100%; margin: 0 auto;} .login-content .form-signin{ padding-top: 12%;} .logo{ margin: 0 0 9% } .copy-rights  { margin:20px 0 10px;}}
+@media only screen and (max-width: 1199px) and (min-width: 991px){#login-dashboard {background: #eee url(../images/login-tile.jpg) -603px center no-repeat; }}
+@media only screen and (max-width: 1024px) and (min-width: 768px){#cutomers{overflow-y: auto;} }*/

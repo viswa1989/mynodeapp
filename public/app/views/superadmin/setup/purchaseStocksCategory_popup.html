@@ -1,0 +1,101 @@
+<div class="modal-body">
+    <form name="mycategoryForm" novalidate class="division-modal-detail">
+        
+        <div class="brand_form_header">
+            <div class="brands_btn_right">
+                <div class="right_side">
+                    <a class="dropdown-toggle">
+                        <div class="dropdown_icon_model" onclick="return popup_dropdown(event, $(this))"></div>
+                    </a>
+                </div>
+                <ul class="dropdown-menu dropdown_popup" id="dropdown-menu_process">
+                    <li class="text-center list_store_title">Menu 
+                        <span class="close trans_close"><span class="close_icon_small_dropdown" onclick="return popup_dropdown(event, $(this))"></span></span>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this));" ng-if="categoryForm.is_active">Disable this Category...</a>
+                        <a class="toggle_click_1" onclick="return toggle_click_disableenable(event, $(this));" ng-if="!categoryForm.is_active">Enable this Category...</a>
+
+                        <div class="toggle_disableenable toggle_cnt_1 margin-top-05" style="display: none;">
+                            <p ng-if="categoryForm.is_active">Disabling this Category will restrict purchase order of this category immediately. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="categoryForm.is_active" ng-click="togglecategory(categoryForm);" onclick="hidealldialg()">Yes, Disable it.</a>
+
+                            <p ng-if="!categoryForm.is_active">Enabling this Category. Do you want to continue?</p>
+                            <a class="remove_btn" ng-if="!categoryForm.is_active" ng-click="togglecategory(categoryForm);" onclick="hidealldialg()">Yes, Enable it.</a>
+                        </div>
+                    </li>
+
+                    <li class="divider" ng-if="categoryData.process != 'ADD'"></li>
+
+                    <li ng-if="categoryData.process != 'ADD'">
+                        <a class="toggle_click_2" onclick="return toggle_click_remove(event, $(this))">Remove this Category...</a>
+                        <div class="toggle_remove toggle_cnt_2 margin-top-05" style="display: none;">
+                            <p>Removing this Category cannot be undone. Do you want to continue removing this category?</p>
+                            <a class="remove_btn" ng-click="delete(categoryForm);" onclick="hidealldialg()">Yes, Remove it.</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="right_side">
+                    <div class="close_icon_large" ng-click="cancel(); $event.stopPropagation();"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 white_color">
+                    <div class="row">
+                        <div class="col-xs-12" style="padding-left:35px;">
+                            <div class="brand_name_cnt brand_name_height">
+                                <div class="brand_name_form heading_4" style="min-height:40px;"> 
+                                    <input type="text" name="name" class="input_name_edit" ng-model="categoryForm.name" placeholder="CATEGORY NAME" style="height:33px;width:350px;"
+                                           ng-class="{'input_error_class':(!mycategoryForm.name.$valid && categoryData.formsubmission)}" ng-blur="verifyDuplicate(categoryForm, 'category')" 
+                                           required/>
+                                </div>
+                                <div class="brand_name_form heading_4"> 
+                                    <input type="text" name="code" class="input_name_edit" ng-model="categoryForm.code" placeholder="CATEGORY CODE" style="height:33px;width:350px;" 
+                                           ng-class="{'input_error_class':(!mycategoryForm.code.$valid && categoryData.formsubmission)}" ng-blur="verifyDuplicate(categoryForm, 'code')" 
+                                           required/>
+                                </div>
+                            </div>
+                            
+                            <div class="brand_status_cnt">
+                                <div class="data_time_update heading_6" style="width: 72%;">
+                                    <div ng-if="categoryForm._id">
+                                        <span ng-bind="'Last Updated: '+ (categoryForm.updated | dateformatFilter:'dmyt')+'.'"></span> <br>
+                                        <span ng-bind="'Created On: '+ (categoryForm.created | dateformatFilter:'dmyt')+'.'"></span>
+                                    </div>
+                                </div>
+                                <div class="enable_disable heading_4" ng-if="categoryForm.is_active" style="width: 28%">
+                                    <div class="center">
+                                        <div class="enable_large_white"></div>
+                                    </div>
+                                    Enabled 
+                                </div>
+                                <div class="enable_disable heading_4" ng-if="!categoryForm.is_active" style="width: 28%">
+                                    <div class="center">
+                                        <div class="disable_medium_white"></div>
+                                    </div>
+                                    Disable 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand_form_body">
+            <div class="brand_form_body_cnt">
+                <div class="col-xs-12 padding_zero">
+                    <div class="col-xs-12 text-center margin-top-20 margin-bottom-20">
+                        <button class="common_button" ng-if="categoryData.process == 'ADD'" ng-show="!categoryData.eventLoad" 
+                                ng-click="categoryData.formsubmission = true;create(mycategoryForm.$valid); $event.stopPropagation();">Save</button>
+                        <button class="common_button" ng-if="categoryData.process == 'UPDATE'" ng-show="!categoryData.eventLoad" 
+                                ng-click="categoryData.formsubmission = true;update(mycategoryForm.$valid); $event.stopPropagation();">Update</button>
+                        <div class="loader_small" ng-show="categoryData.eventLoad"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

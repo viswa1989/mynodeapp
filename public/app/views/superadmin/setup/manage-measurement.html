@@ -1,0 +1,42 @@
+<div class="container" ng-init="measureorder = ''">
+    <div class="row">
+        <div class="col-xs-12 margin-bottom-20">
+            <div class="heading_title_1">Measurements Types </div>
+            <div class="subtitle">Click on the measurement to edit or add more details.</div>
+            <div class="sort_list heading_7">
+                Sort by 
+                <a ng-click="measureorder = '+fabric_measure'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (measureorder == '+fabric_measure') ? 'underline' : 'none' }">0A-Z</a>, 
+                <a ng-click="measureorder = '-fabric_measure'; $event.stopPropagation();" ng-style="{ 'text-decoration' : (measureorder == '-fabric_measure') ? 'underline' : 'none' }">Z-A0</a>
+            </div>
+            <div class="sort_filter">
+                <input type="search" placeholder="Filter" ng-model="unitfilter">
+            </div>
+        </div>
+
+        <div class="col-xs-12 padding_zero margin-top-30 margin-bottom-30">
+            <div class="center_content center_alg">
+                <div class="branch_card_add measurement-add" ng-click="newMeasure(); $event.stopPropagation();">
+                    <div class="center">
+                        <div class="add_icon"></div>
+                    </div>
+                    <div>Add New Measurement</div>
+                </div>
+                <div class="branch_card nocolor-card card_customized" ng-repeat="measure in (manageData.measures | orderBy:measureorder | orderEmpty:'_id':'toTop') | filter:unitfilter" ng-class="{'disabled':!measure.is_active}">
+                    <span class="disable_small_brand activebrand" ng-if="measure.is_active" noty-disable="" noty-update="togglemeasurement(measure)" noty-style="3" 
+                          noty-content="Enabling {{measure.fabric_measure}} Measurement will hide the items. You can re-enable the items anytime. Do you want to continue? "></span>
+                    <span class="disable_small_brand" ng-if="!measure.is_active" noty-enable="" noty-update="togglemeasurement(measure)" noty-style="3" 
+                          noty-content="Disabling {{measure.fabric_measure}} Measurement will show the items. You can disable the items anytime. Do you want to continue? "></span>
+                    <span>
+                        <input type="text" class="small" placeholder="New Measurement" ng-model="measure.fabric_measure" ng-model-options="{updateOn: 'blur'}"
+                               ng-change="add_measure(measure, $index);" required>
+                    </span>
+                    <span class="delete-add" ng-click="delete_measure(measure._id, $index); $event.stopPropagation();"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="stores_pre_nex"> ← <a class="blod_line" ng-click="managePage('color'); $event.stopPropagation();">Colour</a></div>
+    </div>
+</div>

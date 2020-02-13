@@ -1,0 +1,151 @@
+<div class="common_wrapper" ng-controller="AccountmasterController">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 margin-top-20 text-center">
+                <div class="tab_inner_menu">
+                    <div class="menu_0">Showing:</div>
+                    <div class="menu1 active" ng-class="{'active':clientdata.showCategory == 'income' || clientdata.showCategory == 'expense'}" ng-click="changeIncomingToExpense('INCOMING')">Account Categories</div>
+                    <div class="menu2" ng-class="{'active':clientdata.showCategory == 'tax'}" ng-click="changeIncomingToExpense('TAX');">Manage Tax Classes</div>
+                    <div class="menu_0">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12" ng-if="clientdata.showCategory == 'income' || clientdata.showCategory == 'expense'">
+                <div class="content_title heading_4">Account Categories</div>
+                <div class="content_subtitle">Manage Income & Expense Categories here. You can create your own categories too. Categories <br> already used in the account statements cannot be deleted. </div>
+            </div>
+            <div class="col-xs-12" ng-if="clientdata.showCategory == 'TAX'">
+                <div class="content_title heading_4">Manage Tax Classes</div>
+                <div class="content_subtitle">Manage Tax Class here. You can create new tax classes. </div>
+            </div>
+            <div class="col-xs-12 margin-top-10 margin-bottom-20" ng-if="clientdata.showCategory == 'income'">
+                <div class="col-lg-12 text-center"><a class="cutomer_group_link" ng-click="changeIncomingToExpense('INCOMING')"> Manage Income Categories</a></div>
+            </div>
+            <div class="col-xs-12 margin-top-10 margin-bottom-20" ng-if="clientdata.showCategory == 'expense'">
+                <div class="col-lg-12 text-center"><a class="cutomer_group_link" ng-click="changeIncomingToExpense('INCOMING')"> Manage Income Categories</a></div>
+                <div class="clearboth"></div>
+                <div class="col-lg-12 text-center margin-top-20"><a class="cutomer_group_link"  ng-click="changeIncomingToExpense('EXPENSE')">Manage Expense Categories</a></div>
+            </div>
+
+            <div class="col-xs-12 margin-bottom-20 text-center" ng-if="clientdata.showCategory == 'income'">
+                <strong>Income Categories</strong>
+            </div>
+            <div class="col-xs-12 margin-bottom-20 text-center"  ng-if="clientdata.showCategory == 'expense'">
+                <strong>Expense Categories</strong>
+            </div>
+
+            <div class="clearboth"></div>   
+
+            <div class="col-lg-12" ng-if="clientdata.showCategory == 'income' || clientdata.showCategory == 'expense'">		
+                <div ng-model="showMinDir" ng-value="false">                      
+                    <div ng-show="!showMinDir">                
+                        <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs" expand-on="expanding_property" on-select="my_tree_handler(branch)" expand-level="2" icon-leaf= "glyphicon glyphicon-globe"></tree-grid>
+                    </div>
+                    <div ng-show="showMinDir">
+                        <strong>bare minimum directive:</strong> <code>&lt;tree-grid tree-data="tree_data"&gt;&lt;/tree-grid&gt;</code>
+                        <br/>
+                        <br/>
+                        <tree-grid tree-data="tree_data"></tree-grid>
+                    </div>
+                </div>
+                <div class="col-xs-12 text-center margin-top-30 margin-bottom-20">
+                    <a class="common_button" ng-if="clientdata.showCategory == 'income'" ng-model="clientdata.updateIncomeCategories" ng-click="updateIncomeTreeGridDatas('INCOMING')" >Update Income Categories
+                        <div class="button_loader_cnt" ng-if="clientdata.loader_button_start"><div ng-class="{'button_loader':clientdata.loader_button_start}"></div></div>
+                    </a>
+                    <div class="clearboth"></div>
+                    <a class="common_button" ng-if="clientdata.showCategory == 'expense'" ng-model="clientdata.updateIncomeCategories" ng-click="updateIncomeTreeGridDatas('EXPENSE')" >Update Expense Categories
+                        <div class="button_loader_cnt" ng-if="clientdata.loader_button_start"><div ng-class="{'button_loader':clientdata.loader_button_start}"></div></div>
+                    </a>
+                </div>    
+            </div>
+
+            <!--Tax data is here..-->
+            <div class="col-lg-12 margin-top-30 margin-bottom-50" ng-if="clientdata.showCategory == 'tax'">    
+                <div ng-model="showMinDir" ng-value="false" class="tree_table">
+                    <table class="table tree-grid">
+                        <thead>
+                            <tr class='tree_tr_title'>
+                                <th><a class='tree_title'>Tax Class Name</a></th>
+                                <th><a class='tree_title'>Tax Percentage</a></th>
+                                <th><a class='tree_title'>Tax Description</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="tax in taxForm.details">
+                                <td class="acc_taxtd_left" ng-init="tax.name_edit = true">
+                                    <span class="indented tree-label" ng-dblclick="on_user_click(tax);tax.name_edit = false;">
+                                        <input ng-if="tax.name_edit == false" class='tree_input' type="text" ng-model="tax.tax_name" ng-blur="tax.name_edit = true;" style="width:190px;">
+                                        <span ng-if="tax.name_edit == true && tax.tax_name == ''">New Tax Class</span>
+                                        <span ng-if="tax.name_edit == true && tax.tax_name != ''">{{tax.tax_name}}</span>
+                                    </span>
+                                </td>
+                                <td class="acc_taxtd_left" ng-init="tax.percent_edit = true">
+                                    <span class="indented tree-label" ng-dblclick="on_user_click(tax); tax.percent_edit = false;">
+                                        <input ng-if="tax.percent_edit == false" class='tree_input' type="text" ng-model="tax.tax_percentage" ng-blur="percent_decimal_update(tax); tax.percent_edit = true;" style="width:150px;"><span ng-if="tax.percent_edit == false"> %</span>
+                                        <span ng-if="tax.percent_edit == true && tax.tax_percentage == ''">0.00 %</span>
+                                        <span ng-if="tax.percent_edit == true && tax.tax_percentage != ''">{{tax.tax_percentage| number:2}} %</span>
+                                    </span>
+                                </td>
+                                <td class="acc_taxtd_right" ng-init="tax.desc_edit = true">
+                                    <span class="indented tree-label" ng-dblclick="on_user_click(tax); tax.desc_edit = false;">
+                                        <input ng-if="tax.desc_edit == false" class='tree_input' type="text" ng-model="tax.tax_description" ng-blur="tax.desc_edit = true;" style="width:290px;">
+                                        <span ng-if="tax.desc_edit == true && tax.tax_description == ''">New Description</span>
+                                        <span ng-if="tax.desc_edit == true && tax.tax_description != ''">{{tax.tax_description}}</span>
+                                    </span>
+                                    <span class='tree_sub_remove_icon tree_icon_toggle' noty-remove noty-update="removeCurrentTax(tax)" noty-style="3" noty-content="Are you sure?" ></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class='clearboth'></div>
+                <table class="tree_table" style='margin-top:-20px !important;'>
+                    <tr style='border-bottom:1px solid rgb(204,204,204) !important' >
+                        <td style='padding:10px !important;'>
+                            <span class='tree_sub_add_icon' style='padding:3px 10px;' ng-click='newTaxBox()'></span>
+                        </td>
+                    </tr>
+                </table>
+                <div class='clearboth'></div>
+                <div class="text-center margin-top-30">
+                    <a class="common_button" ng-click="updateTax('TAX')" >Update Tax Class
+                        <div class="button_loader_cnt" ng-if="clientdata.loader_button_start"><div ng-class="{'button_loader':clientdata.loader_button_start}"></div></div>
+                    </a>
+                </div>
+            </div>
+            <!--Tax data is here..-->
+
+            <div class="col-xs-12 margin-top-10 margin-bottom-50" ng-if="clientdata.showCategory == 'income'">
+                <div class="col-lg-12 text-center margin-top-20">
+                    <a class="cutomer_group_link"  ng-click="changeIncomingToExpense('EXPENSE')">Manage Expense Categories</a>
+                </div>
+                <div class="clearboth"></div>
+            </div>
+
+            <div class="clearboth"></div>
+
+            <div class="col-lg-12 hide">    
+                <div ng-model="showMinDir" ng-value="false">                      
+                    <div ng-show="!showMinDir">                
+                        <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs" expand-on="expanding_property" on-select="my_tree_handler(branch)" expand-level="2" icon-leaf= "glyphicon glyphicon-globe"></tree-grid>
+                    </div>
+                    <div ng-show="showMinDir">
+                        <strong>bare minimum directive:</strong> <code>&lt;tree-grid tree-data="tree_data"&gt;&lt;/tree-grid&gt;</code>
+                        <br/>
+                        <br/>
+                        <tree-grid tree-data="tree_data"></tree-grid>
+                    </div>
+                </div>        
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    setupScroll();
+</script>

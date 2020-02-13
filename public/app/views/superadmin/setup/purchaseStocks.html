@@ -1,0 +1,21 @@
+<div ng-controller="PurchaseController" class="purchasesetuppage">
+    <div class="wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="content_title heading_4">Purchase & Stocks</div>
+                    <div class="content_subtitle">Manage Purchase & Stock details here.</div>
+                    <div class="regular_price_cnt">
+                        <div class="regular_price heading_6" ng-click="purchaseStockChildPage('Managevendor'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.purchaseStockPageName == 'MANAGEVENDOR'}">Manage Vendor</div>
+                        <div class="regular_price heading_6" ng-click="purchaseStockChildPage('Managecategory'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.purchaseStockPageName == 'MANAGECATEGORY'}">Manage Category</div>
+                        <div class="regular_price heading_6" ng-click="purchaseStockChildPage('Manageproducts'); $event.stopPropagation();" 
+                             ng-class="{'active':clientData.purchaseStockPageName == 'MANAGEPRODUCTS'}">Manage Products</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="setup_submenu_content" ng-include="clientData.purchaseStockPage"></div>
+    </div>
+</div>

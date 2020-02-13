@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Generator: Adobe Fireworks 10, Export SVG Extension by Aaron Beall (http://fireworks.abeall.com) . Version: 0.6.1  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="logo_block.fw-Page%201" viewBox="0 0 301 22" style="background-color:#ffffff00" version="1.1"
+	xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+	x="0px" y="0px" width="301px" height="22px"
+>
+	<defs>
+		<!-- Library -->
+		<symbol id="SSRICEMILLLOGO" overflow="visible">
+			<g id="Layer%2012">
+				<text x="-115" y="21" width="308" fill="#ffffff" style="font-weight: bold; font-size: 30px; font-family: Myriad Pro; color: #ffffff; text-align: left; "><tspan><![CDATA[SREE RAMNATH CARE]]></tspan></text>
+			</g>
+
+		</symbol>
+		<!-- End Library -->
+
+	</defs>
+	<g id="Layer%201">
+		<use id="SS-RICEMILL-LOGO" xlink:href="#SSRICEMILLLOGO" transform="matrix(1, 0, 0, 1, 112, 10)"/>
+	</g>
+</svg>

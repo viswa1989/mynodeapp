@@ -1,0 +1,701 @@
+<style type="text/css">
+    body{
+        background: #23719f;
+    }
+    .clonedcard {
+        width: 350px;
+        margin: 5px 10px 10px 5px;
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: top;
+        transition: all .2s ease;
+        background: #2b3f5b!important;
+    }
+</style>
+<div class="overflow_hidden" ng-controller="DashboardController">
+    <div id="wrapper_header_btn">
+        <div class="row">
+            <div class="col-xs-12 padding-right-30">
+                <div class="left_header">
+                    <a id="button_f" class="menu-toggle button_f white_color">
+                        <span class="f_letter">S</span>
+                        <span class="toggle_icon_small margin-top-05" aria-hidden="true"></span>
+                    </a>
+                    <div class="left_heading white_color heading_4">Dashboard</div>
+                </div>
+                <div class="navbar-right white_color">
+                    <button class="pull-right maximize-list toggle-card-size active">Minimize List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="wrapper" class="active dashboard_container">
+        <div id="wrapper_left" class="dashboard_card1">
+            <div class="dash_head">
+                <div class="col-xs-12 dash_top_cnt">
+                    <span class="pull-left heading_5"><b>Pending Dues</b></span>
+                    <!-- <a class="dropdown-toggle dropdown-toggle-store pull-right" data-toggle="dropdown"><span class="dropdown_icon_small"></span></a>
+                    <ul class="dropdown-menu store_dropdown" id="dropdown-menu_0">
+                        <li class="text-center list_store_title">Actions
+                            <span class="close trans_close"><span class="close_icon_small_dropdown"></span></span>
+                        </li>
+                        <li class="divider"></li>
+                        <li> <a>Action 1</a> </li>
+                        <li> <a>Action 2</a> </li>
+                        <li class="divider"></li>
+                        <li> <a>Action 3</a> </li>
+                    </ul> -->
+                </div>
+                <div class="clearboth"></div>
+                <div class="col-xs-12 padding_col_10">
+                    <div class="select_days">
+                        <!--<h6>Total</h6>-->
+                        <div class="tabs-left margin-top-20">
+                            <ul class="nav">
+                                <li><div class="select_day_menu_empty" ng-init="cardData.selectedDue = 0"> &nbsp;</div></li>
+
+                                <li ng-repeat="dueday in cardData.pendingDues" ng-class="{'active':dueday == cardData.selectedDue}" ng-click="selectDuedays(dueday)">
+                                    <a>
+                                        <div class="select_day_menu" ng-if="dueday == 0">Dues</div>
+                                        <div class="select_day_menu" ng-if="dueday != 0" ng-bind="dueday + 'Day'"></div>
+                                    </a>
+                                </li>
+
+                                <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="show_amount">
+                        <div class="toay_sales">Total Pending Due</div>
+                        <div class="bills" ng-bind="(cardData.overallpendingInvoices.length)+' Bills, '+data.currency+(cardData.oveallDue |  number:2)"></div>
+                        <div class="toay_sales" ng-if="cardData.selectedDue == 0">Current due</div>
+                        <div class="toay_sales" ng-if="cardData.selectedDue > 0" ng-bind="(cardData.selectedDue) + ' Days overdue'"></div>
+                        <div class="bills" ng-bind="(cardData.pendingInvoices.length)+' Bills, '+data.currency+(getInvoicetotal(cardData.pendingInvoices) |  number:2)"></div>
+                    </div>
+                </div>
+                
+                <div class="col-xs-12 padding_zero margin-top-10">
+                    <div class="col-xs-8 padding_zero">
+                        <input type="search" placeholder="Filter" ng-model="cardData.pendingDue" class="dash_search_filter"/>
+                        <span class="close_icon_store_filter" ng-click="cardData.pendingDue = ''" ng-if="cardData.pendingDue.length"></span>
+                    </div>
+                    <div class="col-xs-4 padding_zero" ng-init="cardData.selecteddueDivision = 'ALL'">
+                        <div class="dropdown-toggle btn_allactive" data-toggle="dropdown" ng-bind="cardData.selecteddueDivision"></div>
+                        <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu">
+                            <li class="text-left">
+                                <a ng-click="setDivision(cardData, cardData);">ALL</a>
+                                <a ng-repeat="division in cardData.divisions" ng-if="division._id" ng-click="setDivision(cardData, division);" ng-bind="division.name"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash_body1 dashbodyscrollinvoice">
+                <div class="col-xs-12 padding_10">
+                    
+                    <div class="dashboard_card_list pending_due_card" ng-class="{'active':$root.clientData.selectCard==invoice._id}" ng-repeat="invoice in cardData.pendingInvoices| filter:cardData.pendingDue" 
+                         ng-click="viewJob(invoice, 'INVOICE'); $event.stopPropagation();">
+                        <div class="left_strip red"></div>
+                        <div class="right_sec">
+                            <div class="card_txt_cnt">
+                                <div class="col-xs-12 padding_zero customer-name">
+                                    <b class="pull-left" ng-bind="invoice.customer_name"></b>
+                                </div>
+                                <div class="col-xs-9 padding_zero order-name">
+                                    <div class="col-xs-12 padding_zero">
+                                        <span class="card_label">Invoice No:</span> <b ng-bind="invoice.invoice_no"></b>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 padding_zero text-right">
+                                    <div class="col-xs-12 padding_zero order-name">
+                                        <b ng-bind="invoice.invoice_date | date:dateformats.short_date"></b>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 padding_zero order-name">
+                                    <span class="card_label">Job No:</span> <b order-directive order-no="{{invoice.items}}"></b>
+                                </div>
+                                <div class="col-xs-12 padding_zero order-name due_detail">
+                                    <div class="col-xs-4 padding_zero margin-top-05">
+                                        <span class="card_label">Due Date</span><br>
+                                        <b ng-bind="invoice.invoicedue_date | date:dateformats.short_date"></b>
+                                    </div>
+                                    <div class="col-xs-4 padding_zero margin-top-05">
+                                        <span class="card_label">Invoice Amount</span><br>
+                                        <b ng-bind="data.currency+(invoice.total | number:2)"></b>
+                                    </div>
+                                    <div class="col-xs-4 padding_zero margin-top-05">
+                                        <span class="card_label">Balance Amount</span><br>
+                                        <b class="balance_amt" ng-bind="data.currency+(invoice.total-invoice.paid | number:2)"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cardviewinnertext" ng-if="!cardData.invoiceload && cardData.pendingInvoices.length == 0">No pending dues available.</div>
+                    <div class="loader_small" ng-if="cardData.invoiceload"></div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="footer_text">© 2017 - 2018 BETTER LIVES. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="wrapper_content">
+            <div id="sortable-horizontal" ui-sortable="sortableOptions">
+                <div class="dashboard_card s_card_height draggable margin-top-20" ng-repeat="division in cardData.divisions">
+                    <div class="dash_head dash_head_division myHandle" ng-if="division._id">
+                        <div class="col-xs-12 dash_top_cnt">
+                            <span class="pull-left" ng-class="{'online':division.status=='Online','offline':division.status=='Offline'}"></span>
+                            <span class="pull-left heading_5 card_division_name"><b ng-bind="division.name"></b></span>
+                            <!-- <a class="dp-dwnown-toggle-store pull-right" data-toggle="dropdown"><span class="dropdown_icon_small"></span></a> -->
+                            <a class="pull-right"><span class="restore_icon_small" onclick="return card_min_max(event, $(this))"></span></a>
+                            <!-- <ul class="dropdown-menu store_dropdown" id="dropdown-menu_1">
+                                <li class="text-center list_store_title">Actions <span class="close trans_close"><span class="close_icon_small_dropdown"></span></span>
+                                </li>
+                                <li class="divider"></li>
+                                <li> <a>Action 1</a> </li>
+                                <li> <a>Action 2</a> </li>
+                                <li class="divider"></li>
+                                <li> <a>Action 3</a> </li>
+                            </ul> -->
+                        </div>
+                        <div class="clearboth"></div>
+                        <div class="col-xs-12 padding_col_10 margin-top-10">
+                            <div class="select_days">
+                                <div class="tabs-left">
+                                    <ul class="nav">
+                                        <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                                        <li ng-class="{'active':division.filterSelected == 'TODAY'}" ng-click="getOrderoverview(division, 'TODAY')">
+                                            <a><div class="select_day_menu">T</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'WEEK'}" ng-click="getOrderoverview(division, 'WEEK')">
+                                            <a><div class="select_day_menu">W</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'MONTH'}" ng-click="getOrderoverview(division, 'MONTH')">
+                                            <a><div class="select_day_menu">M</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'ALL'}" ng-click="getOrderoverview(division, 'ALL')">
+                                            <a><div class="select_day_menu" style="font-size: 11px;">ALL</div></a>
+                                        </li>
+                                        <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="show_amount">
+                                <div class="order-details">
+                                    <ul class="">
+                                        <li> <span>Orders</span>
+                                            <h6 ng-bind="division.totalorder"></h6>
+                                        </li>
+                                        <li> <span>Not Started</span>
+                                            <h6 ng-bind="division.notstarted"></h6>
+                                        </li>
+                                        <li> <span>Progress</span>
+                                            <h6 ng-bind="division.inprogress"></h6>
+                                        </li>
+                                        <li> <span>Completed</span>
+                                            <h6 ng-bind="division.completed"></h6>
+                                        </li>
+                                        <li> <span>Returns</span>
+                                            <h6 ng-bind="division.returnorder"></h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dash_tab-section no-border dash_head_division myHandle" ng-if="division._id">
+                        <div class="col-xs-12 margin-top-10">
+                            <div class="responsive-tab">
+                                <ul class="nav nav-tabs faq-cat-tabs orders-tab">
+                                    <li class="dash_menu_list frist-empty"> &nbsp;</li>
+                                    <li class="dash_menu_list" ng-class="{'active':division.tabSelected == 'Orders'}" ng-click="setSelectedtabmenu(division,'Orders'); $event.stopPropagation();">
+                                        <a class="dashcardtab_menu">Orders</a>
+                                    </li>
+                                    <li class="dash_menu_list" ng-class="{'active':division.tabSelected == 'Stocks'}" ng-click="setSelectedtabmenu(division,'Stocks'); $event.stopPropagation();">
+                                        <a class="dashcardtab_menu">Stocks</a>
+                                    </li>
+                                    <li class="dash_menu_list" ng-class="{'active':division.tabSelected == 'Po'}" ng-click="setSelectedtabmenu(division,'Po'); $event.stopPropagation();">
+                                        <a class="dashcardtab_menu"> PO</a>
+                                    </li>
+                                    <li class="dash_menu_list empty"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 padding_zero zzzz" ng-class="{'padding-0-right-10': division.tabSelected == 'Orders'}">
+                            <div class="padding_zero margin-top-05" ng-class="{'col-xs-7': division.tabSelected == 'Orders' , 'col-xs-12': division.tabSelected != 'Orders'} ">
+                                <input type="search" placeholder="Filter" ng-model="division.filterCard" class="dash_search_filter"/>
+                                <span class="close_icon_store_filter" ng-click="division.filterCard = ''" ng-if="division.filterCard.length"></span>
+                            </div>
+                            <div class="col-xs-4 padding_zero margin-top-05" style="min-height: 24px;" ng-if="division.tabSelected == 'Orders'">
+                                <div class="dropdown-toggle btn_allactive" data-toggle="dropdown" ng-if="division.order_status != ''" ng-bind="division.order_status"></div>
+                                <div class="dropdown-toggle btn_allactive" data-toggle="dropdown" ng-if="division.order_status == ''">ALL</div>
+                                <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu1">
+                                    <li>
+                                        <a ng-click="setOrderstatus('',division)">ALL</a>
+                                        <a ng-click="setOrderstatus('New Order',division)">New Order</a>
+                                        <a ng-click="setOrderstatus('In Progress',division)">In Progress</a>
+                                        <a ng-click="setOrderstatus('Completed',division)">Completed</a>
+                                        <a ng-click="setOrderstatus('Invoice and Delivery',division)">Invoice and Delivery</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-1 immediate_jobtagfilter margin-top-05" style="padding: 2px;" ng-if="division.tabSelected == 'Orders'">
+                                <div class="immediate_jobtag" ng-if="division.order_status != 'Completed' && division.order_status != 'Invoice and Delivery'" ng-class="{'active':division.immediate_check}" 
+                                    ng-click="division.immediate_check = !division.immediate_check;setSelectedtabmenu(division,'Orders');"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dash_body dashbodyscrollorder{{$index}} no-border" ng-if="division._id">
+                        <div class="col-xs-12 padding_10" ng-if="division.tabSelected == 'Orders'" infinite-scroll='getOrder(division._id,division)' infinite-scroll-distance='1' 
+                             infinite-scroll-container="'.dashbodyscrollorder'+$index" infinite-scroll-disabled='division.disableorderscroll'>
+                            <div class="dashboard_card_list" ng-class="{'active':$root.clientData.selectCard==order._id}" ng-repeat="order in division.orders| filter:division.filterCard" 
+                                 ng-click="viewJob(order, 'ORDER'); $event.stopPropagation();">
+                                <div class="left_strip" ng-class="{'white':order.order_status == 'New Order','blue':order.order_status == 'In Progress','green':order.order_status == 'Completed','yellow':order.order_status == 'Invoice and Delivery'}"></div>
+                                <div class="right_sec">
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name">
+                                            <b class="pull-left" ng-bind="order.customer_name"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name"><span class="card_label">Job No:</span>
+                                            <b ng-bind="order.order_no"></b>
+                                            <b class="pull-right" ng-bind="order.order_date | date:dateformats.short_date"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name hide"><span class="card_label">Inward No:</span>
+                                            <b ng-bind="order.inward_no"></b>
+                                            <b class="pull-right" ng-bind="order.inward_date | date:dateformats.short_date"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero">
+                                            <div class="name process"><span class="card_label">Process:</span> <b class="txt_blue" order-directive process-name="{{order.process}}"></b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="order.immediate_job" class="immediatetag">
+                                    <div class="immediate_jobtag"></div>
+                                </div>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.busy && division.orders.length == 0">No Job card available.</div>
+                            <div class="loader_small" ng-show="division.busy"></div>
+                        </div>
+
+                        <div class="col-xs-12 padding_10" ng-if="division.tabSelected == 'Stocks'">
+                            <div class="sales_card" ng-repeat="item in division.stocks| filter:division.filterCard">
+                                <span class="item" ng-bind="item.product_name"></span>
+                                <span class="item_value" ng-bind="item.quantity"></span>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.busy && division.stocks.length == 0">No Stocks available.</div>
+                            <div class="loader_small" ng-show="division.busy"></div>
+                        </div>
+
+                        <div class="col-xs-12 padding_10" ng-if="division.tabSelected == 'Po'">
+                            <!--status class  cancelled-icon, wait-icon, deny-icon, approved-icon, deliver-icon-->
+                            <div class="dashboard_card_list purchase_order_card" ng-repeat="purchase in division.purchaseorder| filter:division.filterCard">
+                                <div class="left_strip" 
+                                     ng-class="{'cancelled-icon':purchase.status=='CANCELLED', 'wait-icon':purchase.status=='WAITING', 'deny-icon':purchase.status=='DENIED', 'approved-icon':purchase.status=='APPROVED', 'deliver-icon':purchase.status=='DELIVERED'}"></div>
+                                <div class="right_sec">
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name">
+                                            <b class="pull-left" ng-bind="purchase.vendor.name"></b>
+                                            <span class="pull-right" ng-class="{'cancelled-icon':purchase.status=='CANCELLED', 'wait-icon':purchase.status=='WAITING', 'deny-icon':purchase.status=='DENIED', 'approved-icon':purchase.status=='APPROVED', 'deliver-icon':purchase.status=='DELIVERED'}" 
+                                                  ng-bind="purchase.status"></span>
+                                        </div>
+                                        <div class="col-xs-9 padding_zero order-name">
+                                            <div class="col-xs-12 padding_zero">
+                                                <span class="card_label">PO No: </span><b ng-bind="purchase.po_no"></b>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 padding_zero text-right">
+                                            <div class="col-xs-12 padding_zero order-name"><b ng-bind="purchase.order_date | date:dateformats.short_date"></b></div>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name due_detail">
+                                            <div class="col-xs-4 padding_zero margin-top-05">
+                                                <span class="card_label">No of Items</span><br>
+                                                <b ng-bind="purchase.purchase_details.length"></b>
+                                            </div>
+                                            <div class="col-xs-4 padding_zero margin-top-05">
+                                                <span class="card_label">Amount (~)</span><br>
+                                                <b class="balance_amt" ng-bind="data.currency+(purchase.total | number:2)"></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.busy && division.purchaseorder.length == 0">No Po available.</div>
+                            <div class="loader_small" ng-show="division.busy"></div>
+                        </div>
+                    </div>
+
+                    <div class="dash_head myHandle" ng-if="!division._id && division.name == 'Outwards'">
+                        <div class="col-xs-12 dash_top_cnt">
+                            <span class="pull-left heading_5"><b ng-bind="division.name"></b></span>
+                            <!-- <a class="dp-dwnown-toggle-store pull-right" data-toggle="dropdown"><span class="dropdown_icon_small"></span></a> -->
+                            <a class="pull-right"><span class="restore_icon_small" onclick="return card_min_max(event, $(this))"></span></a>
+                            <!-- <ul class="dropdown-menu store_dropdown" id="dropdown-menu_5">
+                                <li class="text-center list_store_title">Actions
+                                    <span class="close trans_close"><span class="close_icon_small_dropdown"></span></span>
+                                </li>
+                                <li class="divider"></li>
+                                <li> <a>Action 1</a> </li>
+                                <li> <a>Action 2</a> </li>
+                                <li class="divider"></li>
+                                <li> <a>Action 3</a> </li>
+                            </ul> -->
+                        </div>
+                        <div class="clearboth"></div>
+                        <div class="col-xs-12 padding_col_10 margin-top-10">
+                            <div class="select_days">
+                                <div class="tabs-left">
+                                    <ul class="nav">
+                                        <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                                        <li ng-class="{'active':division.filterSelected == 'TODAY'}" ng-click="getOutwardoverview(division, 'TODAY')">
+                                            <a><div class="select_day_menu">T</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'WEEK'}" ng-click="getOutwardoverview(division, 'WEEK')">
+                                            <a><div class="select_day_menu">W</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'MONTH'}" ng-click="getOutwardoverview(division, 'MONTH')">
+                                            <a><div class="select_day_menu">M</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'ALL'}" ng-click="getOutwardoverview(division, 'ALL')">
+                                            <a><div class="select_day_menu" style="font-size: 11px;">ALL</div></a>
+                                        </li>
+                                        <li>
+                                            <div class="select_day_menu_empty"> &nbsp;</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="show_amount">
+                                <div class="order-details">
+                                    <ul class="">
+                                        <li style="width: 120px;"> <span>Delivery</span>
+                                            <h6 ng-bind="division.deliveredCount"></h6>
+                                        </li>
+                                        <li style="width: 120px;"> <span>Return</span>
+                                            <h6 ng-bind="division.returneddCount"></h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dash_tab-section no-border myHandle" ng-if="!division._id && division.name == 'Outwards'">
+                        <div class="col-xs-12 padding_zero grey margin-top-10">
+                            <div class="col-xs-8 padding_zero">
+                                <input type="search" placeholder="Filter" ng-model="division.filterOutward" class="dash_search_filter"/>
+                                <span class="close_icon_store_filter" ng-click="division.filterOutward = ''" ng-if="division.filterOutward.length"></span>
+                            </div>
+                            <div class="col-xs-4 padding_zero">
+                                <div class="dropdown-toggle btn_allactive" data-toggle="dropdown"><span ng-bind="division.selectedDivision"></span></div>
+                                <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu">
+                                    <li class="text-left">
+                                        <a ng-click="getDivisiondata(division, division, 'All');">ALL</a>
+                                        <a ng-repeat="divisionloop in cardData.divisions" ng-if="divisionloop._id"
+                                           ng-click="getDivisiondata(division, divisionloop, 'Division');" ng-bind="divisionloop.name"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="scrolloutward" class="dash_body dashbodyscrolloutward dashbodyscrollreturn" ng-if="!division._id && division.name == 'Outwards'">
+                        <div class="col-xs-12 padding_10" ng-if="division.name == 'Outwards'" infinite-scroll='getOutward(division.selectedDivisionid, division)' infinite-scroll-distance='1' 
+                             infinite-scroll-container="'#scrolloutward'" infinite-scroll-disabled='division.disablescroll'>
+                            <div class="dashboard_card_list" ng-class="{'active':$root.clientData.selectCard==order._id}" ng-repeat="order in division.outwardData| filter:division.filterOutward | orderBy:'-delivery_date'" 
+                                 ng-click="order.is_return?viewJob(order, 'OUTWARDRETURN'):viewJob(order, 'OUTWARD'); $event.stopPropagation();">
+                                <div class="left_strip"></div>
+                                <div class="right_sec">
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name">
+                                            <b class="pull-left" ng-bind="order.customer_name"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name"><span class="card_label">Job No:</span>
+                                            <b ng-bind="order.order_no"></b>
+                                            <b class="pull-right" ng-bind="order.order_date | date:dateformats.short_date"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name">
+                                            <span ng-if="!order.is_return" class="card_label">Outward No:</span>
+                                            <span ng-if="order.is_return" class="card_label">Return No:</span>
+                                            <b ng-bind="order.delivery_no"></b>
+                                            <b class="pull-right" ng-bind="order.delivery_date | date:dateformats.short_date"></b>
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="name process" ng-if="!order.is_return"><span class="card_label">Process:</span> <b class="txt_blue" order-directive process-name="{{order.process}}"></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.outwardloadingData && division.outwardData.length == 0">No Outwards available.</div>
+                            <div class="loader_small" ng-show="division.outwardloadingData"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="dash_head myHandle" ng-if="!division._id && division.name == 'Contractor Outward'">
+                        <div class="col-xs-12 dash_top_cnt">
+                            <span class="pull-left heading_5"><b ng-bind="division.name"></b></span>
+                            <a class="pull-right"><span class="restore_icon_small" onclick="return card_min_max(event, $(this))"></span></a>
+                        </div>
+                        <div class="clearboth"></div>
+                        <div class="col-xs-12 padding_col_10 margin-top-10">
+                            <div class="select_days">
+                                <div class="tabs-left">
+                                    <ul class="nav">
+                                        <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                                        <li ng-class="{'active':division.filterSelected == 'TODAY'}" ng-click="getcontractorOutwardoverview(division, 'TODAY')">
+                                            <a><div class="select_day_menu">T</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'WEEK'}" ng-click="getcontractorOutwardoverview(division, 'WEEK')">
+                                            <a><div class="select_day_menu">W</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'MONTH'}" ng-click="getcontractorOutwardoverview(division, 'MONTH')">
+                                            <a><div class="select_day_menu">M</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'ALL'}" ng-click="getcontractorOutwardoverview(division, 'ALL')">
+                                            <a><div class="select_day_menu" style="font-size: 11px;">ALL</div></a>
+                                        </li>
+                                        <li>
+                                            <div class="select_day_menu_empty"> &nbsp;</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="show_amount">
+                                <div class="order-details">
+                                    <ul class="">
+                                        <li style="width: 120px;"> <span>Outward</span>
+                                            <h6 ng-bind="division.deliveredCount"></h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dash_tab-section no-border myHandle" ng-if="!division._id && division.name == 'Contractor Outward'">
+                        <div class="col-xs-12 padding_zero grey margin-top-10">
+                            <div class="col-xs-8 padding_zero">
+                                <input type="search" placeholder="Filter" ng-model="division.filterOutward" class="dash_search_filter"/>
+                                <span class="close_icon_store_filter" ng-click="division.filterOutward = ''" ng-if="division.filterOutward.length"></span>
+                            </div>
+                            <div class="col-xs-4 padding_zero">
+                                <div class="dropdown-toggle btn_allactive" data-toggle="dropdown"><span ng-bind="division.selectedDivision"></span></div>
+                                <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu">
+                                    <li class="text-left">
+                                        <a ng-click="getcontractorDivisiondata(division, division, 'All');">ALL</a>
+                                        <a ng-repeat="divisionloop in cardData.divisions" ng-if="divisionloop._id"
+                                           ng-click="getcontractorDivisiondata(division, divisionloop, 'Division');" ng-bind="divisionloop.name"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="scrollcontractoutward" class="dash_body" ng-if="!division._id && division.name == 'Contractor Outward'">
+                        <div class="col-xs-12 padding_10" ng-if="division.name == 'Contractor Outward'" infinite-scroll='getcontractorOutward(division.selectedDivisionid, division)' infinite-scroll-distance='1' 
+                             infinite-scroll-container="'#scrollcontractoutward'" infinite-scroll-disabled='division.disablescroll'>
+                            <div class="dashboard_card_list" ng-class="{'active':$root.clientData.selectCard==order._id}" ng-repeat="order in division.outwardData| filter:division.filterOutward | orderBy:'-delivery_date'" 
+                                 ng-click="viewJob(order, 'CONTRACTOUTWARD'); $event.stopPropagation();">
+                                <div class="left_strip" ng-class="{'blue':order.outward_status == 'In Progress','green':order.outward_status == 'Completed'}"></div>
+                                <div class="right_sec">
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name">
+                                            <b class="pull-left" ng-bind="order.contractor_name"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name"><span class="card_label">Outward No:</span>
+                                            <b ng-bind="order.outward_no"></b>
+                                            <b class="pull-right" ng-bind="order.outward_date | date:dateformats.short_date"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name">
+                                            <span class="card_label">Job No:</span>
+                                            <b ng-bind="order.order_no"></b>
+                                            <b class="pull-right" ng-bind="order.order_date | date:dateformats.short_date"></b>
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="name process"><span class="card_label">Process:</span> <b class="txt_blue" order-directive process-name="{{order.process}}"></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.outwardloadingData && division.outwardData.length == 0">No Outwards available.</div>
+                            <div class="loader_small" ng-show="division.outwardloadingData"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <div class="dash_head myHandle" ng-if="!division._id && division.name == 'Contractor Inward'">
+                        <div class="col-xs-12 dash_top_cnt">
+                            <span class="pull-left heading_5"><b ng-bind="division.name"></b></span>
+                            <a class="pull-right"><span class="restore_icon_small" onclick="return card_min_max(event, $(this))"></span></a>
+                        </div>
+                        <div class="clearboth"></div>
+                        <div class="col-xs-12 padding_col_10 margin-top-10">
+                            <div class="select_days">
+                                <div class="tabs-left">
+                                    <ul class="nav">
+                                        <li><div class="select_day_menu_empty"> &nbsp;</div></li>
+                                        <li ng-class="{'active':division.filterSelected == 'TODAY'}" ng-click="getcontractorInwardoverview(division, 'TODAY')">
+                                            <a><div class="select_day_menu">T</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'WEEK'}" ng-click="getcontractorInwardoverview(division, 'WEEK')">
+                                            <a><div class="select_day_menu">W</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'MONTH'}" ng-click="getcontractorInwardoverview(division, 'MONTH')">
+                                            <a><div class="select_day_menu">M</div></a>
+                                        </li>
+                                        <li ng-class="{'active':division.filterSelected == 'ALL'}" ng-click="getcontractorInwardoverview(division, 'ALL')">
+                                            <a><div class="select_day_menu" style="font-size: 11px;">ALL</div></a>
+                                        </li>
+                                        <li>
+                                            <div class="select_day_menu_empty"> &nbsp;</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="show_amount">
+                                <div class="order-details">
+                                    <ul class="">
+                                        <li style="width: 120px;"> <span>Inward</span>
+                                            <h6 ng-bind="division.returneddCount"></h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dash_tab-section no-border myHandle" ng-if="!division._id && division.name == 'Contractor Inward'">
+                        <div class="col-xs-12 padding_zero grey margin-top-10">
+                            <div class="col-xs-8 padding_zero">
+                                <input type="search" placeholder="Filter" ng-model="division.filterOutward" class="dash_search_filter"/>
+                                <span class="close_icon_store_filter" ng-click="division.filterOutward = ''" ng-if="division.filterOutward.length"></span>
+                            </div>
+                            <div class="col-xs-4 padding_zero">
+                                <div class="dropdown-toggle btn_allactive" data-toggle="dropdown"><span ng-bind="division.selectedDivision"></span></div>
+                                <ul class="dropdown-menu activememu_dropdown" id="dropdown_activemenu">
+                                    <li class="text-left">
+                                        <a ng-click="getcontractorDivisiondata(division, division, 'All');">ALL</a>
+                                        <a ng-repeat="divisionloop in cardData.divisions" ng-if="divisionloop._id"
+                                           ng-click="getcontractorDivisiondata(division, divisionloop, 'Division');" ng-bind="divisionloop.name"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="scrollcontractinward" class="dash_body" ng-if="!division._id && division.name == 'Contractor Inward'">
+                        <div class="col-xs-12 padding_10" ng-if="division.name == 'Contractor Inward'" infinite-scroll='getcontractorInward(division.selectedDivisionid, division)' infinite-scroll-distance='1' 
+                             infinite-scroll-container="'#scrollcontractinward'" infinite-scroll-disabled='division.disablescroll'>
+                            <div class="dashboard_card_list" ng-class="{'active':$root.clientData.selectCard==order._id}" ng-repeat="order in division.outwardData| filter:division.filterOutward | orderBy:'-inward_date'" 
+                                 ng-click="viewJob(order, 'CONTRACTINWARD'); $event.stopPropagation();">
+                                <div class="left_strip"></div>
+                                <div class="right_sec">
+                                    <div class="card_txt_cnt">
+                                        <div class="col-xs-12 padding_zero customer-name">
+                                            <b class="pull-left" ng-bind="order.contractor_name"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name hide"><span class="card_label">Inward No:</span>
+                                            <b ng-bind="order.inward_no"></b>
+                                            <b class="pull-right" ng-bind="order.inward_date | date:dateformats.short_date"></b>
+                                        </div>
+                                        <div class="col-xs-12 padding_zero order-name">
+                                            <span class="card_label">Job No:</span>
+                                            <b ng-bind="order.order_no"></b>
+                                            <b class="pull-right" ng-bind="order.order_date | date:dateformats.short_date"></b>
+                                            <div class="col-xs-12 padding_zero">
+                                                <div class="name process"><span class="card_label">Process:</span> <b class="txt_blue" order-directive process-name="{{order.process}}"></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cardviewinnertext" ng-if="!division.outwardloadingData && division.outwardData.length == 0">No Outwards available.</div>
+                            <div class="loader_small" ng-show="division.outwardloadingData"></div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("active");
+            $(".track3").toggleClass('display_none');
+            $(".toggle_icon_small").toggleClass('toggles_icon_small');
+        });
+        $('.toggle-card-size').click(function () {
+            $(this).toggleClass('active');
+            if ($(this).hasClass('active') == true) {
+                $('.dash_body').show();
+                $('.dash_tab-section').show();
+                $(".dashboard_card").removeClass("Minmizelist");
+                $(this).text('Minimize List');
+            } else {
+                $('.dash_body').hide();
+                $('.dash_tab-section').hide();
+                $(".dashboard_card").addClass("Minmizelist");
+                $(this).text('Maxmize List');
+            }
+        });
+    });
+    function card_min_max(eve, th){
+        var dash = $(th).parents('.dashboard_card');
+        if ($(dash).find('.dash_body').css("display") == "none" && $(th).parents().hasClass('Minmizelist')){
+            $(".dashboard_card").removeClass("Minmizelist");
+        }
+        $(dash).find('.dash_body').toggle();
+        $(dash).find('.dash_tab-section').toggle();
+    };
+    //Card Height Set
+    function cardHeight() {
+        var headerHeight = $('.header').height();
+        var windowHeight = $(window).height();
+        var windowWidth = $(window).width();
+        var wrapperhead = $('#wrapper_header_btn').height();
+        var totalHeight = windowHeight - (headerHeight + wrapperhead);
+//        $('.s_card_height').css('height', totalHeight - 49);
+        $('.dashboard_card1').css('height', totalHeight - 17);
+        $('#sortable-horizontal').css('height', totalHeight - 17);
+        $('.s-dashboard-container-width').css('width', windowWidth - 50);
+        if (parseInt($(window).width()) <= 1000 && parseInt($(window).width()) >= 100) { // responsive view
+            $('#wrapper').removeClass('active');
+            $('.toggle_icon_small').addClass('toggles_icon_small');
+        }
+    };
+    function placeholderHeight() {
+        if ($(".toggle-card-size").hasClass('active')) {
+            var headerHeight = $('.header').height();
+            var windowHeight = $(window).height();
+            var wrapperhead = $('#wrapper_header_btn').height();
+            var totalHeight = windowHeight - (headerHeight + wrapperhead);
+            $('.clonedcard').css('height', totalHeight - 50);
+        } else {
+            $('.clonedcard').css('float', 'left');
+            $('.clonedcard').css('height', 150);
+        }
+    };
+    
+    setTimeout(function(){
+        cardHeight();
+    },500);
+    splite_screen();
+    $(window).resize(function () {
+        cardHeight();
+    });
+</script>

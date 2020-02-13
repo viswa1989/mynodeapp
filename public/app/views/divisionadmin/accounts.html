@@ -1,0 +1,1885 @@
+<style>
+    body {
+        background: #fff;
+        overflow: hidden;
+    }    
+    .ui-autocomplete {
+        display: block;
+        position: absolute !important;
+        cursor: default;
+        max-height: 300px;
+        min-height: 50px;
+        max-width: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 0;
+        z-index: 9999;
+        background: #fff;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0px;
+        margin: 2px 0px 0px;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: rgb(255, 255, 255);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.14902);
+    }
+    .ui-autocomplete>li>a{
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+.daterangepicker {
+        position: absolute;
+        background: #fff;
+        top: 100px;
+        left: 20px;
+        padding: 4px;
+        margin-top: 1px;
+        border-radius: 4px;
+    }
+    .daterangepicker.opensleft:before {
+        position: absolute;
+        top: -7px;
+        right: 9px;
+        display: inline-block;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid #ccc;
+        border-left: 7px solid transparent;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        content: '';
+    }
+    .daterangepicker.opensleft:after {
+        position: absolute;
+        top: -6px;
+        right: 10px;
+        display: inline-block;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        border-left: 6px solid transparent;
+        content: '';
+    }
+    .daterangepicker.openscenter:before {
+        position: absolute;
+        top: -7px;
+        left: 0;
+        right: 0;
+        width: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-block;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid #ccc;
+        border-left: 7px solid transparent;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        content: '';
+    }
+    .daterangepicker.openscenter:after {
+        position: absolute;
+        top: -6px;
+        left: 0;
+        right: 0;
+        width: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-block;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        border-left: 6px solid transparent;
+        content: '';
+    }
+    .daterangepicker.opensright:before {
+        position: absolute;
+        top: -7px;
+        left: 9px;
+        display: inline-block;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid #ccc;
+        border-left: 7px solid transparent;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        content: '';
+    }
+    .daterangepicker.opensright:after {
+        position: absolute;
+        top: -6px;
+        left: 10px;
+        display: inline-block;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        border-left: 6px solid transparent;
+        content: '';
+    }
+    .daterangepicker.dropup{
+        margin-top: -5px;
+    }
+    .daterangepicker.dropup:before{
+        top: initial;
+        bottom:-7px;
+        border-bottom: initial;
+        border-top: 7px solid #ccc;
+    }
+    .daterangepicker.dropup:after{
+        top: initial;
+        bottom:-6px;
+        border-bottom: initial;
+        border-top: 6px solid #fff;
+    }
+    .daterangepicker.dropdown-menu {
+        max-width: none;
+        z-index: 3000;
+        width: auto;
+    }
+    .daterangepicker_input {
+        display: none !important;
+    }
+    .daterangepicker .ranges, .daterangepicker .calendar {
+        float: left;
+    }
+    .daterangepicker.single .ranges, .daterangepicker.single .calendar {
+        float: none;
+    }
+    .daterangepicker .ranges {
+        margin: 4px;
+        text-align: left;
+    }
+    .daterangepicker .calendar {
+        display: none;
+        max-width: 270px;
+    }
+    .daterangepicker.show-calendar .calendar {
+        display: block;
+    }
+    .daterangepicker .calendar.single .calendar-table {
+        border: none;
+    }
+
+    /* Calendars */
+    .daterangepicker .calendar th, .daterangepicker .calendar td {
+        white-space: nowrap;
+        text-align: center;
+        min-width: 32px;
+    }
+    .daterangepicker .calendar-table {
+        border: 1px solid #ddd;
+        padding: 4px;
+        border-radius: 4px;
+        background: #fff;
+    }
+    .daterangepicker .calendar.left .calendar-table {
+        border-right: none;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .daterangepicker .calendar.right .calendar-table {
+        border-left: none;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;  
+    }
+    .daterangepicker .calendar.left {
+        margin: 4px 0 4px 4px;
+    }
+    .daterangepicker .calendar.right {
+        margin: 4px 4px 4px 0;
+    }
+    .daterangepicker .calendar.left .calendar-table {
+        padding-right: 12px;
+    }
+    .daterangepicker table {
+        width: 100%;
+        margin: 0;
+    }
+    .daterangepicker td, .daterangepicker th {
+        text-align: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    .daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
+        color: #999;
+        background: #fff;
+    }
+    .daterangepicker td.disabled, .daterangepicker option.disabled {
+        color: #999;
+    }
+    .daterangepicker td.available:hover, .daterangepicker th.available:hover {
+        background: #eee;
+    }
+    .daterangepicker td.in-range {
+        background: #ebf4f8;
+        border-radius: 0;
+    }
+    .daterangepicker td.start-date {
+        border-radius: 4px 0 0 4px;
+    }
+    .daterangepicker td.end-date {
+        border-radius: 0 4px 4px 0;
+    }
+    .daterangepicker td.start-date.end-date {
+        border-radius: 4px;
+    }
+    .daterangepicker td.active, .daterangepicker td.active:hover {
+        background-color: #357ebd;
+        border-color: #3071a9;
+        color: #fff;
+    }
+    .daterangepicker td.week, .daterangepicker th.week {
+        font-size: 80%;
+        color: #ccc;
+    }
+    .daterangepicker select.monthselect, .daterangepicker select.yearselect {
+        font-size: 12px;
+        padding: 1px;
+        height: auto;
+        margin: 0;
+        cursor: default;
+    }
+    .daterangepicker select.monthselect {
+        margin-right: 2%;
+        width: 56%;
+    }
+    .daterangepicker select.yearselect {
+        width: 40%;
+    }
+    .daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.secondselect, .daterangepicker select.ampmselect {
+        width: 50px;
+        margin-bottom: 0;
+    }
+    .daterangepicker th.month {
+        width: auto;
+    }
+
+    /* Text Input Above Each Calendar */
+    .daterangepicker .input-mini {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #555;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        vertical-align: middle;
+        margin: 0 0 5px 0;
+        padding: 0 6px 0 28px;
+        width: 100%;
+    }
+    .daterangepicker .input-mini.active {
+        border: 1px solid #357ebd;
+    }
+    .daterangepicker .daterangepicker_input i {
+        position: absolute;
+        left: 8px;
+        top: 8px;
+    }
+    .daterangepicker .left .daterangepicker_input {
+        padding-right: 12px;
+    }
+    .daterangepicker .daterangepicker_input {
+        position: relative;
+    }
+
+    /* Time Picker */
+    .daterangepicker .calendar-time {
+        text-align: center;
+        margin: 5px auto;
+        line-height: 30px;
+        position: relative;
+        padding-left: 28px;
+    }
+    .daterangepicker .calendar-time select.disabled {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+
+    /* Predefined Ranges */
+    .daterangepicker .ranges {
+        font-size: 11px;
+    }
+    .daterangepicker .ranges ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 160px;
+    }
+    .daterangepicker .ranges li {
+        font-size: 13px;
+        background: #f5f5f5;
+        border: 1px solid #f5f5f5;
+        color: #08c;
+        padding: 3px 12px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .daterangepicker .ranges li.active, .daterangepicker .ranges li:hover {
+        background: #08c;
+        border: 1px solid #08c;
+        color: #fff;
+    }
+</style>
+
+<div class="wrapper" style="overflow: hidden; max-height: 100%; background: #fff;" ng-controller="AccountController">
+    <div id="page_loader" ng-show="accountdata.pageLoader"></div>
+    <div class="container-fluid account margin-top-20">
+        <div class="row margin-0">
+            <div class="col-xs-12">
+
+                <!-- Left Section -->
+                <div class="account_left_section" style="display: block;">
+                    <div class="account_filter_header">
+                        <div class="heading_3">Accounts</div>
+                    </div>
+
+                    <div class="account_filter_cnt">
+                        <div class="overflow_scroll"  style="height: 800px;">
+
+                            <div class="filter_cnt">
+                                <div class="filter_toggle filter">
+                                    <div class="title_filter_cnt">Favorite Accounts</div>
+                                    <div class="favorite accountpage_click_resize" ng-repeat="ledger in favledger = (accountdata.ledgerDetail| filter: { favourite: true }) | limitTo:accountdata.favledgerfiltersLimit" 
+                                         ng-class="{'active':ledger._id == filterData.selectedLedger}" ng-click="setLedger(ledger);">
+                                        <div class="col-xs-6 heading_6"><b ng-bind="ledger.name"></b></div>
+                                        <div class="col-xs-6 text-right heading_6">
+                                            <b ng-if="ledger.current_balance>=0" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></b>
+                                            <b ng-if="ledger.current_balance<0" class="red_text" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></b>
+                                        </div>
+                                        <div class="col-xs-12 update_time_color" ng-bind="(ledger.branchname| branchnameFilter:accountdata.branchDetail:ledger.division_id)+' as on '+(ledger.updated| date:'mediumDate')"></div>
+                                    </div>
+                                </div>
+                                <div class="clearboth"></div>
+                                <div class="read_more text-center" ng-if="favledger.length > 2" 
+                                     ng-click="accountdata.morefavledgerfilters = !accountdata.morefavledgerfilters; accountdata.favledgerfiltersLimit = (accountdata.favledgerfiltersLimit == 2) ? favledger.length : 2;">
+                                    <div class="more_icon" ng-class="{'more_icon':!accountdata.morefavledgerfilters,'less_icon':accountdata.morefavledgerfilters}"></div>
+                                </div>
+                            </div>
+
+                            <div class="filter_cnt">
+                                <div class="filter_toggle filter">
+                                    <div class="title_filter_cnt">Division</div>
+                                    <div class="button_filter" ng-repeat="branch in accountdata.branchDetail| limitTo:accountdata.branchfiltersLimit" 
+                                         ng-class="{'active':branch._id == filterData.selectedBranch}" ng-click="setBranch(branch); $event.stopPropagation();" ng-bind="branch.name"></div>
+                                </div>
+                                <div class="read_more text-center" ng-if="accountdata.branchDetail.length > 6" ng-click="accountdata.morebranchfilters = !accountdata.morebranchfilters; accountdata.branchfiltersLimit = (accountdata.branchfiltersLimit == 6) ? accountdata.branchDetail.length : 6; $event.stopPropagation();">
+                                    <div class="more_icon" ng-class="{'more_icon':!accountdata.morebranchfilters,'less_icon':accountdata.morebranchfilters}"></div>
+                                </div>
+                            </div>
+
+                            <div class="filter_cnt">
+                                <div class="filter_toggle filter">
+                                    <div class="title_filter_cnt">Ledgers</div>
+                                    <div class="ledgers ledgers_c accountpage_click_resize" ng-repeat="ledger in accountdata.ledgerDetail| filter: { division_id: filterData.selectedBranch } | limitTo:accountdata.ledgerfiltersLimit " 
+                                         ng-click="setLedger(ledger);" ng-class="{'active':ledger._id == filterData.selectedLedger}">
+                                        <div class="col-xs-6 heading_6"><b ng-bind="ledger.name"></b></div>
+                                        <div class="col-xs-6 text-right heading_6">
+                                            <b ng-if="ledger.current_balance>=0" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></b>
+                                            <b ng-if="ledger.current_balance<0" class="red_text" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></b>
+                                        </div>
+                                        <div class="col-xs-12 update_time_color" ng-bind="(ledger.branchname| branchnameFilter:accountdata.branchDetail:ledger.division_id)+' as on '+(ledger.updated| date:'mediumDate')"></div>
+                                    </div>
+                                </div>
+                                <div class="clearboth"></div>
+                                <div class="read_more text-center" ng-if="accountdata.ledgerDetail.length > 3" ng-click="accountdata.moreledgerfilters = !accountdata.moreledgerfilters; accountdata.ledgerfiltersLimit = (accountdata.ledgerfiltersLimit == 3) ? accountdata.ledgerDetail.length : 3; $event.stopPropagation();">
+                                    <div class="more_icon" ng-class="{'more_icon':!accountdata.moreledgerfilters,'less_icon':accountdata.moreledgerfilters}"></div>
+                                </div>
+                                <div class="account_total"> 
+                                    <span class="amount" ng-bind="commonobjectService.getCurrency()+(accountdata.total_balance| accountbalanceFilter:accountdata.ledgerDetail:filterData.selectedBranch | number:2)"></span>
+                                    <span>Total Account Balance</span> 
+                                </div>
+                            </div>
+
+                            <div class="filter_cnt text-center" style="border-bottom: 0px;"> 
+                                <a class="add_customer accountpage_click_resize" ng-click="addNewaccount();">
+                                    <span class="add_icon_smalls"></span>
+                                    <span class="add_customer_text">Add New Account</span>
+                                </a> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="account_right_section dashboard_accounts" style="position: relative;">
+
+                    <!-- Right Section Header-->
+                    <div class="account_filter_header account_right_menu">
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'Dashboard'"> 
+                            <span class="heading_3">Accounts Dashboard</span> 
+                        </div>
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'Ledgeradd'"> 
+                            <span class="heading_3">New Account</span> 
+                        </div>
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'Ledgeredit'"> 
+                            <span class="heading_3">Update Account</span> 
+                        </div>
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'Payment' || accountdata.currentPage == 'Payment Receipt'"> 
+                            <span class="heading_3">Receive Payment</span> 
+                        </div>
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'DebitLedgerdetail'"> 
+                            <span class="heading_3">Debit Note</span> 
+                        </div>
+                        <div class="cash_list" ng-if="accountdata.currentPage == 'CreditLedgerdetail'"> 
+                            <span class="heading_3">Credit Note</span> 
+                        </div>
+                        <div class="cash_list" ng-if="(accountdata.currentPage == 'Ledgerdetail' || accountdata.currentPage == 'InvoiceLedgerdetail') && ledgerData._id && ledgerData._id != ''"> 
+                            <span class="heading_3" ng-bind="ledgerData.name"></span>
+                            <span class="heading_3" ng-if="ledgerData.type == 'INVOICE'">(Invoices)</span> 
+                            <span class="account_fav_icon" ng-class="{'active':ledgerData.favourite == true}" ng-click="setaccountFavourite(ledgerData); $event.stopPropagation();">F</span>
+                        </div>
+                        <div class="right_menu ng-scope" ng-if="accountdata.currentPage == 'Ledgerdetail' && ledgerData._id && ledgerData._id != ''" style="margin-top: 0px;">
+                            <div class="search_right_cnt ">
+                                <input type="text" class="search_box_expand" ng-model="accountdata.ledgerGridFillter" placeholder="Search for Payee or Amount ">
+                                <div class="search_icons">
+                                    <span class="search_letter">Search</span>
+                                </div>
+                            </div>
+                            <a ng-if="ledgerData.type == 'INVOICE'" style="float: right;text-decoration: underline;color: #0085b2;font-weight: normal;" 
+                               ng-click="PaymentReceipt()">Payment Receipt</a>
+                        </div>
+                        <div class="right_menu_dropdown">
+                            <div class="dropdown" ng-if="accountdata.currentPage != 'Dashboard' && accountdata.currentPage != 'Ledgeredit' && accountdata.currentPage != 'Ledgeradd' && accountdata.currentPage != 'InvoiceLedgerdetail'">
+                                <div class="dropdown_icons pull-right dropdown-toggle" data-toggle="dropdown"></div>
+                                <ul class="dropdown-menu acconut_dropdown_menu">
+                                    <li class="text-center list_store_title acc_sort_list">
+                                        <span ng-bind="ledgerData.name"></span>
+                                        <span class="close  trans_close">
+                                            <span class="close_icon_small_dropdown"></span>                                            
+                                        </span>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="text-center accountpage_click_resize" ng-click="editExistingaccount();"><a>Edit this account</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown" ng-if="accountdata.currentPage != 'Dashboard' && accountdata.currentPage == 'InvoiceLedgerdetail'">
+                                <div class="dropdown_icons pull-right dropdown-toggle" data-toggle="dropdown"></div>
+                                <ul class="dropdown-menu acconut_dropdown_menu" ng-if="!accountdata.invoiceForm._id">
+                                    <li class="text-center list_store_title acc_sort_list">
+                                        <span ng-bind="ledgerData.name"></span>
+                                        <span class="close trans_close">
+                                            <span class="close_icon_small_dropdown"></span>                                            
+                                        </span>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="text-center accountpage_click_resize" ng-click="editExistingaccount();"><a>Edit this account</a></li>
+                                </ul>
+                                <ul class="dropdown-menu invoice_acconut_dropdown_menu" 
+                                    ng-if="accountdata.invoiceForm._id && accountdata.invoiceForm._id != ''">
+                                    <li class="text-center list_store_title acc_sort_list">Actions for Invoice
+                                        <span class="close trans_close">
+                                            <span class="close_icon_small_dropdown"></span>
+                                        </span>
+                                    </li>
+                                    <li class="divider"></li>
+
+                                    <li>
+                                        <a ng-click="printThisinvoice(accountdata.invoiceForm); $event.stopPropagation();">Print this Invoice</a>
+                                    </li>                                                                        
+                                    <li>
+                                        <a class="accountpage_click_resize" ng-click="ReceivePayment();">Receive Payment for this Invoice</a>
+                                    </li>                                    
+                                    <li class="divider"></li>
+
+                                    <li><a>Go to Customer</a></li>           
+                                </ul>
+                            </div>
+                            <div class="fullscreen_icon account_fullview pull-right accountpage_click_resize" onclick="return full_screen_account()"></div>
+                            <a class="line account_edit_cancel accountpage_click_resize" ng-if="accountdata.currentPage == 'Ledgeredit' || accountdata.currentPage == 'Ledgeradd'" 
+                               ng-click="closeLedgerview();"> Cancel</a>
+                        </div>
+                    </div>
+
+                    <!-- Right Section Dashboard-->
+                    <div class="account_filter_cnt account_add table_cnt padding_top_20 padding_bottom_20" ng-if="accountdata.currentPage == 'Dashboard'">
+                        <div class="fav_cus_heading">Favorite Accounts:</div>
+                        <div class="col-xs-12">
+                            <div class="fav_cus_card accountpage_click_resize" ng-repeat="ledger in accountdata.ledgerDetail| filter: { favourite: true }" 
+                                 ng-class="{'active':ledger._id == filterData.selectedLedger}" ng-click="setLedger(ledger);">
+                                <div class="acc_title" ng-bind="ledger.name"></div>
+                                <div class="place_text" ng-bind="ledger.branchname| branchnameFilter:accountdata.branchDetail:ledger.division_id"></div>
+                                <div class="amount_text" ng-if="ledger.current_balance>=0" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></div>
+                                <div class="amount_text red_text" ng-if="ledger.current_balance<0" ng-bind="commonobjectService.getCurrency()+(ledger.current_balance| number:2)"></div>
+                                <div class="update_text update_time_color" ng-bind="'Updated on '+(ledger.updated| date:'mediumDate')"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Section Ledger Detail-->
+                    <div class="account_filter_cnt account_view table_cnt" ng-if="accountdata.currentPage == 'Ledgerdetail'">
+                        <!-- Right Section Normal Ledger Detail-->
+                        <div class="report">
+                            <div class="report_fixed_postion dtrange_fixed_postion" style="width:100%" >
+                                <div class="report_date_select" style="background-color: #fff; padding-left: 4px; padding-top:8px;">
+                                <div class="report_date_right_sec" style="text-align:left; width:auto; padding:2px 0px 0px;">
+                                    <span>Showing Transactions Since:</span>
+                                    <span class="selmenu" ng-class="{'active':accountdata.activeDay=='TODAY'}" ng-click="changeCurrentSelectedRange('TODAY');">Today,</span>
+                                    <span class="selmenu" ng-class="{'active':accountdata.activeDay=='4DAY'}" ng-click="changeCurrentSelectedRange('4DAY');">Last 4 Days,</span>
+                                    <span class="selmenu" ng-class="{'active':accountdata.activeDay=='7DAY'}" ng-click="changeCurrentSelectedRange('7DAY');">Last 7 Days,</span>
+                                    <span class="selmenu" ng-class="{'active':accountdata.activeDay=='THIS_MONTH'}" ng-click="changeCurrentSelectedRange('THIS_MONTH');">This Month,</span>
+                                    <span class="selmenu" ng-class="{'active':accountdata.activeDay=='LAST_3_MONTH'}" ng-click="changeCurrentSelectedRange('LAST_3_MONTH');">Last 3 Month,</span>
+                                    <span>Custom:</span>
+                                </div>
+                                <div class="report_date_left_sec" style="padding-left:10px; width:auto;">  
+                                    <div class="custom_date_style">
+                                        <div class="input-append" ng-init="initializeDatepicker();">
+                                            <input type="text" name="daterange"  class="form-control add-on report_date_input rangeDate" style="position:relative !important; height:24px" />
+                                            <span class="add-on date_icon rangeDate" style="top:5px !important"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_date_show c_report_date_show"></div>
+                          </div>
+                        </div>
+                        
+                        
+                        <div class="table_scroll padding_top_20 account_table_scroll" style="height: 510px;min-height: 150px;" ng-init="ledgerbal = ledgerData.opening_balance" 
+                             ng-if="accountdata.tempselectedledger.type != 'INVOICE' && accountdata.tempselectedledger.type != 'CREDIT NOTE' && accountdata.tempselectedledger.type != 'DEBIT NOTE'">
+                            <div class="col-xs-12 table_div ">
+                                
+                                <table class="acc_table tb_scroll_style acc-table-scroll div_acc_td_tr_wdt">
+                                    <thead>
+                                        <tr class="tr_header">
+                                            <th style="width: 5%;" class="text-center">Ad. Flag</th>
+                                            <th style="width: 5%" class="text-center">Flag</th>
+                                            <th style="width: 10%;">Num</th>
+                                            <th style="width: 5%;"></th>
+                                            <th style="width: 10%;">Date <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='transaction_date' && 
+                                                        accountdata.sortColumn!='-transaction_date'" ng-click="accountdata.sortColumn='transaction_date'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='transaction_date'" ng-click="accountdata.sortColumn='-transaction_date'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-transaction_date'" ng-click="accountdata.sortColumn='transaction_date'"></span></th>
+                                            <th style="width: 25%;">Payee<span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='payee_name' && 
+                                                        accountdata.sortColumn!='-payee_name'" ng-click="accountdata.sortColumn='payee_name'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='payee_name'" ng-click="accountdata.sortColumn='-payee_name'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-payee_name'" ng-click="accountdata.sortColumn='payee_name'"></span></th>
+                                            <th style="width: 10%;" class="text-right">Spend (Debit)</th>
+                                            <th style="width: 12%;" class="text-right">Receive (Credit)</th>
+                                            <th style="width: 13%;" class="text-right">Balance</th>
+                                            <th style="width: 5%;" class="delete_td"></th>
+                                            <th style="width: 1%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="acc_scollbody">
+                                        <tr class="accountpage_click_resize" ng-repeat="trans in accountdata.accountsTransaction | orderBy : accountdata.sortColumn | filter:accountdata.ledgerGridFillter" 
+                                            ng-dblclick="getTransaction(trans)">
+                                            <td style="width: 5%;" class="text-center flag_div_ad"></td>
+                                            <td style="width: 5%" class="text-center flag_div">
+                                                <span class="flag_div_toggle" ng-click="toggledivisionadminflag(trans)" ng-class="{'flag':trans.divisionadmin_flag, 'flag_default':!trans.divisionadmin_flag}" 
+                                                      title="{{ trans.divisionadmin_flag ? trans.divisionadmin_flag_added_by : ''}}"></span>
+                                            </td>
+                                            <td style="width: 10%;" ng-bind="trans.cheque_no"></td>
+                                            <td style="width: 5%;" ng-bind="trans.transaction_date| date:'EEE'"></td>
+                                            <td style="width: 10%;" ng-bind="trans.transaction_date| date:'dd / MM / yyyy'"></td>
+                                            <td style="width: 25%;" ng-bind="trans.payee_name+', '+trans.memo"></td>
+                                            <td style="width: 10%;" class="text-right"><span ng-if="trans.transaction_type == 'DEBIT'" ng-bind="trans.transaction_amount| number:2"></span></td>
+                                            <td style="width: 12%;" class="text-right"><span ng-if="trans.transaction_type == 'CREDIT'" ng-bind="trans.transaction_amount| number:2"></span></td>
+                                            <td style="width: 13%;" class="text-right" ng-bind="trans.transaction_amount| number:2"></td>
+                                            <td style="width: 5%;" class="delete_td"><span class="delete_small" noty-remove noty-update='deleteTransaction(trans)' noty-style="3" noty-content="Are you sure,You want to delete this transaction?"></span></td>
+                                            <td style="width: 1%;">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Section CREDIT / DEBIT Ledger Detail-->
+                        <div class="table_scroll padding_top_20 account_table_scroll" style="height: 510px;min-height: 150px;" ng-init="ledgerbal = ledgerData.opening_balance" 
+                             ng-if="accountdata.tempselectedledger.type == 'CREDIT NOTE' || accountdata.tempselectedledger.type == 'DEBIT NOTE'">
+                            <div class="col-xs-12 table_div ">
+                                
+                                <table class="acc_table tb_scroll_style acc-table-scroll div_acc_td_tr_wdt">
+                                        <thead>
+                                        <tr class="tr_header">
+                                            <th style="width: 5%;" class="text-center">Ad. Flag</th>
+                                            <th style="width: 5%" class="text-center">Flag</th>
+                                            <th style="width: 10%;">
+                                                <span ng-if="accountdata.tempselectedledger.type == 'CREDIT NOTE'">Credit Number</span>
+                                                <span ng-if="accountdata.tempselectedledger.type == 'DEBIT NOTE'">Debit Number</span>
+                                            </th>
+                                            <th style="width: 13%;">Date <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='transaction_date' && 
+                                                        accountdata.sortColumn!='-transaction_date'" ng-click="accountdata.sortColumn='transaction_date'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='transaction_date'" ng-click="accountdata.sortColumn='-transaction_date'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-transaction_date'" ng-click="accountdata.sortColumn='transaction_date'"></span></th>
+                                            <th style="width: 15%;">Customer / Vendor<span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='payee_name' && 
+                                                        accountdata.sortColumn!='-payee_name'" ng-click="accountdata.sortColumn='payee_name'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='payee_name'" ng-click="accountdata.sortColumn='-payee_name'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-payee_name'" ng-click="accountdata.sortColumn='payee_name'"></span></th>
+                                            <th style="width: 10%;">Order No / PO No</th>
+                                            <th style="width: 24%;">Description</th>
+                                            <th style="width: 13%;" class="text-right">Amount</th>
+                                            <th style="width: 5%;" class="delete_td"></th>
+                                            <th style="width: 1%;"></th>
+                                        </tr>
+                                        </thead>
+                                    <tbody class="acc_scollbody">
+                                        <tr class="accountpage_click_resize" ng-repeat="trans in accountdata.accountsTransaction | orderBy : accountdata.sortColumn | filter:accountdata.ledgerGridFillter" 
+                                            ng-dblclick="getdebitcreditnotetrans(trans)">
+                                            <td style="width: 5%;" class="text-center flag_div_ad"></td>
+                                            <td style="width: 5%" class="text-center flag_div">
+                                                <span class="flag_div_toggle" ng-click="toggledivisionadminflag(trans)" ng-class="{'flag':trans.divisionadmin_flag, 'flag_default':!trans.divisionadmin_flag}" 
+                                                      title="{{ trans.divisionadmin_flag ? trans.divisionadmin_flag_added_by : ''}}"></span>
+                                            </td>
+                                            <td style="width: 10%;" ng-bind="trans.serial_no"></td>
+                                            <td style="width: 13%;">
+                                                <span ng-bind="trans.transaction_date| date:'EEE'"></span>
+                                                <span ng-bind="trans.transaction_date| date:'dd / MM / yyyy'"></span>
+                                            </td>
+                                            <td style="width: 15%;" ng-bind="trans.payee_name"></td>
+                                            <td style="width: 10%;">
+                                                <span ng-if="trans.bills && trans.bills.length==1" ng-bind="trans.bills[0].bill_no"></span>
+                                                <span ng-if="trans.bills && trans.bills.length>1" ng-bind="(trans.bills[0].bill_no)+' +'+(trans.bills.length-1)+' more..'"></span>
+                                                <span ng-if="trans.invoice_nos && trans.invoice_nos!=''" ng-bind="trans.invoice_nos"></span>                                                
+                                            </td>
+                                            <td style="width: 24%;" ng-bind="trans.memo"></td>
+                                            <td style="width: 13%;" class="text-right" ng-bind="trans.transaction_amount| number:2"></td>
+                                            <td style="width: 5%;" class="delete_td"><span class="delete_small" noty-remove noty-update='deleteDebitnote(trans)' noty-style="3" noty-content="Are you sure,You want to delete this debit note entry?"></span></td>
+                                            <td style="width: 1%;">&nbsp;</td>
+                                        </tr>                       	  
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Section Invoice Ledger Detail-->
+                        <div class="table_scroll accounts-receivable accounts_des padding_top_20 account_table_scroll" ng-init="ledgerbal = ledgerData.opening_balance" ng-if="accountdata.tempselectedledger.type == 'INVOICE'" 
+                             style="height: 510px;min-height: 200px;">
+                            <div class="col-xs-12 table_div ">
+                                <table class="acc_table tb_scroll_style acc-table-scroll div_acc_td_tr_wdt">
+                                    <thead>
+                                        <tr class="tr_header">
+                                            <th style="width:5%" class="ac1 text-center">Ad. Flag</th>
+                                            <th style="width:5%" class="ac2 text-center" >Flag</th>
+                                            <th style="width:10%" class="text-center">Invoice Num <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='invoice_no' && 
+                                                        accountdata.sortColumn!='-invoice_no'" ng-click="accountdata.sortColumn='invoice_no'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='invoice_no'" ng-click="accountdata.sortColumn='-invoice_no'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-invoice_no'" ng-click="accountdata.sortColumn='invoice_no'"></span></th>
+                                            <th style="width:10%">Invoice Date <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='invoice_date' && 
+                                                        accountdata.sortColumn!='-invoice_date'" ng-click="accountdata.sortColumn='invoice_date'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='invoice_date'" ng-click="accountdata.sortColumn='-invoice_date'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-invoice_date'" ng-click="accountdata.sortColumn='invoice_date'"></span></th>
+                                            <th style="width:15%">Due Date <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='invoicedue_date' && 
+                                                        accountdata.sortColumn!='-invoicedue_date'" ng-click="accountdata.sortColumn='invoicedue_date'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='invoicedue_date'" ng-click="accountdata.sortColumn='-invoicedue_date'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-invoicedue_date'" ng-click="accountdata.sortColumn='invoicedue_date'"></span></th>
+                                            <th style="width:30%">Customer <span class="dowm_dropdown_small_default" ng-if="accountdata.sortColumn!='customer_name' && 
+                                                        accountdata.sortColumn!='-customer_name'" ng-click="accountdata.sortColumn='customer_name'"></span>
+                                            <span class="dowm_dropdown_small" ng-if="accountdata.sortColumn=='customer_name'" ng-click="accountdata.sortColumn='-customer_name'"></span>
+                                            <span class="up_dropdown_small" ng-if="accountdata.sortColumn=='-customer_name'" ng-click="accountdata.sortColumn='customer_name'"></span></th>
+                                            <th style="width:10%" class="text-right">Invoices Amount </th>
+                                            <th style="width:20%" class="text-right">Balance Due</th>
+                                            <th style="width:10%">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody  class="acc_scollbody">
+                                        <tr class="accountpage_click_resize" ng-repeat="trans in accountdata.accountsTransaction | orderBy : accountdata.sortColumn | filter:accountdata.ledgerGridFillter" ng-dblclick="getInvoice(trans)">
+                                            <td style="width: 5%;" class="text-center flag_div_ad"></td>
+                                            <td style="width: 5%" class="text-center flag_div">
+                                                <span class="flag_div_toggle" ng-click="toggledivisionadminflag(trans)" ng-class="{'flag':trans.divisionadmin_flag, 'flag_default':!trans.divisionadmin_flag}" 
+                                                      title="{{ trans.divisionadmin_flag ? trans.divisionadmin_flag_added_by : ''}}"></span>
+                                            </td>
+                                            <td style="width:10%" class="text-center" ng-bind="trans.invoice_no"></td>
+                                            <td style="width:10%" ng-bind="trans.invoice_date| date:'EEE dd - MM - yyyy'"></td>
+                                            <td style="width:15%" ng-bind="trans.invoicedue_date| date:'dd - MM - yyyy'"></td>
+                                            <td style="width:30%" ng-bind="trans.customer_name"></td>
+                                            <td style="width:10%" class="text-right">
+                                                <span ng-bind="trans.total| number:2"></span>
+                                            </td>
+                                            <td style="width:20%" class="text-right">
+                                                <span ng-bind="(trans.total - trans.paid| number:2)"></span>
+                                            </td>
+                                            <td style="width:10%" class="delete_td">
+                                                <span class="delete_small" noty-remove noty-update='deleteInvoicetrans(trans)' noty-style="3" 
+                                                      noty-content="Are you sure,You want to delete this transaction?"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Section Ledger Balance-->
+                        <div class="account_total_show" ng-bind="'Ending Balance: '+ commonobjectService.getCurrency() + (ledgerData.current_balance | number:2)"></div>
+
+                        <!-- Right Section Normal Ledger Footer-->
+                        <div class="account_footer" ng-if="ledgerData.type != 'INVOICE' && accountdata.tempselectedledger.type != 'CREDIT NOTE' && accountdata.tempselectedledger.type != 'DEBIT NOTE'"" style="height: 60px;">
+                            <!-- Right Section Normal Ledger Footer Header-->
+                            <div class="edit_header">
+                                <ul class="nav nav-tabs heading_5 purchase-menu">
+                                    <li ng-class="{'active': accountdata.accountEdit == 'DEBIT'}" ng-click="selectTransaction('DEBIT'); $event.stopPropagation();">
+                                        <a class="menu_list edit_btn">Spend (Debit)</a>
+                                    </li>
+                                    <li ng-class="{'active': accountdata.accountEdit == 'CREDIT'}" ng-click="selectTransaction('CREDIT'); $event.stopPropagation();">
+                                        <a class="menu_list edit_btn">Receive (Credit)</a>
+                                    </li>
+                                    <li ng-class="{'active': accountdata.accountEdit == 'TRANSFER'}" ng-click="selectTransaction('TRANSFER'); $event.stopPropagation();">
+                                        <a class="menu_list edit_btn">Transfer</a>
+                                    </li>
+									<div class="fullscreen_icon account_bottom_view pull-right" onclick=""></div>
+                                </ul>
+                            </div>
+
+                            <!-- Right Section Normal Ledger Footer Tab View-->
+                            <div class="edit_body spend accounts-bottom-tab">
+                                <!-- Right Section Normal Ledger Footer Debit Tab-->
+                                <div ng-if="accountdata.accountEdit == 'DEBIT'">
+                                    <div class="edit_left_sec margin-top-30">
+                                        <div class="col-xs-12   margin-bottom-10">
+                                            <input class="input_right pull-right" type="text" ng-model="transactionData.cheque_no">
+                                            <span class="left_title text-right pull-right">Number:</span>
+                                        </div>
+                                        <div class="col-xs-12  margin-bottom-10">
+                                            <input class="pull-right" type="text" ng-model="transactionData.payee_name">
+                                            <span class="left_title pull-right">Pay to:</span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <ui-select ng-model="accountdata.category" theme="selectize" search-enabled='true'
+                                                       on-select="setCategory($item)" class="pull-right"> 
+                                                <ui-select-match>{{$select.selected.category_name}}</ui-select-match>
+                                                <ui-select-choices repeat="category._id as category in accountdata.categories | filter: $select.search | filter:{categoryType: 'EXPENSE'}">
+                                                    <span class="category_space{{category.level}}"
+                                                          ng-bind-html="category.category_name | highlight: $select.search"></span>
+                                                </ui-select-choices> 
+                                            </ui-select>
+                                            <span class="left_title pull-right">Category: </span> 
+
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <input class="pull-right" ng-model="transactionData.memo" type="text">
+                                            <span class="left_title pull-right">Memo:</span>                        
+                                        </div>
+                                    </div>
+
+                                    <div class="edit_right_sec">
+                                        <div class="col-xs-12 margin-top-30 margin-bottom-10">
+                                            <span class="left_title text-right">Date :</span>
+                                            <div class="datepicker_custom_style datestyledebit">
+                                                <div class="input-group date">
+                                                    <date-time-picker ng-model="transactionData.transaction_date" placeholder="Date" start-view='2' min-view='2' max-view='4' 
+                                                                      today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".datestyledebit" 
+                                                                      picker-position="top-left">
+                                                    </date-time-picker>
+                                                </div>
+                                            </div>	
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-20">
+                                            <span class="left_title text-right">Amount:</span>
+                                            <span class="input-group-addon" ng-bind="commonobjectService.getCurrency()"></span>
+                                            <input class="input_right_currency" ng-model="transactionData.transaction_amount" valid-number>
+                                        </div>
+                                        <div class="col-xs-12 btn_top_margin" style="display:flex;">                                            
+                                            <a class="common_button enter margin-right-15 margin-left-10" ng-click="transactionData._id ? updateTransaction('DEBIT') : saveTransaction('DEBIT');" 
+                                               ng-show="!accountdata.eventLoader">{{transactionData._id ? 'Modify' : 'Save'}}</a>
+                                            <a class="common_button margin-right-15 margin-left-10 cancel" ng-click="accountdata.eventLoader = true; resetTransaction(); $event.stopPropagation();" ng-show="!accountdata.eventLoader">Cancel</a> 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Section Normal Ledger Footer Credit Tab-->
+                                <div ng-if="accountdata.accountEdit == 'CREDIT'">
+                                    <div class="edit_left_sec">
+                                        <div class="col-xs-12 margin-top-30 margin-bottom-10">
+                                            <input class="pull-right" type="text" ng-model="transactionData.payee_name">
+                                            <span class="left_title pull-right">Payee:</span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <ui-select ng-model="accountdata.category" theme="selectize" search-enabled='true'
+                                                       on-select="setCategory($item)"> 
+                                                <ui-select-match>{{$select.selected.category_name}}</ui-select-match>
+                                                <ui-select-choices repeat="category._id as category in accountdata.categories | filter: $select.search | filter:{categoryType: 'INCOMING'}">
+                                                    <span class="category_space{{category.level}}"
+                                                          ng-bind-html="category.category_name | highlight: $select.search"></span>
+                                                </ui-select-choices> 
+                                            </ui-select>
+                                            <span class="left_title pull-right">Category: </span> 
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <input class="pull-right" type="text" ng-model="transactionData.memo">
+                                            <span class="left_title pull-right">Memo:</span> 
+                                        </div>
+                                    </div>
+
+                                    <div class="edit_right_sec">
+                                        <div class="col-xs-12 margin-top-30 margin-bottom-10">
+                                            <span class="left_title text-right">Date :</span> 
+                                            <div class="datepicker_custom_style datestylecredit">
+                                                <div class="input-group date" id="date1">
+                                                    <date-time-picker ng-model="transactionData.transaction_date" placeholder="Date" start-view='2' min-view='2' max-view='4' 
+                                                                      today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".datestylecredit" 
+                                                                      picker-position="top-left">
+                                                    </date-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-20">
+                                            <span class="left_title text-right">Amount:</span>
+                                            <span class="input-group-addon" ng-bind="commonobjectService.getCurrency()"></span>
+                                            <input class="input_right_currency" ng-model="transactionData.transaction_amount" valid-number/>
+                                        </div>
+                                        <div class="col-xs-12 btn_top_margin" style="display:flex;">							                                            
+                                            <a class="common_button enter margin-right-15 margin-left-10" ng-click="saveTransaction('CREDIT'); $event.stopPropagation();" 
+                                               ng-show="!accountdata.eventLoader" ng-if="!transactionData._id">Save</a>
+                                            <a class="common_button enter margin-right-15 margin-left-10" ng-click="updateTransaction('CREDIT'); $event.stopPropagation();" 
+                                               ng-show="!accountdata.eventLoader" ng-if="transactionData._id">Modify</a>                            
+                                            <a class="common_button margin-right-15 margin-left-10 cancel" ng-click="accountdata.eventLoader = true; resetTransaction(); $event.stopPropagation();" ng-show="!accountdata.eventLoader">Cancel</a> 
+                                        </div>                                                                                                                        
+                                    </div>
+                                </div>
+
+                                <!-- Right Section Normal Ledger Footer Transfer Tab-->
+                                <div ng-if="accountdata.accountEdit == 'TRANSFER'">
+                                    <div class="edit_left_sec margin-top-30">
+                                        <div class="col-xs-12   margin-bottom-10">
+                                            <input class="input_right pull-right" type="text" ng-model="transactionData.cheque_no">
+                                            <span class="left_title text-right pull-right">Number:</span>
+                                        </div>
+                                        <div class="col-xs-12  margin-bottom-10">
+                                            <ui-select ng-model="accountdata.fromledger" theme="selectize" search-enabled='true'
+                                                       on-select="setTransfer($item,'FROM')"> 
+                                                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="ledger._id as ledger in accountdata.fromledgerDetail | filter: $select.search">
+                                                    <span ng-bind-html="ledger.name | highlight: $select.search"></span>
+                                                </ui-select-choices> 
+                                            </ui-select>
+                                            <span class="left_title pull-right">From:</span>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <ui-select ng-model="accountdata.toledger" theme="selectize" search-enabled='true'
+                                                       on-select="setTransfer($item,'TO')"> 
+                                                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="ledger._id as ledger in accountdata.toledgerDetail | filter: $select.search">
+                                                    <span ng-bind-html="ledger.name | highlight: $select.search"></span>
+                                                </ui-select-choices> 
+                                            </ui-select>
+                                            <span class="left_title pull-right">To: </span> 
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-10">
+                                            <input class="pull-right" ng-model="transactionData.memo" type="text">
+                                            <span class="left_title pull-right">Memo:</span> 
+                                        </div>
+                                    </div>
+
+                                    <div class="edit_right_sec">
+                                        <div class="col-xs-12 margin-top-30 margin-bottom-10">
+                                            <span class="left_title text-right">Date :</span> 
+                                            <div class="datepicker_custom_style datestyletransfer">
+                                                <div class="input-group date" id="date2">
+                                                    <date-time-picker ng-model="transactionData.transaction_date" placeholder="Date" start-view='2' min-view='2' max-view='4' 
+                                                                      today-btn='true' minute-step='30' format="dd-MM-yyyy" container=".datestyletransfer" 
+                                                                      picker-position="top-left">
+                                                    </date-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 margin-bottom-20">
+                                            <span class="left_title text-right">Amount:</span>
+                                            <span class="input-group-addon" ng-bind="commonobjectService.getCurrency()"></span>
+                                            <input class="input_right_currency" ng-model="transactionData.transaction_amount" valid-number/>
+                                        </div>
+                                        <div class="col-xs-12 btn_top_margin" style="display:flex;">                                            
+                                            <a class="common_button enter margin-right-15 margin-left-10" ng-click="saveTransaction('TRANSFER'); $event.stopPropagation();" 
+                                               ng-show="!accountdata.eventLoader" ng-if="!transactionData.from && !transactionData.to">Save</a>
+                                            <a class="common_button enter margin-right-15 margin-left-10" ng-click="updateTransaction('TRANSFER'); $event.stopPropagation();" 
+                                               ng-show="!accountdata.eventLoader" ng-if="transactionData.from && transactionData.to">Modify</a>
+                                            <a class="common_button margin-right-15 margin-left-10 cancel" ng-click="accountdata.eventLoader = true; resetTransaction(); $event.stopPropagation();" ng-show="!accountdata.eventLoader">Cancel</a> 
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Section Invoice Ledger Footer-->
+                        <div class="col-xs-12 margin-top-10 padding_zero" ng-if="ledgerData.type == 'CREDIT NOTE'">
+                            <a class="common_button margin-right-15 margin-left-10 enter-new accountpage_click_resize" 
+                               ng-click="newCredit();">New Credit Note</a>
+                            <!--<a class="common_button cancel" href="javasscript:void(0);">Cancel Invoice</a>--> 
+                        </div>
+                        <!-- Right Section Invoice Ledger Footer-->
+                        <div class="col-xs-12 margin-top-10 padding_zero" ng-if="ledgerData.type == 'DEBIT NOTE'">
+                            <a class="common_button margin-right-15 margin-left-10 enter-new accountpage_click_resize" 
+                               ng-click="newDebit();">New Debit Note</a>
+                            <!--<a class="common_button cancel" href="javasscript:void(0);">Cancel Invoice</a>--> 
+                        </div>
+
+                        <!-- Right Section Invoice Ledger Footer-->
+                        <div class="col-xs-12 margin-top-10 padding_zero" ng-if="ledgerData.type == 'INVOICE'" style="height: 50px;">
+                            <a class="common_button margin-right-15 margin-left-10 enter-new accountpage_click_resize" ng-click="newInvoice();">New Invoice</a>
+                            <!--<a class="common_button cancel" href="javasscript:void(0);">Cancel Invoice</a>--> 
+                        </div>
+                    </div>
+
+                    <!-- Right Section Ledger Create/view/update-->
+                    <div class="accounts_general_info" style="position:relative;" ng-if="accountdata.currentPage == 'Ledgeredit' || accountdata.currentPage == 'Ledgeradd'">
+                        <div class="account_filter_cnt account_add table_cnt padding_top_20 padding_bottom_20">
+                            <div class="row margin-0" style="overflow:hidden;">
+                                <div class="col-xs-12">
+                                    <!-- Right Section Ledger Create/update form-->
+                                    <form name="accountledgerForm" novalidate>
+
+                                        <div class="accont_add_form">
+                                            <div class="acc_form_title">General Information</div>
+                                            <div class="acc_form_subtitle">Enter the general information about this account.</div>
+
+                                            <table class="editable_ledger">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="form_left">Account Name</td>
+                                                        <td class="form_right">
+                                                            <input type="text" name="name" ng-model="ledgerData.name" 
+                                                                   ng-class="{'input_error_class':!accountledgerForm.name.$valid && accountdata.formsubmission}" required>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Account Type</td>
+                                                        <td class="form_right">
+                                                            <select ng-model="ledgerData.type" name="type" ng-if="ledgerData.type != 'INVOICE' && !ledgerData.default" 
+                                                                    ng-class="{'input_error_class':!accountledgerForm.type.$valid && accountdata.formsubmission}" required>
+                                                                <option value="BANK">Bank</option>
+                                                                <option value="CASH">Cash</option>
+                                                            </select>
+                                                            <b class="ledger_default_cash" ng-if="ledgerData.type == 'INVOICE'">Invoice</b>
+                                                            <b class="ledger_default_cash" ng-if="(ledgerData.type == 'BANK' || ledgerData.type == 'CASH') && ledgerData.default" ng-bind="ledgerData.type"></b>
+                                                            <b class="ledger_default_cash" ng-if="ledgerData.type == 'CREDIT NOTE' || ledgerData.type == 'DEBIT NOTE'" ng-bind="ledgerData.type"></b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Financial Institution</td>
+                                                        <td class="form_right">
+                                                            <input type="text" ng-model="ledgerData.financial_institution" name="financial_institution">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Account Number</td>
+                                                        <td class="form_right">
+                                                            <input type="text" ng-model="ledgerData.account_no" name="account_no">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Notes</td>
+                                                        <td class="form_right">
+                                                            <textarea ng-model="ledgerData.notes" name="notes"></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Abbrevation</td>
+                                                        <td class="form_right">
+                                                            <input type="text" ng-model="ledgerData.abbrevation" class="abbrevation" name="abbrevation">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left"></td>
+                                                        <td class="form_right">
+                                                            <input type="checkbox" class="input_class_checkbox" ng-model="ledgerData.favourite" ng-hide="true">
+                                                            <div class="class_checkbox" ng-click="ledgerData.favourite = !ledgerData.favourite; $event.stopPropagation();" 
+                                                                 ng-class="{'checked':ledgerData.favourite == true || ledgerData.favourite == 'true'}"></div>
+                                                            <span class="fav_check_text">Favorite Account</span> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left"></td>
+                                                        <td class="form_right">
+                                                            <input type="checkbox" class="input_class_checkbox" ng-model="ledgerData.closed" ng-hide="true">
+                                                            <div class="class_checkbox" ng-click="ledgerData.closed = !ledgerData.closed; $event.stopPropagation();" 
+                                                                 ng-class="{'checked':ledgerData.closed == true || ledgerData.closed == 'true'}"></div> 
+                                                            <span class="fav_check_text">This account has been closed</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="accont_add_form account_form_top" ng-if="ledgerData.type != 'INVOICE'">
+                                            <div class="acc_form_title">Balance Information</div>
+                                            <div class="acc_form_subtitle">Enter the balance information for this account.</div>
+
+                                            <table style="margin-bottom:0px;" class="editable_ledger">
+                                                <tbody><tr>
+                                                        <td class="acc_table_date">
+                                                            <div class="form_left_bal">Opening Balance</div>
+                                                            <div class="form_right_bal s_input_style_account_edit">
+                                                                <span class="input-group-addon">₹</span>
+                                                                <input type="text" class="balance_input" ng-model="ledgerData.opening_balance" valid-number name="opening_balance" 
+                                                                       ng-class="{'input_error_class':!accountledgerForm.opening_balance.$valid && accountdata.formsubmission}" required>
+                                                            </div>
+                                                        </td>
+                                                        <td class="acc_table_date balance-info">
+                                                            <div class="datepicker_custom_style datestyleledger">
+                                                                <div class="input-group date" id="date3">
+                                                                    <date-time-picker ng-model="ledgerData.opening_date" placeholder="Date" start-view='2' min-view='2' 
+                                                                                      max-view='4' today-btn='true' minute-step='30' format="dd-MM-yyyy" 
+                                                                                      container=".datestyleledger">
+                                                                    </date-time-picker>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table style="margin-top:0px;" class="editable_ledger">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="form_left">Minimum Balance</td>
+                                                        <td class="form_right s_input_style_account_edit">
+                                                            <span class="input-group-addon">₹</span>
+                                                            <input type="text" class="balance_input" ng-model="ledgerData.minimum_balance" valid-number/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="form_left">Account Currency</td>
+                                                        <td class="form_right">
+                                                <ui-select ng-model="ledgerData.currency" theme="selectize" search-enabled='true'>
+                                                    <ui-select-match class="model_brand" placeholder="Select Currency">{{$select.selected.name}}</ui-select-match>
+                                                    <ui-select-choices repeat="currency.tag as currency in accountdata.currencytype | filter: $select.search">
+                                                        <div ng-bind-html="currency.name | highlight: $select.search"></div>
+                                                        <!--<small ng-bind-template="{{category._id | highlight: $select.search}}"></small>-->
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_left">Interest Rate</td>
+                                                    <td class="form_right">
+                                                        <input type="text" class="abbrevation" ng-model="ledgerData.interest_rate" valid-number>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="accont_add_form">
+                                            <table class="editable_ledger">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="center">
+                                                            <div class="loader_medium" ng-show="accountdata.eventLoader"></div>
+                                                            <a class="common_button accont_color accountpage_click_resize" ng-click="accountdata.formsubmission = true; updateLedgerDetails(accountledgerForm.$valid);" 
+                                                               ng-show="!accountdata.eventLoader" ng-if="!ledgerData._id && ledgerData.type != 'INVOICE'">Done</a>
+                                                            <a class="common_button accont_color accountpage_click_resize" ng-click="accountdata.formsubmission = true; updateLedgerDetails(accountledgerForm.$valid);" 
+                                                               ng-show="!accountdata.eventLoader" ng-if="ledgerData._id">Update</a>									
+                                                        </td>
+                                                    </tr>  
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Section Invoice view/create/update-->
+                    <b>
+                        <div class="account_filter_cnt account_view table_cnt accounts_recievable" ng-if="accountdata.currentPage == 'InvoiceLedgerdetail'">
+                            <div class="invoice invoice_account_view margin-bottom-30 padding_top_20 padding_bottom_20">
+                                <div class="col-lg-12 acnt_invoice_no_id">
+                                    <strong ng-bind="'Invoice #' + (accountdata.invoiceForm.invoice_no)"></strong>        
+                                    <span class="heading_3 blue-color" ng-if="!accountdata.invoiceForm._id">New Invoice (Invoices)</span>
+                                </div>
+
+                                <div class="col-xs-12 col-lg-6 padding_zero">
+                                    <div class="col-xs-12 padding_zero">
+                                        <div class="acnt_invoice_cus_title cus_name_left">Customer</div>
+                                        <div class="acnt_invoice_cus_details typehead_input">           
+                                            <input type="text" class="form-control form_center" placeholder="Customer Name" ng-model="accountdata.invoiceForm.customer_name" 
+                                                   ui-event="{autocompletecreate:'changeClass(customerOption)'}" ui-autocomplete="customerOption" ng-if="!accountdata.invoiceForm._id" required>
+                                            <span ng-if="accountdata.invoiceForm._id" ng-bind="accountdata.invoiceForm.customer_name"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 padding_zero">
+                                        <div class="acnt_invoice_cus_title">Address</div>
+                                        <div class="acnt_invoice_cus_details">
+                                            <div class="col-xs-6 padding_zero_div"> 
+                                                <div id="address_cnt" ng-class="{'acnt_address_cnt': accountdata.invoice_address_change}" ng-if="accountdata.invoiceForm.customer_id && accountdata.invoiceForm.customer_id != ''">
+                                                    <div class="addrss_list acnt_add" ng-if="accountdata.invoice_address_change" ng-click="accountdata.invoice_address_change = !accountdata.invoice_address_change; invoiceSelectaddress(nwaddr); $event.stopPropagation();" 
+                                                         ng-repeat="nwaddr in accountdata.customeraddress" ng-if="accountdata.invoice_address_change">
+                                                        <p bill-gstin="true" bill-companyname="true" combine-Address="{{nwaddr}}"></p> 
+                                                    </div>
+                                                    <div ng-if="!accountdata.invoice_address_change" ng-click="accountdata.invoice_address_change = false; $event.stopPropagation();" class="addrss_select acnt_add">
+                                                        <p bill-gstin="true" bill-companyname="true" combine-Address="{{accountdata.invoiceForm.billing_address}}"></p> 
+                                                    </div>
+                                                    <a class="line light add_change" ng-if="!accountdata.invoice_address_change" 
+                                                       ng-click="accountdata.invoice_address_change = !accountdata.invoice_address_change; $event.stopPropagation();">Change</a>  
+                                                </div>
+                                                <div id="address_cnt" ng-if="!accountdata.invoiceForm.customer_id || accountdata.invoiceForm.customer_id == ''">
+                                                    <i>----.</i>
+                                                </div>
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                    <div class="col-xs-12 padding_zero_div">
+                                        <div class="acnt_invoice_cus_title cus_name_left">GSTN</div>
+                                        <div class="acnt_invoice_cus_details margin-top-05" ng-if="accountdata.invoiceForm.customer_id && accountdata.invoiceForm.customer_id != ''" ng-init="accountdata.invoiceGstinEdit = false">
+                                            <span ng-if="accountdata.invoiceForm.gstTreatment != '' && accountdata.invoiceForm.placeofSupply != '' && accountdata.invoiceForm.gstin != ''" ng-bind="accountdata.invoiceForm.gstin"></span>
+                                            <a class="line light add_change" ng-if="accountdata.invoiceGstinEdit != true && accountdata.invoiceForm.gstTreatment == '' && accountdata.invoiceForm.placeofSupply == ''"
+                                               ng-click="accountdata.invoiceGstinEdit = true">Manage Customer's GSTN</a>
+                                            <div class="add_edit_div acnt_add_edit_div" style="background:#ddd; width:83%;min-width: 410px;" 
+                                                 ng-if="accountdata.invoiceGstinEdit == true && accountdata.invoiceForm.gstTreatment == '' && accountdata.invoiceForm.placeofSupply == ''">
+                                                <div class="col-xs-12 accounts_gst_top_txt">You can manage the GSTN for this customer</div>
+                                                <div style="clear:both"></div>
+                                                <ui-select ng-model="accountdata.invoiceForm.gstTreatmentcopy" class="accounts_ui_select" theme="selectize" search-enabled='true'
+                                                           on-select="assignCustomergsttreatment(accountdata.invoiceForm)">
+                                                    <ui-select-match placeholder="GST Treatement">{{$select.selected.name}}</ui-select-match>
+                                                    <ui-select-choices repeat="gsttreat in accountdata.Gsttreatmentdetails" ng-hide="!$select.open">
+                                                        <span ng-bind-html="gsttreat.name"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+
+                                                <input name="invoice_selected_customer" id="invoice_selected_customer" type="text" placeholder="GSTN" 
+                                                       ng-model="accountdata.invoiceForm.gstin" class="accounts_gstbox form-control" style="font-size:12px;"
+                                                       ng-if="accountdata.invoiceForm.gstTreatmentcopy.name == 'Registered Business - Regular' || accountdata.invoiceForm.gstTreatmentcopy.name == 'Registered Business - Composition' ||
+                                                                   accountdata.invoiceForm.gstTreatmentcopy.name == 'Special Economic Zone'">
+                                                <div style="clear:both"></div>
+                                                <ui-select ng-model="accountdata.invoiceForm.stateCopy" class="accounts_ui_select" theme="selectize" search-enabled='true'
+                                                           ng-if="accountdata.invoiceForm.gstTreatmentcopy.name == 'Registered Business - Regular' || accountdata.invoiceForm.gstTreatmentcopy.name == 'Registered Business - Composition' ||
+                                                                       accountdata.invoiceForm.gstTreatmentcopy.name == 'Special Economic Zone' || accountdata.invoiceForm.gstTreatmentcopy.name == 'Unregistered Business' ||
+                                                                       accountdata.invoiceForm.gstTreatmentcopy.name == 'Consumer'">
+                                                    <ui-select-match placeholder="Place Of Supply">{{$select.selected.name}}</ui-select-match>
+                                                    <ui-select-choices repeat="state in accountdata.Statelistdetails"  ng-hide="!$select.open">
+                                                        <span ng-bind-html="state.name"></span>
+                                                    </ui-select-choices> 
+                                                </ui-select>
+                                                <div class="col-xs-12 accounts_gst_bottom_txt margin-top-10">Make it permanent?</div>
+                                                <div class="col-xs-12 accounts_gst_bottom_txt">
+                                                    <input type="checkbox" ng-model="accountdata.invoiceForm.savegstDetails">
+                                                    Use these settings for all future transactions of this customer.
+                                                </div>
+                                                <div class="col-xs-12 accounts_gst_button_div">
+                                                    <a class="common_button pull-right savebtn" ng-click="saveCustomerGstinDetails();">Save GSTN</a>
+                                                    <a class="common_button pull-right cancel" ng-click="accountdata.invoiceGstinEdit = false">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 padding_zero" ng-if="!accountdata.invoiceForm._id">
+                                        <div class="acnt_invoice_cus_title cus_name_left">Choose Job</div>
+                                        <div class="acnt_invoice_cus_details multipletypehead_input"> 
+                                            <ui-select multiple ng-model="accountdata.jobselected" theme="bootstrap" search-enabled='true' on-select="addJobs($item)" on-remove="removeJobs($item)" style="width:100%">
+                                                <!--<ui-select-match allow-clear="true">{{$item.job_no}}</ui-select-match>-->
+                                                <ui-select-match placeholder="Choose Job">{{$item.order_no}}</ui-select-match>
+                                                <ui-select-choices repeat="job._id as job in accountdata.Joblist | filter:$select.search">
+                                                    <span class="job{{job._id}}" ng-bind-html="job.order_no | highlight: $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-lg-6 padding_zero">
+                                    <div class="acnt_invoice_right_details">
+                                        <span class="acnt_invoice_no_right">Invoice No.</span> 
+                                        <input class="acnt_invoice_no_input" ng-model="accountdata.invoiceForm.invoice_no" ng-disabled="true" />
+                                    </div>
+
+                                    <div class="acnt_invoice_right_details">
+                                        <span class="acnt_invoice_no_right">Invoice Date</span>
+
+                                        <div class="date_cnt_1 margin-left-10">
+                                            <div class="custom_date_style">
+                                                <div class="input-append acnt_invoice_date_style">
+                                                    <div class="input-append" name="invoice_date">
+                                                        <date-time-picker ng-if="!accountdata.invoiceForm._id" ng-model="accountdata.invoiceForm.invoice_date" placeholder="Date" 
+                                                                          start-view='2' min-view='2' max-view='4' today-btn='true' 
+                                                                          minute-step='30' format="dd-MM-yyyy" container=".acnt_invoice_date_style">
+                                                        </date-time-picker>
+                                                        <span class="margin-top-10" ng-if="accountdata.invoiceForm._id" ng-bind="accountdata.invoiceForm.invoice_date | date:'dd - MM - yyyy'"
+                                                              style="display: block;"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="date_cnt_3 acnt_due_date margin-left-05">
+                                            <div class="custom_date_style acnt_invoice_due_style1">
+                                                <div class="input-append" name="invoicedue_date">
+                                                    <date-time-picker ng-model="accountdata.invoiceForm.invoicedue_date" placeholder="Date" 
+                                                                      start-view='2' min-view='2' max-view='4' today-btn='true' 
+                                                                      minute-step='30' format="dd-MM-yyyy" container=".acnt_invoice_due_style1">
+                                                    </date-time-picker>
+                                                </div>
+                                            </div>
+                                            <span class="acnt_due_on_invc">Due 0n: </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 margin-top-20" ng-if="!accountdata.invoiceForm._id || accountdata.invoiceForm.payment_status == 'PENDING'">
+                                    <div class="add_edit_div acnt_add_edit_div">
+                                        <div style="width:97%; display:inline-block;">
+                                            <div class="col-xs-12 acnt_add_edit_click" >
+                                                <span class="heading_5"> Add/Edit Items</span> <span ng-click="accountdata.showadditems = !accountdata.showadditems"
+                                                    class="add_icon_black pull-right" ng-class="{'add_icon_item':accountdata.showadditems == true}"></span>
+                                            </div>
+                                            <div class="col-xs-12" ng-show="accountdata.showadditems">
+                                                <div class="col-lg-9 col-xs-12">
+                                                    <div class="col-xs-12 padding_zero margin-bottom-10">
+                                                        <div class="acnt_left_sec acnt_resp_left_sec">
+                                                            <b>Item</b>
+                                                        </div>
+                                                        <div class="acnt_right_sec acnt_resp_right_sec">
+                                                            <input name="invoice_new_items" id="invoice_new_items" type="text" items="8" placeholder="Item name" 
+                                                                   ng-model="accountdata.invoiceItems.itemname" 
+                                                                   typeahead="res for res in getFilterInvoiceRecords($viewValue,'INVOICE_ITEMS') | filter:$viewValue | limitTo:8" class="form-control"  
+                                                                   typeahead-template-url="typehead_invoice_newitems.html" style="position: relative;right: 0px;float: right;width: 100%;height: 36px;"> 
+
+                                                            <script type="text/ng-template" id="typehead_invoice_newitems.html">
+                                                                <a tabindex="-1">      
+                                                                <span  ng-bind-html="match.model | typehighlight:query"></span>
+                                                                </a>
+                                                            </script>  
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearboth"></div>
+                                                    <div class="col-xs-12 padding_zero margin-bottom-10">
+                                                        <div class="acnt_left_sec">
+                                                            <b>Discount </b>
+                                                        </div>
+                                                        <div class="acnt_right_sec">
+                                                            <div class=" col-xs-2 res-col-xs-2 padding_zero acnt_text_invoice_input margin-botton-10 accounts_discount_txt_div">
+                                                                <input type="text" ng-model="accountdata.invoiceItems.discount" numberdecimal="20" class="accounts_discount_txt" ng-blur="getItemtotal()"/>
+                                                            </div>
+                                                            <div class="col-xs-2 res-col-xs-2 acnt_text_invoice_select margin-botton-10 accounts_discount_sel_div">
+                                                                <select ng-model="accountdata.invoiceItems.discountby" class="accounts_discount_sel" style="width: 100% !important;" ng-change="getItemtotal()">
+                                                                    <option value="flat">&nbsp;Flat&nbsp;</option>
+                                                                    <option value="percentage">&nbsp;Percentage&nbsp;</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-xs-1 res-col-xs-1-btm text_invoice_text_right margin-botton-10 text-right padding_zero accounts_tax_h">Tax</div>
+                                                            <div class="col-xs-3 res-col-xs-2-btm acnt_text_invoice_input_prec margin-botton-10 padding_zero accounts_tax_box">
+                                                                <a class="tax_class_text" ng-if="!accountdata.showTaxselection && (!accountdata.invoiceItems.tax_class || accountdata.invoiceItems.tax_class.length == 0)" 
+                                                                   ng-click="accountdata.showTaxselection = !accountdata.showTaxselection">Add Tax Classes</a>
+                                                                <a class="tax_class_text" ng-if="!accountdata.showTaxselection && accountdata.invoiceItems.tax_class && accountdata.invoiceItems.tax_class.length > 0"
+                                                                   ng-click="accountdata.showTaxselection = !accountdata.showTaxselection">
+                                                                    <span ng-repeat="tx in accountdata.invoiceItems.tax_class">
+                                                                        {{tx.display_name}}<b ng-if="$index != accountdata.invoiceItems.tax_class.length - 1">, </b>
+                                                                    </span>
+                                                                </a>
+                                                                <a class="tag_clearall_icon" ng-if="accountdata.showTaxselection" ng-click="accountdata.showTaxselection = false">×</a>
+
+                                                                <tags-input key-property="_id" display-property="display_name" class="tax_tags"
+                                                                            ng-model="accountdata.makeUpTaxClass_selected" placeholder="Select Tax Class"
+                                                                            replace-spaces-with-dashes="false" ng-blur="newItemCalc();" ng-if="accountdata.showTaxselection">
+                                                                    <auto-complete source="accountdata.taxes" load-on-focus="true" load-on-empty="true" min-length="0" max-results="10">
+                                                                    </auto-complete>
+                                                                </tags-input>
+                                                                <script type="text/ng-template" id="my-custom-template">
+                                                                    <span>{{data.display_name}}</span>
+                                                                </script>
+                                                            </div>
+                                                            <div class="col-xs-1 res-col-xs-1-btm text_invoice_text_right margin-botton-10 text-right padding_zero accounts_hsn_h" style="">HSN Code:</div>
+                                                            <div class="col-xs-2 res-col-xs-2 padding_zero acnt_text_invoice_input margin-botton-10 accounts_hsn_div" ng-init="accountdata.hsnCodeDisable = false">
+                                                                <div class="text_invoice_text_right" ng-if="accountdata.hsnCodeDisable == true">{{accountdata.invoiceItems.hsn_code}}</div>
+                                                                <input type="text" ng-model="accountdata.invoiceItems.hsn_code" class="accounts_hsn_input" ng-if="accountdata.hsnCodeDisable == false" />
+                                                            </div>
+                                                            <div class="col-xs-3 res-col-xs-3-btm text_invoice_text_right margin-botton-10 pull-right text-right accounts_net_total"
+                                                                 ng-bind-template="Net Total {{accountdata.invoiceItems.total| number:2}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-xs-12 padding_zero">
+                                                    <div class="col-lg-12 col-xs-6 padding_zero margin-bottom-10">
+                                                        <div class="acnt_left_sec_2">
+                                                            <b>Qty/Hrs</b>
+                                                        </div>
+                                                        <div class="acnt_right_sec_2">
+                                                            <input class="acnt_invoice_qty" type="text" ng-model="accountdata.invoiceItems.qty" numbersonly="20" ng-blur="getItemtotal()"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12 col-xs-6 padding_zero margin-bottom-10">
+                                                        <div class="acnt_left_sec_2">
+                                                            <b>Price/Rate</b>
+                                                        </div>
+                                                        <div class="acnt_right_sec_2">
+                                                            <input class="acnt_invoice_qty acnt_input_prefix" ng-model="accountdata.invoiceItems.price"
+                                                                   numberdecimal="20" type="text" ng-blur="getItemtotal()"/>
+                                                            <span class="input-group-add" style="margin-top: 0px">&#8377;</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12" ng-show="accountdata.showadditems">
+                                                <div class="col-lg-9 col-xs-12 add_edit_cnt_view margin-top-10 margin-bottom-20">                                                    
+                                                    <div class="col-xs-12">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-xs-12 text-center acnt_bnt_cnt margin-top-10 margin-bottom-20 padding_zero"
+                                                     ng-if="accountdata.invoiceForm.customer_id && accountdata.invoiceForm.customer_id != ''">
+                                                    <a class="common_button pull-right cancel" 
+                                                       ng-click="reEditInvoiceItems('', true); invoice_Cancel()">Cancel</a>
+                                                    <!--- Normal Invoice Item Add then -->
+                                                    <a class="common_button pull-right enter"
+                                                       ng-click="accountdata.canValidate = true; invoice_newItemInsert()" ng-if="accountdata.selectedIndex == - 1">Add Item
+                                                        <div class="button_loader_cnt"
+                                                             ng-if="accountdata.invoice_loader">
+                                                            <div ng-class="{'button_loader':accountdata.invoice_loader}"></div>
+                                                        </div>
+                                                    </a>
+                                                    <a class="common_button pull-right enter"
+                                                       ng-click="accountdata.canValidate = true; invoice_updateItemInsert()" ng-if="accountdata.selectedIndex > - 1">Update Item
+                                                        <div class="button_loader_cnt"
+                                                             ng-if="accountdata.invoice_loader">
+                                                            <div ng-class="{'button_loader':accountdata.invoice_loader}"></div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accounts_receivable-row3 col-lg-12 margin-top-30">
+                                    <div class="col-xs-12 invoice_data_content">
+                                        <table>
+                                            <thead>
+                                                <tr class="tr_header">
+                                                    <th>Cust.DC.No</th>
+                                                    <th>Dye.DC.No</th>
+                                                    <th>Del No</th>
+                                                    <th>Process</th>
+                                                    <th>Fabric</th>
+                                                    <th>Colour</th>
+                                                    <th class="text-center">Dia</th>
+                                                    <th class="text-center">Rolls</th>
+                                                    <th class="text-right">Weight</th>
+                                                    <th style="min-width: 65px;" class="text-right">Rate (₹)</th>
+                                                    <th class="text-right" ng-repeat="tax in accountdata.invoiceForm.tax_data">{{tax.tax_name}}</th>
+                                                    <th style="min-width: 100px;" class="text-right">Amount (₹)</th>
+                                                    <th style="width: 40px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                                <tr ng-repeat-start="item in accountdata.invoiceForm.items"></tr>
+                                                <tr ng-repeat="process in item.process">
+                                                    <td><span ng-bind="item.customer_dc_no"></span></td>
+                                                    <td><span ng-bind="item.dyeing_dc_no"></span></td>
+                                                    <td><span ng-bind="item.delivery_no"></span></td>
+                                                    <td><span ng-bind="process.process_name"></span></td>
+                                                    <td><span ng-if="$index == 0" ng-bind="item.fabric_type"></span></td>
+                                                    <td class="text-left"><span ng-if="$index == 0" ng-bind="item.fabric_color"></span></td>
+                                                    <td class="text-center"><span ng-if="$index == 0" ng-bind="item.dia | number:2"></span></td>
+                                                    <td class="text-center"><span ng-if="$index == 0" ng-bind="item.delivery_roll"></span></td>
+                                                    <td class="text-right"><span ng-if="$index == 0" ng-bind="item.delivery_weight | number:3"></span></td>
+                                                    <td class="text-right">
+                                                        <input type="text" class="rate_val" ng-model="process.price" valid-number ng-blur="calculateSumInvoice(process, item)"/>
+                                                    </td>
+                                                    <td class="text-right" ng-repeat="tax in accountdata.invoiceForm.tax_data">
+                                                        <span ng-repeat="tx in process.tax_class" ng-if="tx._id === tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                    </td>
+                                                    <td class="text-right"><span ng-bind="process.subtotal | number:2"></span></td>
+                                                    <td><!--<span class="delete_small recievable-delete"></span>--></td>
+                                                <tr/>
+                                                <tr ng-repeat-end></tr>
+                                                <tr ng-repeat="items in accountdata.invoiceForm.otheritems" ng-click="editItem(items)">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><span ng-bind="items.itemname"></span></td>
+                                                    <td></td>
+                                                    <td class="text-left"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-right"><span ng-bind="items.qty | number:3"></span></td>
+                                                    <td class="text-right"><span ng-bind="items.price | number:2"></span></td>
+                                                    <td class="text-right" ng-repeat="tax in accountdata.invoiceForm.tax_data">
+                                                        <span ng-repeat="tx in items.tax_class" ng-if="tx._id === tax._id" ng-bind="tx.taxamount | number:2"></span>
+                                                    </td>															 
+                                                    <td class="text-right"><span ng-bind="items.pretotal | number:2"></span></td>
+                                                    <td><!--<span class="delete_small recievable-delete"></span>--></td>
+                                                <tr/>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="footer-sec margin-top-20 margin-bottom-30">
+                                        <div class="col-lg-12 col-xs-12">
+                                            <div class="col-lg-8 col-xs-8">
+                                                <div class="col-lg-2 col-xs-3 heading_7 padding_zero">
+                                                    Customer Notes
+                                                </div>
+                                                <div class="col-lg-10 padding_left_zero col-xs-9">
+                                                    <textarea class="form-control" rows="5" id="comment" ng-model="accountdata.invoiceForm.customer_notes"></textarea>
+                                                </div>
+
+                                                <div class="col-lg-12 col-xs-12 margin-top-25 padding_zero">
+                                                    <span class="fav_check_text pull-right margin-top-05" style="font-size: 13px;font-weight: normal;">Email/Message this invoice to customer when saved.</span>
+                                                    <input type="checkbox" class="input_class_checkbox" ng-model="accountdata.invoiceForm.email_status" ng-hide="true">
+                                                    <div class="class_checkbox" ng-class="{'checked':accountdata.invoiceForm.email_status}" ng-if="accountdata.invoiceForm._id && accountdata.invoiceForm.payment_status == 'PENDING'"></div>
+                                                    <div class="class_checkbox" ng-class="{'checked':accountdata.invoiceForm.email_status}" ng-if="!accountdata.invoiceForm._id" 
+                                                         ng-click="accountdata.invoiceForm.email_status = !accountdata.invoiceForm.email_status;"></div>
+
+                                                </div>
+                                                <div class="col-lg-12 col-xs-12 margin-top-30 padding_zero">
+                                                    <a class="common_button cancel pull-right accountpage_click_resize" ng-click="cancelInvoice();">Cancel</a> 
+                                                    <a class="common_button margin-right-15 margin-left-10 pull-right enter-new accountpage_click_resize" ng-if="!accountdata.invoiceForm._id" ng-click="saveInvoice();">Save Invoice</a>
+                                                    <a class="common_button margin-right-15 margin-left-10 pull-right enter-new accountpage_click_resize" ng-if="accountdata.invoiceForm._id && accountdata.invoiceForm.payment_status == 'PENDING'" 
+                                                       ng-click="updateInvoice();">Save Invoice</a>
+                                                    <a class="text_uderline pull-right print-invoice accountpage_click_resize" ng-if="accountdata.invoiceForm._id && jobviewData.invoiceForm._id != ''" 
+                                                       ng-click="printThisinvoice(accountdata.invoiceForm); $event.stopPropagation();">Print this invoice</a>	
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 text-right heading_7">
+                                                <div><strong>Subtotal:</strong>
+                                                    <div class="price_section">
+                                                        <strong ng-bind="accountdata.currency+(accountdata.invoiceForm.subtotal | number:2)"></strong>
+                                                    </div>
+                                                </div>
+                                                <div ng-repeat="tax in accountdata.invoiceForm.tax_data">
+                                                    <strong ng-bind="tax.tax_percentage+'% '+tax.tax_name+':'"></strong>
+                                                    <div class="price_section margin-top-10">
+                                                        <strong ng-bind="accountdata.currency+(tax.taxamount | number:2)"></strong>
+                                                    </div>
+                                                </div>
+                                                 <div><strong>Round Off</strong>
+                                                    <div class="price_section">
+                                                        <strong ng-bind="accountdata.currency+accountdata.invoiceForm.roundoff"></strong>
+                                                    </div>
+                                                </div>
+                                                <div><strong>Total:</strong>
+                                                    <div class="price_section margin-top-15">
+                                                        <b ng-bind="accountdata.currency+(accountdata.invoiceForm.total | number:2)"></b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </b>
+
+                    <!-- Right Section Debit note view/create/update-->
+                    <b>
+                        <div class="account_filter_cnt account_view table_cnt accounts_recievable" style="height: 800px; overflow-y: hidden" 
+                             ng-if="accountdata.currentPage == 'DebitLedgerdetail'">
+                            <div class="receiving_invoice">
+                                <div class="col-lg-12 margin-bottom-25 margin-top-20">
+                                    <strong ng-bind="'Debit Note #' + accountdata.debitForm.serial_no"></strong>        
+                                    <span class="heading_3 blue-color" ng-if="!accountdata.debitForm._id">New Debit Note</span>
+                                </div>
+
+                                <div class="receiving_payment_form">
+                                    <div class="row margin-0">
+                                        <div class="col-xs-7 receive_left_section">
+                                            <div class="col-xs-12 receive_choose_account_resp padding_zero_div" style="margin-bottom: 5px;">
+                                                <div class="receive_invoice_cus_title">Customer</div>
+                                                <div class="receive_invoice_cus_details" style="width:74%;display: inline-flex;">
+                                                    <input ng-if="!accountdata.debitForm._id" type="text" class="form-control form_center" placeholder="Customer Name" 
+                                                           ng-model="accountdata.debitForm.customer_name" ui-event="{autocompletecreate:'changeClass(debitcustomerOption)'}" 
+                                                           ui-autocomplete="debitcustomerOption" required>
+                                                    <span ng-if="accountdata.debitForm._id" class="receive_invoice_text" ng-bind="accountdata.debitForm.payee_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Category</div>
+                                                <div class="receive_invoice_cus_details" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.debitForm.category_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Memo</div>
+                                                <div class="receive_invoice_cus_details">
+                                                    <input type="text" class="meno_input" style="width: 98% !important;" ng-model="accountdata.debitForm.memo">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-5 receive_right_section">
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Debit No</div>
+                                                <div class="receive_invoice_cus_details_1" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.debitForm.serial_no"></span>
+                                                </div>                                                
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Date</div>
+                                                <div class="receive_invoice_cus_details_1" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.debitForm.transaction_date | date:'dd - MM - yyyy'"></span>
+                                                </div>                                                
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Debit Amount</div>
+                                                <div class="receive_invoice_cus_details_1">
+                                                    <input type="text" class="paymant_input text-right" ng-model="accountdata.debitForm.transaction_amount" ng-model-options="{updateOn: 'blur'}" ng-change="allocatebebitPayment()" valid-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 heading_5 margin-bottom-20 margin-top-30">Allocate the debit amount to the customer invoices below.</div>
+
+                                <div class="col-xs-12">
+                                    <div class="acnt_receive_table_container col-xs-8 padding_zero_div">
+                                        <table class="receive_balance_table">
+                                            <tbody>
+                                                <tr><th colspan="6">INVOICE DETAILS</th></tr>
+                                                <tr ng-if="accountdata.debitForm.pendingbills && accountdata.debitForm.pendingbills.length>0">
+                                                    <th>Invoice Number</th>
+                                                    <th>Due Date</th>
+                                                    <th class="text-right">Invoice Amount</th>
+                                                    <th class="text-right">Pending Balance</th>
+                                                    <th class="text-right">Balance Due</th>
+                                                    <th class="text-right">Amount Allocated</th>
+                                                </tr>
+                                                <tr ng-if="accountdata.debitForm.pendingbills && accountdata.debitForm.pendingbills.length>0" 
+                                                    ng-repeat="bill in accountdata.debitForm.pendingbills">
+                                                    <td ng-bind="bill.bill_no"></td>
+                                                    <td ng-bind="bill.due_date| date:'dd / MM / yyyy'"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.amount| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.pending_balance| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.balance_due| number:2)"></td>
+                                                    <td class="text-right">
+                                                        <input type="text" class="acnt_amt_allocate" ng-model="bill.amount_allocated" valid-number ng-blur="debitPaymentAllocation(bill)">
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="!accountdata.debitForm.pendingbills || accountdata.debitForm.pendingbills.length==0">
+                                                    <th colspan="7" style="text-align: center;">No Invoices found with pending payments!</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="acnt_receive_total_show"
+                                             ng-bind="'Balance after Allocation: '+ commonobjectService.getCurrency() + (accountdata.debitForm.balance | number:2)"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 heading_7">The total payment amount has to be allocated in full before proceeding.</div>
+
+                                <div class="col-xs-12 margin-top-30 margin-bottom-20">
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="accountdata.debitForm._id" ng-click="updateDebitnote();">Enter</a>
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="!accountdata.debitForm._id" ng-click="saveDebitnote();">Enter</a>
+                                    <a class="common_button cancel-new accountpage_click_resize" ng-click="cancelInvoice();">Cancel</a> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="account_filter_cnt account_view table_cnt accounts_recievable" style="height: 800px; overflow-y: hidden" 
+                             ng-if="accountdata.currentPage == 'CreditLedgerdetail'">
+                            <div class="receiving_invoice">
+                                <div class="col-lg-12 margin-bottom-25 margin-top-20">
+                                    <strong ng-bind="'Credit Note #' + accountdata.creditForm.serial_no"></strong>        
+                                    <span class="heading_3 blue-color" ng-if="!accountdata.creditForm._id">New Credit Note</span>
+                                </div>
+
+                                <div class="receiving_payment_form">
+                                    <div class="row margin-0">
+                                        <div class="col-xs-7 receive_left_section">
+                                            <div class="col-xs-12 receive_choose_account_resp padding_zero_div" style="margin-bottom: 5px;">
+                                                <div class="receive_invoice_cus_title">Customer</div>
+                                                <div class="receive_invoice_cus_details" style="width:74%;display: inline-flex;">
+                                                    <input ng-if="!accountdata.creditForm._id" type="text" class="form-control form_center" placeholder="Customer Name" 
+                                                           ng-model="accountdata.creditForm.customer_name" ui-event="{autocompletecreate:'changeClass(creditcustomerOption)'}" 
+                                                           ui-autocomplete="creditcustomerOption" required>
+                                                    <span ng-if="accountdata.creditForm._id" class="receive_invoice_text" ng-bind="accountdata.creditForm.payee_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Category</div>
+                                                <div class="receive_invoice_cus_details" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.creditForm.category_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Memo</div>
+                                                <div class="receive_invoice_cus_details">
+                                                    <input type="text" class="meno_input" style="width: 98% !important;" ng-model="accountdata.creditForm.memo">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Invoice Nos</div>
+                                                <div class="receive_invoice_cus_details">
+                                                    <input type="text" class="meno_input" style="width: 98% !important;" ng-model="accountdata.creditForm.invoice_nos">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-5 receive_right_section">
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Credit No</div>
+                                                <div class="receive_invoice_cus_details_1" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.creditForm.serial_no"></span>
+                                                </div>                                                
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Date</div>
+                                                <div class="receive_invoice_cus_details_1" style="min-height: 34px;">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.creditForm.transaction_date | date:'dd - MM - yyyy'"></span>
+                                                </div>                                                
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Credit Amount</div>
+                                                <div class="receive_invoice_cus_details_1">
+                                                    <input type="text" class="paymant_input text-right" ng-model="accountdata.creditForm.transaction_amount" ng-model-options="{updateOn: 'blur'}" valid-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 margin-top-30 margin-bottom-20">
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="accountdata.creditForm._id" ng-click="updateCreditnote();">Enter</a>
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="!accountdata.creditForm._id" ng-click="saveCreditnote();">Enter</a>
+                                    <a class="common_button cancel-new accountpage_click_resize" ng-click="cancelInvoice();">Cancel</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </b>
+
+                    <!-- Right Section Payment view/create/update-->
+                    <b>
+                        <div class="account_filter_cnt account_view table_cnt accounts_recievable" style="height: 800px; overflow-y: hidden" ng-if="accountdata.currentPage == 'Payment' || accountdata.currentPage == 'Payment Receipt'">
+                            <div class="receiving_invoice">
+                                <div class="col-lg-12 margin-bottom-25 margin-top-20">
+                                    <strong>Receive Payment for Invoice</strong>   
+                                </div>
+
+                                <div class="receiving_payment_form">
+                                    <div class="row margin-0">
+                                        <div class="col-xs-8 receive_left_section">
+                                            <div class="col-xs-8 receive_choose_account_resp padding_zero_div" style="margin-bottom: 5px;">
+                                                <div class="receive_invoice_cus_title_left" style="width: 30%;">Choose Account</div>
+                                                <div class="receive_invoice_cus_details_left" style="width:60%;margin-left: 7%;"> 							
+                                                    <ui-select ng-model="accountdata.customerPayment.selectedledgers"
+                                                               on-select="invoice_changeInvoiceDueDate($item,$select)"
+                                                               theme="selectize" search-enabled='true'> <ui-select-match
+                                                            placeholder="">{{$select.selected.name}}</ui-select-match> <ui-select-choices
+                                                            repeat="ledgers in accountdata.paymentledgers | filter:{division_id:filterData.selectedBranch} | filter: $select.search">
+                                                            <span class="net_span" style="font-size:12px;" ng-bind-html="ledgers.name | highlight: $select.search"></span>
+                                                        </ui-select-choices> 
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 receive_number_resp" style="margin-bottom: 5px;">
+                                                <div class="receive_invoice_cus_title_left">Number:</div>
+                                                <div class="receive_invoice_cus_details_left">
+                                                    <input type="text" class="num_input" ng-model="accountdata.customerPayment.cheque_no">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 receive_choose_account_resp padding_zero_div" style="margin-bottom: 5px;">
+                                                <div class="receive_invoice_cus_title_left" style="width: 30%;">Customer</div>
+                                                <div class="receive_invoice_cus_details_left" style="width:60%;margin-left: 7%;display: inline-flex;">
+                                                    <input ng-if="accountdata.currentPage == 'Payment Receipt'" type="text" class="form-control form_center" placeholder="Customer Name" 
+                                                           ng-model="accountdata.customerPayment.customer_name" ui-event="{autocompletecreate:'changeClass(paycustomerOption)'}" 
+                                                           ui-autocomplete="paycustomerOption" required>
+                                                    <span ng-if="accountdata.currentPage == 'Payment'" class="receive_invoice_text" ng-bind="accountdata.customerPayment.payee_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Category</div>
+                                                <div class="receive_invoice_cus_details">
+                                                    <span class="receive_invoice_text" ng-bind="accountdata.customerPayment.category_name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title">Memo</div>
+                                                <div class="receive_invoice_cus_details">
+                                                    <input type="text" class="meno_input" style="width: 98% !important;" ng-model="accountdata.customerPayment.memo">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-4 receive_right_section">
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Date:</div>
+                                                <div class="receive_invoice_cus_details_1">
+                                                    <div class="custom_date_style">
+                                                        <div class="input-append acnt_invoice_receive_date">
+                                                            <div class="input-append" name="transaction_date">
+                                                                <date-time-picker  ng-model="accountdata.customerPayment.transaction_date" placeholder="Date" 
+                                                                                   start-view='2' min-view='2' max-view='4' today-btn='true' 
+                                                                                   minute-step='30' format="dd-MM-yyyy" container=".acnt_invoice_receive_date">
+                                                                </date-time-picker>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05">
+                                                <div class="receive_invoice_cus_title_1">Payment Amount:</div>
+                                                <div class="receive_invoice_cus_details_1">
+                                                    <input type="text" class="paymant_input text-right" ng-model="accountdata.customerPayment.transaction_amount" ng-model-options="{updateOn: 'blur'}" ng-change="allocatePayment()" valid-number>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 padding_zero_div margin-bottom-05" ng-if="accountdata.customerPayment.previous_owe && accountdata.customerPayment.previous_owe>0">
+                                                <div class="receive_invoice_cus_title_1">Previous Owe:</div>
+                                                <div class="receive_invoice_cus_details_1 margin-top-10">
+                                                    <span type="text" class="text-left red_text" ng-bind="accountdata.currency+(accountdata.customerPayment.previous_owe| number:2)"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 heading_5 margin-bottom-20 margin-top-30">Allocate the payment amount to the customer invoices below.</div>
+
+                                <div class="col-xs-12">
+                                    <div class="acnt_receive_table_container col-xs-8 padding_zero_div">
+                                        <table class="receive_balance_table">
+                                            <tbody>
+                                                <tr><th colspan="6">INVOICE DETAILS</th></tr>
+                                                <tr ng-if="accountdata.customerPayment.pendingbills && accountdata.customerPayment.pendingbills.length>0">
+                                                    <th>Invoice Number</th>
+                                                    <th>Due Date</th>
+                                                    <th class="text-right">Invoice Amount</th>
+                                                    <th class="text-right">Pending Balance</th>
+                                                    <th class="text-right">Balance Due</th>
+                                                    <th class="text-right">Amount Allocated</th>
+                                                </tr>
+                                                <tr ng-if="accountdata.customerPayment.pendingbills && accountdata.customerPayment.pendingbills.length>0" 
+                                                    ng-repeat="bill in accountdata.customerPayment.pendingbills">
+                                                    <td ng-bind="bill.bill_no"></td>
+                                                    <td ng-bind="bill.due_date| date:'dd / MM / yyyy'"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.amount| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.pending_balance| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(bill.balance_due| number:2)"></td>
+                                                    <td class="text-right">
+                                                        <input type="text" class="acnt_amt_allocate" ng-model="bill.amount_allocated" valid-number ng-blur="PaymentAllocation(bill)">
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="!accountdata.customerPayment.pendingbills || accountdata.customerPayment.pendingbills.length==0">
+                                                    <th colspan="7" style="text-align: center;">No Invoices found with pending payments!</th>
+                                                </tr>
+
+                                                <tr><th colspan="6">CUSTOMER OPENING BALANCE</th></tr>
+                                                <tr ng-if="accountdata.customerPayment.customer_openingbalance && accountdata.customerPayment.customer_openingbalance.pending_balance &&
+                                                accountdata.customerPayment.customer_openingbalance.pending_balance>0">
+                                                    <th colspan="2"></th>
+                                                    <th class="text-right">Opening Balance</th>
+                                                    <th class="text-right">Pending Balance</th>
+                                                    <th class="text-right">Balance Due</th>
+                                                    <th class="text-right">Amount Allocated</th>
+                                                </tr>
+                                                <tr ng-if="accountdata.customerPayment.customer_openingbalance && accountdata.customerPayment.customer_openingbalance.pending_balance &&
+                                                accountdata.customerPayment.customer_openingbalance.pending_balance>0">
+                                                    <td colspan="2"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(accountdata.customerPayment.customer_openingbalance.total_balance| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(accountdata.customerPayment.customer_openingbalance.pending_balance| number:2)"></td>
+                                                    <td class="text-right" ng-bind="accountdata.currency+(accountdata.customerPayment.customer_openingbalance.balance_due| number:2)"></td>
+                                                    <td class="text-right">
+                                                        <input type="text" class="acnt_amt_allocate" ng-model="accountdata.customerPayment.customer_openingbalance.amount_allocated" 
+                                                        valid-number ng-blur="PaymentAllocationOpeningbal(accountdata.customerPayment.customer_openingbalance)">
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="!accountdata.customerPayment.customer_openingbalance">
+                                                        <th colspan="7" style="text-align: center;">No Opening Balance found!</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="acnt_receive_total_show"
+                                             ng-bind="'Balance after Allocation: '+ commonobjectService.getCurrency() + (accountdata.customerPayment.balance | number:2)"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 heading_7">The total payment amount has to be allocated in full before proceeding.</div>
+
+                                <div class="col-xs-12 margin-top-30 margin-bottom-20">
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="accountdata.customerPayment._id" ng-click="updatePayment();">Enter</a>
+                                    <a class="common_button margin-right-15 enter-new accountpage_click_resize" ng-if="!accountdata.customerPayment._id" ng-click="savePayment();">Enter</a>
+                                    <a class="common_button cancel-new accountpage_click_resize" ng-click="cancelInvoice();">Cancel</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </b>
+                </div>        
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Card Height Set
+    function acconut_page_height(data) { 
+        setTimeout(function(){
+            var Account_height = $(window).height()+2;
+            var Account_menu_leftside = $('.account_left_section .account_filter_header').height() + $('.header').height();
+            var Account_menu_rightside = $('.account_right_section .account_filter_header').height() + $('.header').height();
+            var account_filter = $(".account_filter_cnt .report").height();
+            var footer_form = "50"
+            if(data){
+                footer_form = $(".account .account_footer").height();
+            }else{
+                footer_form = "50"
+            }
+       
+            var tableheight = Account_menu_rightside + 330;
+            $('.overflow_scroll').css('height', Account_height - Account_menu_leftside - 50);
+            $('.table_cnt').css('height', Account_height - Account_menu_rightside - 45);
+            $('.account_table_scroll').css('height', Account_height - Account_menu_rightside - footer_form - account_filter  - 110);
+            $('.acc_scollbody').css('height', Account_height - Account_menu_rightside - footer_form - account_filter  - 180);
+        }, 500);
+    }
+
+    WinHeight();
+    splite_screen();
+    acconut_page_height();
+    $(window).resize(function () { // Screen Resize responsive
+    WinHeight();
+    acconut_page_height();
+    });
+    function full_screen_account() {
+    $('.account_left_section').toggle();
+    $('.account_right_section').toggleClass('full_width_acc');
+    $('.edit_body').toggleClass('acc_fullscreen_add');
+    }
+
+    //Address Select Invoice
+    function addressChange(e, th) {
+    $(th).toggle();
+    $('#address_cnt').addClass('acnt_address_cnt');
+    $('.addrss_list').removeClass('hide');
+    }
+
+    function acnt_add(e, th) {
+    $('.add_change').show();
+    $('#address_cnt').removeClass('acnt_address_cnt');
+    $('.addrss_list').addClass('hide');
+    }
+
+    function resetAddressClick() {
+    $('.add_change').show();
+    $('#address_cnt').removeClass('acnt_address_cnt');
+    $('.addrss_list').addClass('hide');
+    }
+
+    // Invoice POPUP Deleted
+    function invoiceDeleted(e, th) {
+    e.stopPropagation();
+    $('.invoice_delete_toggle').removeClass('hide');
+    }
+
+    function invoiceDeletedHide() {
+    $('.invoice_delete_toggle').addClass('hide');
+    }
+    function tableInitialize() {
+    if ($(".account_table_scroll")[0] && $(".account_table_scroll")[0].scrollHeight) {
+    $(".account_table_scroll").scrollTop($(".account_table_scroll")[0].scrollHeight);
+    }
+    }
+    $(document).ready(function () {
+    $(document).on('click', '.accountpage_click_resize', function () {
+    acconut_page_height();
+    });
+    });
+
+    $(document).ready(function () {
+        $(document).on('click', '.account .favorite, .account .ledgers', function () {
+            if($(window).width() <= 840){
+                full_screen_account();
+            }
+        });
+		$(document).on('click', '.account_bottom_view', function () {
+            $(".account_bottom_view").toggleClass("click");
+            var Isclicked = $( ".account_bottom_view" ).hasClass( "click" );
+            if(Isclicked){
+                $('.account .account_footer').css('height', "250");
+            }
+                acconut_page_height(Isclicked);
+        });
+    });
+</script>
