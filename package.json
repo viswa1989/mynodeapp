@@ -19,7 +19,7 @@
   "homepage": "https://github.com/viswa1989/mynodeapp#readme",
   "dependencies": {
     "app-module-path": "^2.2.0",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^5.0.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "cron": "^1.6.0",
