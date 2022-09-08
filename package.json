@@ -25,7 +25,7 @@
     "cron": "^1.6.0",
     "ejs": "^2.6.1",
     "email-templates": "^5.0.2",
-    "exceljs": "^1.6.3",
+    "exceljs": "^1.15.0",
     "express": "^4.16.4",
     "fs-extra": "^7.0.1",
     "helmet": "^3.15.0",
