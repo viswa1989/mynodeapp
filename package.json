@@ -38,7 +38,7 @@
     "nodemailer": "^4.7.0",
     "rimraf": "^2.6.2",
     "serve-favicon": "^2.5.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "string-template": "^1.0.0"
   }
 }
